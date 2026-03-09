@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finansor Quant Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-green: #3fb950;
+            --accent-red: #f85149;
+            --accent-yellow: #d29922;
+            --accent-blue: #58a6ff;
+            --border: #30363d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-value {
+            font-size: 32px;
+            font-weight: 600;
+        }
+        
+        .signal-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .signal-strong-buy { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); }
+        .signal-buy { background: rgba(210, 153, 34, 0.2); color: var(--accent-yellow); }
+        .signal-hold { background: rgba(139, 148, 158, 0.2); color: var(--text-secondary); }
+        .signal-sell { background: rgba(248, 81, 73, 0.2); color: var(--accent-red); }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background: var(--bg-tertiary);
+        }
+        
+        .price { font-family: 'SF Mono', monospace; }
+        .change-positive { color: var(--accent-green); }
+        .change-negative { color: var(--accent-red); }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .tab:hover, .tab.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+        
+        .sentiment-meter {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 0;
+        }
+        
+        .meter-bar {
+            flex: 1;
+            height: 20px;
+            background: linear-gradient(to right, 
+                var(--accent-red) 0%, 
+                var(--accent-yellow) 50%, 
+                var(--accent-green) 100%);
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .meter-needle {
+            position: absolute;
+            top: -5px;
+            width: 4px;
+            height: 30px;
+            background: white;
+            border-radius: 2px;
+            transform: translateX(-50%);
+            transition: left 0.5s ease;
+        }
+        
+        .refresh-btn {
+            padding: 10px 20px;
+            background: var(--accent-blue);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .refresh-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .timestamp {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Finansor Quant</h1>
+            <div class="status">
+                <span class="status-dot"></span>
+                <span class="timestamp" id="lastUpdate">Son güncelleme: --</span>
+                <button class="refresh-btn" onclick="loadData()">🔄 Yenile</button>
+            </div>
+        </header>
+        
+        <!-- Özet Kartları -->
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Toplam Hisse</span>
+                </div>
+                <div class="card-value" id="totalStocks">--</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">🟢 Strong Buy</span>
+                </div>
+                <div class="card-value" id="strongBuyCount">--</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">🟡 Buy</span>
+                </div>
+                <div class="card-value" id="buyCount">--</div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">🔴 Sell</span>
+                </div>
+                <div class="card-value" id="sellCount">--</div>
+            </div>
+        </div>
+        
+        <!-- Sentiment -->
+        <div class="card" style="margin-bottom: 30px;">
+            <div class="card-header">
+                <span class="card-title">📊 Market Sentiment</span>
+            </div>
+            <div class="sentiment-meter">
+                <span>Bearish</span>
+                <div class="meter-bar">
+                    <div class="meter-needle" id="sentimentNeedle" style="left: 50%;"></div>
+                </div>
+                <span>Bullish</span>
+            </div>
+            <div style="text-align: center; margin-top: 10px;">
+                <span id="sentimentScore">0.00</span>
+            </div>
+        </div>
+        
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('all')">Tümü</div>
+            <div class="tab" onclick="showTab('buy')">Alım Sinyalleri</div>
+            <div class="tab" onclick="showTab('sell')">Satım Sinyalleri</div>
+        </div>
+        
+        <!-- Sinyal Tablosu -->
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Fiyat</th>
+                        <th>Değişim</th>
+                        <th>RSI</th>
+                        <th>Sinyal</th>
+                        <th>Skor</th>
+                        <th>Strateji</th>
+                    </tr>
+                </thead>
+                <tbody id="signalsTable">
+                    <tr><td colspan="7" style="text-align: center;">Yükleniyor...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Grafik -->
+        <div class="card" style="margin-top: 30px;">
+            <div class="card-header">
+                <span class="card-title">📈 Sinyal Dağılımı</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="signalChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample data (gerçek veri signals.json'dan gelecek)
+        let signals = [];
+        let chart = null;
+        
+        async function loadData() {
+            try {
+                const response = await fetch('data/signals.json');
+                const data = await response.json();
+                signals = data.signals || [];
+                updateDashboard();
+            } catch (e) {
+                // Mock data
+                signals = generateMockData();
+                updateDashboard();
+            }
+        }
+        
+        function generateMockData() {
+            const tickers = ['AAPL', 'GOOG', 'MSFT', 'NVDA', 'TSLA', 'AMD', 'META', 'AMZN', 'JPM', 'V'];
+            const signalTypes = ['🟢 STRONG BUY', '🟡 BUY', '⚪ HOLD', '🟠 SELL', '🔴 STRONG SELL'];
+            
+            return tickers.map(ticker => ({
+                ticker,
+                price: 100 + Math.random() * 300,
+                changePct: (Math.random() - 0.5) * 10,
+                rsi: 30 + Math.random() * 40,
+                score: Math.floor((Math.random() - 0.5) * 10),
+                signal: signalTypes[Math.floor(Math.random() * signalTypes.length)],
+                best_strategy: ['Volatility Regime', 'ADX Trend', 'EMA Crossover', 'Dual Momentum'][Math.floor(Math.random() * 4)]
+            }));
+        }
+        
+        function updateDashboard() {
+            // Özet
+            document.getElementById('totalStocks').textContent = signals.length;
+            document.getElementById('strongBuyCount').textContent = signals.filter(s => s.signal.includes('STRONG BUY')).length;
+            document.getElementById('buyCount').textContent = signals.filter(s => s.signal === '🟡 BUY').length;
+            document.getElementById('sellCount').textContent = signals.filter(s => s.signal.includes('SELL')).length;
+            
+            // Timestamp
+            document.getElementById('lastUpdate').textContent = 'Son güncelleme: ' + new Date().toLocaleTimeString('tr-TR');
+            
+            // Sentiment
+            const avgScore = signals.reduce((a, b) => a + (b.score || 0), 0) / signals.length;
+            const sentimentPct = 50 + avgScore * 5;
+            document.getElementById('sentimentNeedle').style.left = sentimentPct + '%';
+            document.getElementById('sentimentScore').textContent = avgScore.toFixed(2);
+            
+            // Tablo
+            renderTable('all');
+            
+            // Grafik
+            renderChart();
+        }
+        
+        function renderTable(filter) {
+            const tbody = document.getElementById('signalsTable');
+            let filtered = signals;
+            
+            if (filter === 'buy') {
+                filtered = signals.filter(s => s.signal.includes('BUY'));
+            } else if (filter === 'sell') {
+                filtered = signals.filter(s => s.signal.includes('SELL'));
+            }
+            
+            // Skora göre sırala
+            filtered.sort((a, b) => (b.score || 0) - (a.score || 0));
+            
+            tbody.innerHTML = filtered.map(s => `
+                <tr>
+                    <td><strong>${s.ticker}</strong></td>
+                    <td class="price">$${(s.price || 0).toFixed(2)}</td>
+                    <td class="${(s.changePct || 0) >= 0 ? 'change-positive' : 'change-negative'}">
+                        ${(s.changePct || 0) >= 0 ? '+' : ''}${(s.changePct || 0).toFixed(2)}%
+                    </td>
+                    <td>${(s.rsi || 0).toFixed(1)}</td>
+                    <td><span class="signal-badge ${getSignalClass(s.signal)}">${s.signal}</span></td>
+                    <td>${(s.score || 0) >= 0 ? '+' : ''}${s.score || 0}</td>
+                    <td>${s.best_strategy || '-'}</td>
+                </tr>
+            `).join('');
+        }
+        
+        function getSignalClass(signal) {
+            if (signal.includes('STRONG BUY')) return 'signal-strong-buy';
+            if (signal.includes('BUY')) return 'signal-buy';
+            if (signal.includes('SELL')) return 'signal-sell';
+            return 'signal-hold';
+        }
+        
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTable(tab);
+        }
+        
+        function renderChart() {
+            const ctx = document.getElementById('signalChart').getContext('2d');
+            
+            const counts = {
+                'STRONG BUY': signals.filter(s => s.signal.includes('STRONG BUY')).length,
+                'BUY': signals.filter(s => s.signal === '🟡 BUY').length,
+                'HOLD': signals.filter(s => s.signal === '⚪ HOLD').length,
+                'SELL': signals.filter(s => s.signal === '🟠 SELL').length,
+                'STRONG SELL': signals.filter(s => s.signal.includes('STRONG SELL')).length
+            };
+            
+            if (chart) chart.destroy();
+            
+            chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(counts),
+                    datasets: [{
+                        data: Object.values(counts),
+                        backgroundColor: [
+                            '#3fb950',
+                            '#d29922',
+                            '#8b949e',
+                            '#f85149',
+                            '#da3633'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#c9d1d9' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Auto refresh
+        setInterval(loadData, 300000); // 5 dk
+        
+        // Initial load
+        loadData();
+    </script>
+</body>
+</html>
