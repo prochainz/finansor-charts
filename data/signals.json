@@ -1,0 +1,225 @@
+{
+  "timestamp": "2026-03-09T21:50:00Z",
+  "signals": [
+    {
+      "ticker": "AAPL",
+      "price": 259.8800048828125,
+      "changePct": 0.9399570838394211,
+      "rsi": 44.76,
+      "score": -0.5980000000000001,
+      "signal": "\ud83d\udfe0 SELL",
+      "best_strategy": "EMA Crossover",
+      "stop_loss": 247.8,
+      "take_profit": 278.0
+    },
+    {
+      "ticker": "GOOG",
+      "price": 306.010009765625,
+      "changePct": 2.58465380092717,
+      "rsi": 53.19,
+      "score": -0.796,
+      "signal": "\ud83d\udfe0 SELL",
+      "best_strategy": "ADX Trend Following",
+      "stop_loss": 290.31,
+      "take_profit": 329.56
+    },
+    {
+      "ticker": "MSFT",
+      "price": 409.4100036621094,
+      "changePct": 0.11003819846291277,
+      "rsi": 59.77,
+      "score": 0.07,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "EMA Crossover",
+      "stop_loss": 391.19,
+      "take_profit": 436.75
+    },
+    {
+      "ticker": "NVDA",
+      "price": 182.64999389648438,
+      "changePct": 2.7162222322143554,
+      "rsi": 47.7,
+      "score": -0.5489999999999999,
+      "signal": "\ud83d\udfe0 SELL",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 170.23,
+      "take_profit": 201.27
+    },
+    {
+      "ticker": "TSLA",
+      "price": 398.67999267578125,
+      "changePct": 0.49151353198745634,
+      "rsi": 42.71,
+      "score": -0.734,
+      "signal": "\ud83d\udfe0 SELL",
+      "best_strategy": "ADX Trend Following",
+      "stop_loss": 372.3,
+      "take_profit": 438.24
+    },
+    {
+      "ticker": "AMD",
+      "price": 202.67999267578125,
+      "changePct": 5.326612477333446,
+      "rsi": 49.76,
+      "score": -0.43,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 183.65,
+      "take_profit": 231.22
+    },
+    {
+      "ticker": "META",
+      "price": 647.3900146484375,
+      "changePct": 0.3923377716630514,
+      "rsi": 53.74,
+      "score": -0.41500000000000004,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "ADX Trend Following",
+      "stop_loss": 609.99,
+      "take_profit": 703.5
+    },
+    {
+      "ticker": "AMZN",
+      "price": 213.49000549316406,
+      "changePct": 0.13132534612816738,
+      "rsi": 64.64,
+      "score": 0.295,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "ADX Trend Following",
+      "stop_loss": 201.49,
+      "take_profit": 231.49
+    },
+    {
+      "ticker": "JPM",
+      "price": 289.9200134277344,
+      "changePct": 0.1519975213166034,
+      "rsi": 32.77,
+      "score": -0.804,
+      "signal": "\ud83d\udfe0 SELL",
+      "best_strategy": "ADX Trend Following",
+      "stop_loss": 273.16,
+      "take_profit": 315.06
+    },
+    {
+      "ticker": "V",
+      "price": 315.9700012207031,
+      "changePct": -0.43798342419243236,
+      "rsi": 45.33,
+      "score": -0.646,
+      "signal": "\ud83d\udfe0 SELL",
+      "best_strategy": "ADX Trend Following",
+      "stop_loss": 301.27,
+      "take_profit": 338.02
+    },
+    {
+      "ticker": "WYFI",
+      "price": 15.8100004196167,
+      "changePct": 2.000002707204511,
+      "rsi": 38.18,
+      "score": -0.436,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 13.14,
+      "take_profit": 19.82
+    },
+    {
+      "ticker": "NBIS",
+      "price": 94.94000244140625,
+      "changePct": 6.280085632329296,
+      "rsi": 48.22,
+      "score": -0.058,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 78.82,
+      "take_profit": 119.12
+    },
+    {
+      "ticker": "CEG",
+      "price": 322.989990234375,
+      "changePct": 1.2317409596480444,
+      "rsi": 61.17,
+      "score": 0.354,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 294.62,
+      "take_profit": 365.54
+    },
+    {
+      "ticker": "TSM",
+      "price": 348.70001220703125,
+      "changePct": 2.8947437618575407,
+      "rsi": 42.2,
+      "score": -0.087,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 323.27,
+      "take_profit": 386.85
+    },
+    {
+      "ticker": "NKE",
+      "price": 56.529998779296875,
+      "changePct": -0.8419567731420681,
+      "rsi": 18.04,
+      "score": -0.333,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "EMA Crossover",
+      "stop_loss": 52.3,
+      "take_profit": 62.88
+    },
+    {
+      "ticker": "ORCL",
+      "price": 151.55999755859375,
+      "changePct": -0.9152779117565991,
+      "rsi": 47.31,
+      "score": -0.29000000000000004,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 136.85,
+      "take_profit": 173.63
+    },
+    {
+      "ticker": "SOFI",
+      "price": 18.790000915527344,
+      "changePct": -0.5820037313391414,
+      "rsi": 43.9,
+      "score": -0.792,
+      "signal": "\ud83d\udfe0 SELL",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 16.72,
+      "take_profit": 21.9
+    },
+    {
+      "ticker": "MSTR",
+      "price": 138.9499969482422,
+      "changePct": 4.059011621728296,
+      "rsi": 56.43,
+      "score": 0.07,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 120.69,
+      "take_profit": 166.34
+    },
+    {
+      "ticker": "PATH",
+      "price": 11.970000267028809,
+      "changePct": 0.9274925255974317,
+      "rsi": 64.19,
+      "score": 0.04999999999999999,
+      "signal": "\u26aa HOLD",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 10.68,
+      "take_profit": 13.9
+    },
+    {
+      "ticker": "ASTS",
+      "price": 89.76000213623047,
+      "changePct": 0.31852882589521003,
+      "rsi": 54.81,
+      "score": 0.665,
+      "signal": "\ud83d\udfe1 BUY",
+      "best_strategy": "Volatility Regime (Mean Rev)",
+      "stop_loss": 72.62,
+      "take_profit": 115.47
+    }
+  ]
+}

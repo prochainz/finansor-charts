@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Finansor AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg-0:#06080d;--bg-1:#0c0f16;--bg-2:#12161f;--bg-3:#1a1f2e;--bg-4:#222838;--border:#1e2433;--border-light:#2a3040;--text-0:#f0f2f5;--text-1:#c4c9d4;--text-2:#8891a4;--text-3:#5a6378;--accent:#3b82f6;--accent-light:#60a5fa;--green:#10b981;--green-dim:rgba(16,185,129,0.12);--red:#ef4444;--red-dim:rgba(239,68,68,0.12);--yellow:#f59e0b;--yellow-dim:rgba(245,158,11,0.12);--purple:#8b5cf6;--cyan:#06b6d4;--gradient-1:linear-gradient(135deg,#3b82f6,#8b5cf6);--shadow-glow:0 0 40px rgba(59,130,246,0.1)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:var(--bg-0);color:var(--text-1);line-height:1.6;overflow-x:hidden}
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,8,13,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+        .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text-0);font-weight:700;font-size:18px}
+        .nav-brand span{background:var(--gradient-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;align-items:center;gap:8px;list-style:none}
+        .nav-links a{color:var(--text-2);text-decoration:none;font-size:14px;font-weight:500;padding:8px 16px;border-radius:8px;transition:all 0.2s}
+        .nav-links a:hover,.nav-links a.active{color:var(--text-0);background:var(--bg-3)}
+        .mobile-menu{display:none;background:none;border:none;color:var(--text-1);font-size:24px;cursor:pointer}
+        @media(max-width:768px){.nav-links{display:none}.mobile-menu{display:block}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--bg-1);border-bottom:1px solid var(--border);padding:16px}}
+
+        .dashboard{max-width:1400px;margin:0 auto;padding:84px 24px 40px}
+        .dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px}
+        .dash-header h1{font-size:24px;font-weight:700;color:var(--text-0)}
+        .dash-header .meta{font-size:13px;color:var(--text-3);font-family:'JetBrains Mono',monospace}
+
+        .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+        .kpi{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:20px}
+        .kpi .label{font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+        .kpi .value{font-size:28px;font-weight:700;color:var(--text-0);font-family:'JetBrains Mono',monospace}
+        .kpi .sub{font-size:13px;margin-top:4px}
+        .kpi .up{color:var(--green)}.kpi .down{color:var(--red)}.kpi .neutral{color:var(--text-2)}
+
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+        @media(max-width:900px){.grid-2{grid-template-columns:1fr}}
+
+        .card{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:24px}
+        .card-title{font-size:14px;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+        .agent-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+        .agent-row:last-child{border-bottom:none}
+        .agent-row .left{display:flex;align-items:center;gap:12px}
+        .agent-row .icon{font-size:20px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--bg-3);border-radius:8px}
+        .agent-row .name{font-weight:600;color:var(--text-0);font-size:14px}
+        .agent-row .detail{font-size:12px;color:var(--text-3)}
+        .agent-row .right{text-align:right}
+        .agent-row .status-badge{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600}
+        .status-running{background:var(--green-dim);color:var(--green)}
+        .status-warning{background:var(--yellow-dim);color:var(--yellow)}
+
+        .event-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+        .event-item:last-child{border-bottom:none}
+        .event-item .time{color:var(--text-3);font-family:'JetBrains Mono',monospace;font-size:11px}
+        .event-item .agent-name{color:var(--accent-light);font-weight:500}
+        .event-item .msg{color:var(--text-1)}
+        .event-type{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase;margin:0 6px}
+        .type-signal{background:var(--green-dim);color:var(--green)}
+        .type-alert{background:var(--yellow-dim);color:var(--yellow)}
+        .type-error{background:var(--red-dim);color:var(--red)}
+        .type-info{background:rgba(59,130,246,0.12);color:var(--accent-light)}
+
+        .progress-bar{width:100%;height:8px;background:var(--bg-4);border-radius:4px;overflow:hidden;margin-top:6px}
+        .progress-fill{height:100%;border-radius:4px;transition:width 0.5s}
+
+        .portfolio-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+        .portfolio-item:last-child{border-bottom:none}
+        .portfolio-item .ticker{font-weight:600;color:var(--text-0);font-family:'JetBrains Mono',monospace}
+
+        footer{padding:40px 24px;border-top:1px solid var(--border);text-align:center}
+        .footer-links{display:flex;gap:24px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+        .footer-links a{color:var(--text-2);text-decoration:none;font-size:14px}
+        .footer-links a:hover{color:var(--text-0)}
+        .footer-copy{font-size:13px;color:var(--text-3)}
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="nav-brand">📊 <span>Finansor AI</span></a>
+        <button class="mobile-menu" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Marketplace</a></li>
+            <li><a href="dashboard.html" class="active">Dashboard</a></li>
+            <li><a href="makro-gundem.html">Makro Gündem</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+        </ul>
+    </nav>
+
+    <div class="dashboard">
+        <div class="dash-header">
+            <h1>⚙️ Agent Operations Console</h1>
+            <div class="meta" id="dashTime">Loading...</div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-row" id="kpiRow"></div>
+
+        <!-- Agents + Events -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title">🤖 Active Agents</div>
+                <div id="agentsList"></div>
+            </div>
+            <div class="card">
+                <div class="card-title">📋 Recent Events</div>
+                <div id="eventsList"></div>
+            </div>
+        </div>
+
+        <!-- Resource Usage + Portfolio -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-title">📡 Resource Usage</div>
+                <div id="resourceUsage"></div>
+            </div>
+            <div class="card">
+                <div class="card-title">💼 Portfolio Snapshot</div>
+                <div id="portfolioSnap"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">Marketplace</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="makro-gundem.html">Makro Gündem</a>
+            <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-copy">© 2026 Finansor AI</div>
+    </footer>
+
+    <script>
+        async function loadDashboard() {
+            let data;
+            try {
+                const r = await fetch('data/dashboard.json');
+                data = await r.json();
+            } catch(e) { return; }
+
+            document.getElementById('dashTime').textContent = 'Last sync: ' + new Date(data.timestamp).toLocaleString();
+
+            // KPIs
+            const s = data.system;
+            const p = data.portfolio_snapshot;
+            document.getElementById('kpiRow').innerHTML = `
+                <div class="kpi"><div class="label">Agents Running</div><div class="value">${data.agents.length}</div><div class="sub neutral">All operational</div></div>
+                <div class="kpi"><div class="label">Signals Today</div><div class="value">${s.total_signals_today}</div><div class="sub up">↑ Active</div></div>
+                <div class="kpi"><div class="label">Portfolio Value</div><div class="value">$${p.total_value.toLocaleString()}</div><div class="sub ${p.daily_pnl>=0?'up':'down'}">${p.daily_pnl>=0?'+':''}${p.daily_pnl_pct}% today</div></div>
+                <div class="kpi"><div class="label">System Uptime</div><div class="value">${s.uptime_pct}%</div><div class="sub neutral">${s.total_errors_24h} errors/24h</div></div>
+                <div class="kpi"><div class="label">API Credits</div><div class="value">${Math.round(s.api_credits_used/s.api_credits_limit*100)}%</div><div class="sub neutral">${s.api_credits_used.toLocaleString()}/${s.api_credits_limit.toLocaleString()}</div></div>
+                <div class="kpi"><div class="label">Risk Score</div><div class="value">${p.risk_score}</div><div class="sub ${p.risk_score>70?'down':'up'}">${p.risk_score>70?'Elevated':'Normal'}</div></div>
+            `;
+
+            // Agents
+            document.getElementById('agentsList').innerHTML = data.agents.map(a => `
+                <div class="agent-row">
+                    <div class="left">
+                        <div class="icon">${getIcon(a.id)}</div>
+                        <div>
+                            <div class="name">${a.name}</div>
+                            <div class="detail">Win: ${a.win_rate}% · ${a.signals_today} signals today · ${a.errors_24h} errors</div>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <span class="status-badge ${a.errors_24h>3?'status-warning':'status-running'}">${a.status}</span>
+                        <div style="font-size:11px;color:var(--text-3);margin-top:4px">CPU ${a.cpu_usage}% · ${a.memory_mb}MB</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Events
+            document.getElementById('eventsList').innerHTML = data.recent_events.map(e => `
+                <div class="event-item">
+                    <div class="time">${new Date(e.time).toLocaleTimeString()}</div>
+                    <span class="agent-name">${e.agent}</span>
+                    <span class="event-type type-${e.type}">${e.type}</span>
+                    <span class="msg">${e.message}</span>
+                </div>
+            `).join('');
+
+            // Resources
+            document.getElementById('resourceUsage').innerHTML = `
+                <div style="margin-bottom:16px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>CPU Usage</span><span style="color:var(--text-0)">${s.total_cpu}%</span></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${s.total_cpu}%;background:${s.total_cpu>70?'var(--red)':'var(--green)'}"></div></div>
+                </div>
+                <div style="margin-bottom:16px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Memory</span><span style="color:var(--text-0)">${s.total_memory_mb}/${s.total_memory_limit}MB</span></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(s.total_memory_mb/s.total_memory_limit*100)}%;background:var(--accent)"></div></div>
+                </div>
+                <div style="margin-bottom:16px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px"><span>API Credits</span><span style="color:var(--text-0)">${s.api_credits_used.toLocaleString()}/${s.api_credits_limit.toLocaleString()}</span></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(s.api_credits_used/s.api_credits_limit*100)}%;background:var(--yellow)"></div></div>
+                </div>
+                ${data.agents.map(a => `
+                    <div style="margin-bottom:12px">
+                        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text-2)">${a.name} API</span><span style="color:var(--text-3)">${a.api_calls_today}/${a.api_limit}</span></div>
+                        <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(a.api_calls_today/a.api_limit*100)}%;background:var(--cyan)"></div></div>
+                    </div>
+                `).join('')}
+            `;
+
+            // Portfolio
+            document.getElementById('portfolioSnap').innerHTML = `
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+                    <div style="background:var(--bg-3);padding:14px;border-radius:8px">
+                        <div style="font-size:11px;color:var(--text-3);text-transform:uppercase">Daily P&L</div>
+                        <div style="font-size:20px;font-weight:700;color:${p.daily_pnl>=0?'var(--green)':'var(--red)'};font-family:'JetBrains Mono',monospace">${p.daily_pnl>=0?'+':''}$${p.daily_pnl.toFixed(2)}</div>
+                    </div>
+                    <div style="background:var(--bg-3);padding:14px;border-radius:8px">
+                        <div style="font-size:11px;color:var(--text-3);text-transform:uppercase">Sharpe (30D)</div>
+                        <div style="font-size:20px;font-weight:700;color:var(--text-0);font-family:'JetBrains Mono',monospace">${p.sharpe_30d}</div>
+                    </div>
+                    <div style="background:var(--bg-3);padding:14px;border-radius:8px">
+                        <div style="font-size:11px;color:var(--text-3);text-transform:uppercase">Max Drawdown</div>
+                        <div style="font-size:20px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace">${p.max_drawdown_30d}%</div>
+                    </div>
+                    <div style="background:var(--bg-3);padding:14px;border-radius:8px">
+                        <div style="font-size:11px;color:var(--text-3);text-transform:uppercase">Monthly P&L</div>
+                        <div style="font-size:20px;font-weight:700;color:${p.monthly_pnl_pct>=0?'var(--green)':'var(--red)'};font-family:'JetBrains Mono',monospace">${p.monthly_pnl_pct>=0?'+':''}${p.monthly_pnl_pct}%</div>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <span style="color:var(--text-2)">Top Gainer</span>
+                    <span><span class="ticker">${p.top_gainer.ticker}</span> <span style="color:var(--green)">+${p.top_gainer.pct}%</span></span>
+                </div>
+                <div class="portfolio-item">
+                    <span style="color:var(--text-2)">Top Loser</span>
+                    <span><span class="ticker">${p.top_loser.ticker}</span> <span style="color:var(--red)">${p.top_loser.pct}%</span></span>
+                </div>
+                <div class="portfolio-item">
+                    <span style="color:var(--text-2)">Weekly Return</span>
+                    <span style="color:var(--green);font-family:'JetBrains Mono',monospace">+${p.weekly_pnl_pct}%</span>
+                </div>
+            `;
+        }
+
+        function getIcon(id) {
+            const icons = {'sentiment-sniper':'🎯','volatility-screener':'⚡','macro-radar':'🌐','momentum-hunter':'🏹','defi-scout':'🔮','risk-guardian':'🛡️'};
+            return icons[id] || '🤖';
+        }
+
+        loadDashboard();
+    </script>
+</body>
+</html>

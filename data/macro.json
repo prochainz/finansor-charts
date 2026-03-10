@@ -1,0 +1,114 @@
+{
+  "timestamp": "2026-03-10T22:50:00Z",
+  "macro_brief": {
+    "title": "What Matters Now",
+    "summary": "Fed holds rates steady at 4.25-4.50% with hawkish forward guidance. PCE inflation sticky at 2.8% YoY. Labor market cooling — NFP miss at +125K vs +170K expected. Treasury yields inverted, 2Y-10Y spread at -42bps. Gold pushing ATH at $3,050 on safe-haven flows. Oil weak at $68 on demand concerns. Risk sentiment cautious ahead of CPI release March 12.",
+    "risk_regime": "Risk-Off Leaning",
+    "updated": "2026-03-10T22:50:00Z"
+  },
+  "themes": [
+    {
+      "id": "fed-policy",
+      "name": "Fed Policy & Rates",
+      "icon": "🏛️",
+      "sentiment": -0.15,
+      "trend": "hawkish",
+      "items": [
+        {"text": "Fed Governor Waller signals patience on cuts, cites sticky services inflation", "source": "Reuters", "url": "https://reuters.com", "time": "2026-03-10T18:30:00Z", "impact": "bearish"},
+        {"text": "CME FedWatch: June cut probability drops to 52% from 68% last week", "source": "CME Group", "url": "https://cmegroup.com", "time": "2026-03-10T16:00:00Z", "impact": "bearish"},
+        {"text": "2-year Treasury yield climbs to 4.72%, highest since January", "source": "Bloomberg", "url": "https://bloomberg.com", "time": "2026-03-10T15:30:00Z", "impact": "bearish"},
+        {"text": "Fed minutes reveal divided committee on pace of easing", "source": "Federal Reserve", "url": "https://federalreserve.gov", "time": "2026-03-09T19:00:00Z", "impact": "neutral"}
+      ]
+    },
+    {
+      "id": "inflation",
+      "name": "Inflation & CPI",
+      "icon": "📊",
+      "sentiment": -0.22,
+      "trend": "sticky",
+      "items": [
+        {"text": "CPI preview: Core expected at 3.1% YoY, shelter costs remain elevated", "source": "Goldman Sachs", "url": "https://goldmansachs.com", "time": "2026-03-10T14:00:00Z", "impact": "bearish"},
+        {"text": "Used car prices rise 2.3% MoM, adding upward pressure to CPI", "source": "Manheim", "url": "https://manheim.com", "time": "2026-03-10T12:00:00Z", "impact": "bearish"},
+        {"text": "Egg prices normalize but food-at-home still running +3.4% YoY", "source": "BLS", "url": "https://bls.gov", "time": "2026-03-09T14:00:00Z", "impact": "neutral"},
+        {"text": "Breakeven inflation rates tick up: 5Y at 2.45%, 10Y at 2.38%", "source": "FRED", "url": "https://fred.stlouisfed.org", "time": "2026-03-10T16:30:00Z", "impact": "bearish"}
+      ]
+    },
+    {
+      "id": "labor-market",
+      "name": "Employment & Labor",
+      "icon": "👷",
+      "sentiment": -0.08,
+      "trend": "cooling",
+      "items": [
+        {"text": "Initial jobless claims rise to 225K, above 215K consensus", "source": "DOL", "url": "https://dol.gov", "time": "2026-03-10T13:30:00Z", "impact": "bearish"},
+        {"text": "JOLTS job openings fall to 8.1M, lowest since March 2024", "source": "BLS", "url": "https://bls.gov", "time": "2026-03-09T15:00:00Z", "impact": "bearish"},
+        {"text": "Tech layoffs continue: 15K cuts announced across sector in March", "source": "Layoffs.fyi", "url": "https://layoffs.fyi", "time": "2026-03-10T10:00:00Z", "impact": "bearish"},
+        {"text": "Wage growth moderates to 3.9% YoY, down from 4.1% prior", "source": "BLS", "url": "https://bls.gov", "time": "2026-03-07T13:30:00Z", "impact": "neutral"}
+      ]
+    },
+    {
+      "id": "commodities",
+      "name": "Commodities & Safe Havens",
+      "icon": "🥇",
+      "sentiment": 0.35,
+      "trend": "bullish",
+      "items": [
+        {"text": "Gold hits $3,050 intraday, central bank buying continues at record pace", "source": "World Gold Council", "url": "https://gold.org", "time": "2026-03-10T17:00:00Z", "impact": "bullish"},
+        {"text": "Oil slides to $68.20 on weak China PMI and rising US inventories", "source": "EIA", "url": "https://eia.gov", "time": "2026-03-10T15:00:00Z", "impact": "bearish"},
+        {"text": "Copper rallies 3.2% on AI data center demand expectations", "source": "LME", "url": "https://lme.com", "time": "2026-03-10T14:30:00Z", "impact": "bullish"},
+        {"text": "Silver outperforms gold with 4.1% weekly gain, industrial demand strong", "source": "Kitco", "url": "https://kitco.com", "time": "2026-03-10T16:00:00Z", "impact": "bullish"}
+      ]
+    },
+    {
+      "id": "crypto",
+      "name": "Crypto & Digital Assets",
+      "icon": "₿",
+      "sentiment": 0.12,
+      "trend": "consolidating",
+      "items": [
+        {"text": "Bitcoin holds $82K support after testing $79K, ETF inflows resume at $340M/day", "source": "CoinDesk", "url": "https://coindesk.com", "time": "2026-03-10T20:00:00Z", "impact": "bullish"},
+        {"text": "Ethereum gas fees spike 40% as L2 activity reaches new ATH", "source": "Etherscan", "url": "https://etherscan.io", "time": "2026-03-10T18:00:00Z", "impact": "neutral"},
+        {"text": "SEC approves first spot Solana ETF application for review", "source": "SEC.gov", "url": "https://sec.gov", "time": "2026-03-10T16:00:00Z", "impact": "bullish"},
+        {"text": "Stablecoin market cap hits $210B, USDT dominance at 62%", "source": "DefiLlama", "url": "https://defillama.com", "time": "2026-03-10T12:00:00Z", "impact": "neutral"}
+      ]
+    },
+    {
+      "id": "geopolitics",
+      "name": "Geopolitics & Trade",
+      "icon": "🌍",
+      "sentiment": -0.18,
+      "trend": "uncertain",
+      "items": [
+        {"text": "US-China trade tensions escalate: new semiconductor export controls announced", "source": "White House", "url": "https://whitehouse.gov", "time": "2026-03-10T19:00:00Z", "impact": "bearish"},
+        {"text": "EU carbon border tax implementation begins, steel imports face 20% levy", "source": "European Commission", "url": "https://ec.europa.eu", "time": "2026-03-10T11:00:00Z", "impact": "neutral"},
+        {"text": "OPEC+ signals potential output increase in Q2, Brent drops 2%", "source": "OPEC", "url": "https://opec.org", "time": "2026-03-09T16:00:00Z", "impact": "bearish"},
+        {"text": "Japan intervention watch: USD/JPY approaches 155, BOJ comments awaited", "source": "Nikkei", "url": "https://nikkei.com", "time": "2026-03-10T08:00:00Z", "impact": "neutral"}
+      ]
+    }
+  ],
+  "sentiment_overview": {
+    "overall": -0.05,
+    "risk_appetite": 38,
+    "fear_greed": 42,
+    "vix": 19.8,
+    "put_call_ratio": 1.12,
+    "market_breadth": 0.44
+  },
+  "asset_impact": [
+    {"asset": "S&P 500", "ticker": "SPY", "impact_score": -0.15, "key_driver": "Fed hawkish + CPI risk"},
+    {"asset": "Nasdaq", "ticker": "QQQ", "impact_score": -0.22, "key_driver": "Rate sensitivity + tech layoffs"},
+    {"asset": "Gold", "ticker": "GLD", "impact_score": 0.45, "key_driver": "Safe haven + CB buying"},
+    {"asset": "Bitcoin", "ticker": "BTC", "impact_score": 0.10, "key_driver": "ETF flows + consolidation"},
+    {"asset": "US Dollar", "ticker": "DXY", "impact_score": 0.18, "key_driver": "Hawkish Fed + rate differential"},
+    {"asset": "Oil", "ticker": "USO", "impact_score": -0.30, "key_driver": "Weak demand + OPEC supply"},
+    {"asset": "10Y Treasury", "ticker": "TLT", "impact_score": -0.25, "key_driver": "Inflation sticky + supply"},
+    {"asset": "Russell 2000", "ticker": "IWM", "impact_score": -0.20, "key_driver": "Rate sensitivity + credit tightening"}
+  ],
+  "upcoming_events": [
+    {"event": "CPI Release", "date": "2026-03-12T13:30:00Z", "importance": "high", "expected": "Core 3.1% YoY"},
+    {"event": "FOMC Meeting", "date": "2026-03-18T18:00:00Z", "importance": "critical", "expected": "Hold 4.25-4.50%"},
+    {"event": "Retail Sales", "date": "2026-03-14T13:30:00Z", "importance": "medium", "expected": "+0.3% MoM"},
+    {"event": "PPI Release", "date": "2026-03-13T13:30:00Z", "importance": "medium", "expected": "Core 2.5% YoY"},
+    {"event": "BOJ Decision", "date": "2026-03-19T03:00:00Z", "importance": "medium", "expected": "Hold, guidance watched"}
+  ]
+}
