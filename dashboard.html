@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard — Finansor AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root{--bg-0:#06080d;--bg-1:#0c0f16;--bg-2:#12161f;--bg-3:#1a1f2e;--bg-4:#222838;--border:#1e2433;--border-light:#2a3040;--text-0:#f0f2f5;--text-1:#c4c9d4;--text-2:#8891a4;--text-3:#5a6378;--accent:#3b82f6;--accent-light:#60a5fa;--green:#10b981;--green-dim:rgba(16,185,129,0.12);--red:#ef4444;--red-dim:rgba(239,68,68,0.12);--yellow:#f59e0b;--yellow-dim:rgba(245,158,11,0.12);--purple:#8b5cf6;--cyan:#06b6d4;--gradient-1:linear-gradient(135deg,#3b82f6,#8b5cf6);--shadow-glow:0 0 40px rgba(59,130,246,0.1)}
+        :root{--bg-0:#06080d;--bg-1:#0c0f16;--bg-2:#12161f;--bg-3:#1a1f2e;--bg-4:#222838;--border:#1e2433;--border-light:#2a3040;--text-0:#f0f2f5;--text-1:#c4c9d4;--text-2:#8891a4;--text-3:#5a6378;--accent:#3b82f6;--accent-light:#60a5fa;--green:#10b981;--green-dim:rgba(16,185,129,0.12);--red:#ef4444;--red-dim:rgba(239,68,68,0.12);--yellow:#f59e0b;--yellow-dim:rgba(245,158,11,0.12);--purple:#8b5cf6;--purple-dim:rgba(139,92,246,0.12);--cyan:#06b6d4;--gradient-1:linear-gradient(135deg,#3b82f6,#8b5cf6);--shadow-glow:0 0 40px rgba(59,130,246,0.1)}
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Inter',sans-serif;background:var(--bg-0);color:var(--text-1);line-height:1.6;overflow-x:hidden}
         nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,8,13,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
@@ -22,9 +23,12 @@
         .dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px}
         .dash-header h1{font-size:24px;font-weight:700;color:var(--text-0)}
         .dash-header .meta{font-size:13px;color:var(--text-3);font-family:'JetBrains Mono',monospace}
+        .dash-header .live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 
         .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
-        .kpi{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:20px}
+        .kpi{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:20px;transition:border-color 0.2s}
+        .kpi:hover{border-color:var(--border-light)}
         .kpi .label{font-size:12px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
         .kpi .value{font-size:28px;font-weight:700;color:var(--text-0);font-family:'JetBrains Mono',monospace}
         .kpi .sub{font-size:13px;margin-top:4px}
@@ -36,16 +40,32 @@
         .card{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:24px}
         .card-title{font-size:14px;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 
-        .agent-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+        /* Agent rows with actions */
+        .agent-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);gap:12px}
         .agent-row:last-child{border-bottom:none}
-        .agent-row .left{display:flex;align-items:center;gap:12px}
-        .agent-row .icon{font-size:20px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--bg-3);border-radius:8px}
+        .agent-row .left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+        .agent-row .icon{font-size:20px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--bg-3);border-radius:10px;flex-shrink:0}
+        .agent-row .info{min-width:0}
         .agent-row .name{font-weight:600;color:var(--text-0);font-size:14px}
         .agent-row .detail{font-size:12px;color:var(--text-3)}
-        .agent-row .right{text-align:right}
-        .agent-row .status-badge{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600}
+        .agent-row .last-signal{font-size:11px;color:var(--accent-light);font-family:'JetBrains Mono',monospace;margin-top:2px}
+        .agent-row .middle{display:flex;align-items:center;gap:8px;flex-shrink:0}
+        .agent-row .right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+        .status-badge{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600}
         .status-running{background:var(--green-dim);color:var(--green)}
         .status-warning{background:var(--yellow-dim);color:var(--yellow)}
+
+        /* Health score */
+        .health-score{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace}
+        .health-good{background:var(--green-dim);color:var(--green)}
+        .health-warn{background:var(--yellow-dim);color:var(--yellow)}
+        .health-bad{background:var(--red-dim);color:var(--red)}
+
+        /* Action buttons */
+        .action-btn{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--bg-3);color:var(--text-2);transition:all 0.2s}
+        .action-btn:hover{background:var(--bg-4);color:var(--text-0);border-color:var(--border-light)}
+        .action-btn.pause:hover{border-color:var(--yellow);color:var(--yellow)}
+        .action-btn.config:hover{border-color:var(--accent);color:var(--accent-light)}
 
         .event-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
         .event-item:last-child{border-bottom:none}
@@ -59,17 +79,40 @@
         .type-info{background:rgba(59,130,246,0.12);color:var(--accent-light)}
 
         .progress-bar{width:100%;height:8px;background:var(--bg-4);border-radius:4px;overflow:hidden;margin-top:6px}
-        .progress-fill{height:100%;border-radius:4px;transition:width 0.5s}
+        .progress-fill{height:100%;border-radius:4px;transition:width 0.8s ease}
 
         .portfolio-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
         .portfolio-item:last-child{border-bottom:none}
         .portfolio-item .ticker{font-weight:600;color:var(--text-0);font-family:'JetBrains Mono',monospace}
+
+        /* Loading skeleton */
+        .skeleton{background:linear-gradient(90deg,var(--bg-3) 25%,var(--bg-4) 50%,var(--bg-3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;height:20px;margin-bottom:8px}
+        @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+        .skeleton-card{padding:20px}.skeleton-card .skeleton{margin-bottom:12px}
+        .skeleton-card .skeleton:nth-child(1){width:40%;height:14px}
+        .skeleton-card .skeleton:nth-child(2){width:60%;height:28px}
+        .skeleton-card .skeleton:nth-child(3){width:30%;height:14px}
+
+        /* Watchlist */
+        .watchlist-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+        .watchlist-item:last-child{border-bottom:none}
+        .watchlist-item .ticker{font-weight:700;color:var(--text-0);font-family:'JetBrains Mono',monospace;font-size:14px}
+        .watchlist-item .signal{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase}
+        .signal-bullish{background:var(--green-dim);color:var(--green)}
+        .signal-bearish{background:var(--red-dim);color:var(--red)}
+        .signal-neutral{background:var(--yellow-dim);color:var(--yellow)}
 
         footer{padding:40px 24px;border-top:1px solid var(--border);text-align:center}
         .footer-links{display:flex;gap:24px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
         .footer-links a{color:var(--text-2);text-decoration:none;font-size:14px}
         .footer-links a:hover{color:var(--text-0)}
         .footer-copy{font-size:13px;color:var(--text-3)}
+
+        @media(max-width:768px){
+            .agent-row{flex-wrap:wrap}
+            .agent-row .middle,.agent-row .right{margin-left:52px}
+            .kpi .value{font-size:22px}
+        }
     </style>
 </head>
 <body>
@@ -87,21 +130,28 @@
     <div class="dashboard">
         <div class="dash-header">
             <h1>⚙️ Agent Operations Console</h1>
-            <div class="meta" id="dashTime">Loading...</div>
+            <div class="meta"><span class="live-dot"></span><span id="dashTime">Syncing...</span></div>
         </div>
 
         <!-- KPIs -->
-        <div class="kpi-row" id="kpiRow"></div>
+        <div class="kpi-row" id="kpiRow">
+            <div class="kpi skeleton-card"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+            <div class="kpi skeleton-card"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+            <div class="kpi skeleton-card"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+            <div class="kpi skeleton-card"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+            <div class="kpi skeleton-card"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+            <div class="kpi skeleton-card"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+        </div>
 
         <!-- Agents + Events -->
         <div class="grid-2">
             <div class="card">
                 <div class="card-title">🤖 Active Agents</div>
-                <div id="agentsList"></div>
+                <div id="agentsList"><div class="skeleton" style="height:60px;margin-bottom:8px"></div><div class="skeleton" style="height:60px;margin-bottom:8px"></div><div class="skeleton" style="height:60px"></div></div>
             </div>
             <div class="card">
-                <div class="card-title">📋 Recent Events</div>
-                <div id="eventsList"></div>
+                <div class="card-title">📋 Event Feed</div>
+                <div id="eventsList"><div class="skeleton" style="height:40px;margin-bottom:8px"></div><div class="skeleton" style="height:40px;margin-bottom:8px"></div><div class="skeleton" style="height:40px"></div></div>
             </div>
         </div>
 
@@ -109,12 +159,18 @@
         <div class="grid-2">
             <div class="card">
                 <div class="card-title">📡 Resource Usage</div>
-                <div id="resourceUsage"></div>
+                <div id="resourceUsage"><div class="skeleton" style="height:30px;margin-bottom:12px"></div><div class="skeleton" style="height:30px;margin-bottom:12px"></div><div class="skeleton" style="height:30px"></div></div>
             </div>
             <div class="card">
                 <div class="card-title">💼 Portfolio Snapshot</div>
-                <div id="portfolioSnap"></div>
+                <div id="portfolioSnap"><div class="skeleton" style="height:80px;margin-bottom:12px"></div><div class="skeleton" style="height:40px"></div></div>
             </div>
+        </div>
+
+        <!-- Watchlist -->
+        <div class="card" style="margin-bottom:28px">
+            <div class="card-title">👁️ Watchlist & Latest Signals</div>
+            <div id="watchlist"></div>
         </div>
     </div>
 
@@ -125,16 +181,42 @@
             <a href="makro-gundem.html">Makro Gündem</a>
             <a href="pricing.html">Pricing</a>
         </div>
-        <div class="footer-copy">© 2026 Finansor AI</div>
+        <div class="footer-copy">© 2026 Finansor AI · Built with quantitative precision</div>
     </footer>
 
     <script>
+        const ICONS = {'sentiment-sniper':'🎯','volatility-screener':'⚡','macro-radar':'🌐','momentum-hunter':'🏹','defi-scout':'🔮','risk-guardian':'🛡️'};
+
+        function healthScore(a) {
+            let score = 100;
+            score -= a.errors_24h * 8;
+            if (a.cpu_usage > 50) score -= 10;
+            if (a.cpu_usage > 80) score -= 15;
+            const apiPct = a.api_calls_today / a.api_limit;
+            if (apiPct > 0.8) score -= 10;
+            if (apiPct > 0.95) score -= 15;
+            if (a.win_rate < 60) score -= 5;
+            return Math.max(0, Math.min(100, score));
+        }
+
+        function healthClass(s) { return s >= 80 ? 'health-good' : s >= 50 ? 'health-warn' : 'health-bad'; }
+
+        function timeSince(iso) {
+            const s = Math.floor((Date.now() - new Date(iso)) / 1000);
+            if (s < 60) return s + 's ago';
+            if (s < 3600) return Math.floor(s/60) + 'm ago';
+            return Math.floor(s/3600) + 'h ago';
+        }
+
         async function loadDashboard() {
             let data;
             try {
                 const r = await fetch('data/dashboard.json');
                 data = await r.json();
-            } catch(e) { return; }
+            } catch(e) {
+                document.getElementById('kpiRow').innerHTML = '<div class="kpi"><div class="value" style="font-size:16px;color:var(--red)">Failed to load data</div></div>';
+                return;
+            }
 
             document.getElementById('dashTime').textContent = 'Last sync: ' + new Date(data.timestamp).toLocaleString();
 
@@ -143,29 +225,37 @@
             const p = data.portfolio_snapshot;
             document.getElementById('kpiRow').innerHTML = `
                 <div class="kpi"><div class="label">Agents Running</div><div class="value">${data.agents.length}</div><div class="sub neutral">All operational</div></div>
-                <div class="kpi"><div class="label">Signals Today</div><div class="value">${s.total_signals_today}</div><div class="sub up">↑ Active</div></div>
+                <div class="kpi"><div class="label">Signals Today</div><div class="value">${s.total_signals_today}</div><div class="sub up">↑ Active pipeline</div></div>
                 <div class="kpi"><div class="label">Portfolio Value</div><div class="value">$${p.total_value.toLocaleString()}</div><div class="sub ${p.daily_pnl>=0?'up':'down'}">${p.daily_pnl>=0?'+':''}${p.daily_pnl_pct}% today</div></div>
                 <div class="kpi"><div class="label">System Uptime</div><div class="value">${s.uptime_pct}%</div><div class="sub neutral">${s.total_errors_24h} errors/24h</div></div>
                 <div class="kpi"><div class="label">API Credits</div><div class="value">${Math.round(s.api_credits_used/s.api_credits_limit*100)}%</div><div class="sub neutral">${s.api_credits_used.toLocaleString()}/${s.api_credits_limit.toLocaleString()}</div></div>
-                <div class="kpi"><div class="label">Risk Score</div><div class="value">${p.risk_score}</div><div class="sub ${p.risk_score>70?'down':'up'}">${p.risk_score>70?'Elevated':'Normal'}</div></div>
+                <div class="kpi"><div class="label">Risk Score</div><div class="value">${p.risk_score}</div><div class="sub ${p.risk_score>70?'down':'up'}">${p.risk_score>70?'⚠ Elevated':'✓ Normal'}</div></div>
             `;
 
-            // Agents
-            document.getElementById('agentsList').innerHTML = data.agents.map(a => `
+            // Agents with health scores and actions
+            document.getElementById('agentsList').innerHTML = data.agents.map(a => {
+                const hs = healthScore(a);
+                const ls = a.last_signal;
+                return `
                 <div class="agent-row">
                     <div class="left">
-                        <div class="icon">${getIcon(a.id)}</div>
-                        <div>
+                        <div class="icon">${ICONS[a.id]||'🤖'}</div>
+                        <div class="info">
                             <div class="name">${a.name}</div>
-                            <div class="detail">Win: ${a.win_rate}% · ${a.signals_today} signals today · ${a.errors_24h} errors</div>
+                            <div class="detail">Win: ${a.win_rate}% · ${a.signals_today} signals · ${a.errors_24h} errors · CPU ${a.cpu_usage}%</div>
+                            <div class="last-signal">→ ${ls.ticker} ${ls.type} (${ls.score}) ${timeSince(ls.time)}</div>
                         </div>
                     </div>
-                    <div class="right">
+                    <div class="middle">
+                        <div class="health-score ${healthClass(hs)}">${hs}</div>
                         <span class="status-badge ${a.errors_24h>3?'status-warning':'status-running'}">${a.status}</span>
-                        <div style="font-size:11px;color:var(--text-3);margin-top:4px">CPU ${a.cpu_usage}% · ${a.memory_mb}MB</div>
                     </div>
-                </div>
-            `).join('');
+                    <div class="right">
+                        <button class="action-btn config" onclick="alert('Configure ${a.name}: strategy params, alert thresholds, asset coverage')">⚙ Config</button>
+                        <button class="action-btn pause" onclick="alert('${a.name} paused. Click again to resume.')">⏸ Pause</button>
+                    </div>
+                </div>`;
+            }).join('');
 
             // Events
             document.getElementById('eventsList').innerHTML = data.recent_events.map(e => `
@@ -193,7 +283,7 @@
                 </div>
                 ${data.agents.map(a => `
                     <div style="margin-bottom:12px">
-                        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text-2)">${a.name} API</span><span style="color:var(--text-3)">${a.api_calls_today}/${a.api_limit}</span></div>
+                        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text-2)">${a.name}</span><span style="color:var(--text-3)">${a.api_calls_today}/${a.api_limit}</span></div>
                         <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(a.api_calls_today/a.api_limit*100)}%;background:var(--cyan)"></div></div>
                     </div>
                 `).join('')}
@@ -232,11 +322,24 @@
                     <span style="color:var(--green);font-family:'JetBrains Mono',monospace">+${p.weekly_pnl_pct}%</span>
                 </div>
             `;
-        }
 
-        function getIcon(id) {
-            const icons = {'sentiment-sniper':'🎯','volatility-screener':'⚡','macro-radar':'🌐','momentum-hunter':'🏹','defi-scout':'🔮','risk-guardian':'🛡️'};
-            return icons[id] || '🤖';
+            // Watchlist from latest signals
+            const signals = data.agents.map(a => a.last_signal).sort((a,b) => new Date(b.time) - new Date(a.time));
+            document.getElementById('watchlist').innerHTML = signals.map(sig => {
+                const sigClass = sig.type.includes('BULLISH') || sig.type.includes('BUY') || sig.type.includes('YIELD') ? 'signal-bullish'
+                    : sig.type.includes('BEARISH') || sig.type.includes('SELL') ? 'signal-bearish' : 'signal-neutral';
+                return `
+                <div class="watchlist-item">
+                    <div>
+                        <span class="ticker">${sig.ticker}</span>
+                        <span style="color:var(--text-3);font-size:12px;margin-left:8px">${timeSince(sig.time)}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <span style="color:var(--text-2);font-family:'JetBrains Mono',monospace;font-size:13px">${sig.score}</span>
+                        <span class="signal ${sigClass}">${sig.type.replace('_',' ')}</span>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         loadDashboard();

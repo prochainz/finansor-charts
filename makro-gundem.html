@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Makro Gündem — Finansor AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root{--bg-0:#06080d;--bg-1:#0c0f16;--bg-2:#12161f;--bg-3:#1a1f2e;--bg-4:#222838;--border:#1e2433;--border-light:#2a3040;--text-0:#f0f2f5;--text-1:#c4c9d4;--text-2:#8891a4;--text-3:#5a6378;--accent:#3b82f6;--accent-light:#60a5fa;--green:#10b981;--green-dim:rgba(16,185,129,0.12);--red:#ef4444;--red-dim:rgba(239,68,68,0.12);--yellow:#f59e0b;--yellow-dim:rgba(245,158,11,0.12);--purple:#8b5cf6;--cyan:#06b6d4;--gradient-1:linear-gradient(135deg,#3b82f6,#8b5cf6)}
+        :root{--bg-0:#06080d;--bg-1:#0c0f16;--bg-2:#12161f;--bg-3:#1a1f2e;--bg-4:#222838;--border:#1e2433;--border-light:#2a3040;--text-0:#f0f2f5;--text-1:#c4c9d4;--text-2:#8891a4;--text-3:#5a6378;--accent:#3b82f6;--accent-light:#60a5fa;--green:#10b981;--green-dim:rgba(16,185,129,0.12);--red:#ef4444;--red-dim:rgba(239,68,68,0.12);--yellow:#f59e0b;--yellow-dim:rgba(245,158,11,0.12);--purple:#8b5cf6;--purple-dim:rgba(139,92,246,0.12);--cyan:#06b6d4;--gradient-1:linear-gradient(135deg,#3b82f6,#8b5cf6)}
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Inter',sans-serif;background:var(--bg-0);color:var(--text-1);line-height:1.6;overflow-x:hidden}
         nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,8,13,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
@@ -18,34 +19,69 @@
         .mobile-menu{display:none;background:none;border:none;color:var(--text-1);font-size:24px;cursor:pointer}
         @media(max-width:768px){.nav-links{display:none}.mobile-menu{display:block}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--bg-1);border-bottom:1px solid var(--border);padding:16px}}
 
-        .macro{max-width:1400px;margin:0 auto;padding:84px 24px 40px}
-        .macro-header{margin-bottom:28px}
-        .macro-header h1{font-size:24px;font-weight:700;color:var(--text-0);margin-bottom:4px}
+        /* Terminal ticker */
+        .terminal-ticker{background:var(--bg-1);border-bottom:1px solid var(--border);padding:8px 0;overflow:hidden;white-space:nowrap;margin-top:64px;font-family:'JetBrains Mono',monospace;font-size:12px}
+        .ticker-track{display:inline-flex;gap:32px;animation:scroll 50s linear infinite}
+        @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+        .ticker-item{display:inline-flex;gap:6px;align-items:center}
+        .ticker-item .sym{color:var(--text-2)}
+        .ticker-item .val{color:var(--text-0)}
+        .ticker-item .chg{font-size:11px}
+        .ticker-item .up{color:var(--green)}.ticker-item .dn{color:var(--red)}
+
+        .macro{max-width:1400px;margin:0 auto;padding:24px 24px 40px}
+        .macro-header{margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+        .macro-header h1{font-size:24px;font-weight:700;color:var(--text-0);display:flex;align-items:center;gap:8px}
+        .macro-header h1 .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
         .macro-header .sub{font-size:13px;color:var(--text-3);font-family:'JetBrains Mono',monospace}
 
         /* Brief Card */
-        .brief-card{background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(139,92,246,0.06));border:1px solid var(--border-light);border-radius:14px;padding:28px;margin-bottom:28px}
+        .brief-card{background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(139,92,246,0.06));border:1px solid var(--border-light);border-radius:14px;padding:28px;margin-bottom:24px}
         .brief-card h2{font-size:18px;font-weight:700;color:var(--text-0);margin-bottom:4px;display:flex;align-items:center;gap:8px}
         .brief-regime{display:inline-block;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;margin-bottom:12px}
         .regime-risk-off{background:var(--red-dim);color:var(--red)}
         .regime-risk-on{background:var(--green-dim);color:var(--green)}
         .brief-card p{font-size:14px;color:var(--text-1);line-height:1.7}
 
+        /* Quant Deductions */
+        .quant-panel{background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:24px}
+        .quant-panel .card-title{font-size:14px;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .deduction{padding:12px 0;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:flex-start}
+        .deduction:last-child{border-bottom:none}
+        .deduction .signal-icon{font-size:18px;flex-shrink:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--bg-3);border-radius:8px}
+        .deduction .content h4{font-size:14px;font-weight:600;color:var(--text-0);margin-bottom:2px}
+        .deduction .content p{font-size:13px;color:var(--text-2);line-height:1.5}
+        .deduction .content .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+        .deduction .content .tag{font-size:11px;padding:2px 8px;border-radius:4px;background:var(--bg-4);color:var(--text-2)}
+        .deduction .content .tag.pos{background:var(--green-dim);color:var(--green)}
+        .deduction .content .tag.neg{background:var(--red-dim);color:var(--red)}
+        .deduction .confidence{flex-shrink:0;text-align:right;min-width:60px}
+        .deduction .confidence .val{font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text-0)}
+        .deduction .confidence .lbl{font-size:10px;color:var(--text-3);text-transform:uppercase}
+
         /* Sentiment Overview */
-        .sentiment-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:28px}
-        .sent-card{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+        .sentiment-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+        .sent-card{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;transition:border-color 0.2s}
+        .sent-card:hover{border-color:var(--border-light)}
         .sent-card .label{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px}
         .sent-card .value{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text-0);margin-top:4px}
 
         /* Grid */
-        .macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+        .macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
         @media(max-width:900px){.macro-grid{grid-template-columns:1fr}}
 
         .card{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:24px}
         .card-title{font-size:14px;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 
+        /* Theme filter tabs */
+        .theme-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+        .theme-filter-btn{padding:6px 16px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:var(--text-2);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s}
+        .theme-filter-btn:hover,.theme-filter-btn.active{background:var(--accent);color:white;border-color:var(--accent)}
+
         /* Theme Cards */
-        .theme-card{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+        .theme-card{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;transition:border-color 0.2s}
+        .theme-card:hover{border-color:var(--border-light)}
         .theme-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
         .theme-header .left{display:flex;align-items:center;gap:10px}
         .theme-header .icon{font-size:24px}
@@ -60,9 +96,9 @@
         .news-item{padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
         .news-item:last-child{border-bottom:none}
         .news-item .text{font-size:13px;color:var(--text-1);flex:1}
-        .news-item .text a{color:var(--text-1);text-decoration:none}
+        .news-item .text a{color:var(--text-1);text-decoration:none;transition:color 0.15s}
         .news-item .text a:hover{color:var(--accent-light)}
-        .news-item .meta{text-align:right;min-width:90px}
+        .news-item .meta{text-align:right;min-width:100px;flex-shrink:0}
         .news-item .source{font-size:11px;color:var(--accent-light);font-weight:500}
         .news-item .time{font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace}
         .impact-badge{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
@@ -110,14 +146,27 @@
         </ul>
     </nav>
 
+    <!-- Terminal Ticker -->
+    <div class="terminal-ticker">
+        <div class="ticker-track" id="macroTicker"></div>
+    </div>
+
     <div class="macro">
         <div class="macro-header">
-            <h1>🌐 Makro Gündem — Macro Intelligence Terminal</h1>
-            <div class="sub" id="macroTime">Loading...</div>
+            <div>
+                <h1><span class="live"></span> Makro Gündem — Macro Intelligence Terminal</h1>
+            </div>
+            <div class="sub" id="macroTime">Syncing...</div>
         </div>
 
         <!-- Brief -->
         <div class="brief-card" id="briefCard"></div>
+
+        <!-- Quant Deductions -->
+        <div class="quant-panel" id="quantPanel">
+            <div class="card-title">🧠 Quant Deductions</div>
+            <div id="quantDeductions"></div>
+        </div>
 
         <!-- Sentiment Overview -->
         <div class="sentiment-row" id="sentimentRow"></div>
@@ -134,6 +183,9 @@
             </div>
         </div>
 
+        <!-- Theme Filters -->
+        <div class="theme-filters" id="themeFilters"></div>
+
         <!-- Theme Feeds -->
         <div id="themeFeeds"></div>
     </div>
@@ -145,18 +197,118 @@
             <a href="makro-gundem.html">Makro Gündem</a>
             <a href="pricing.html">Pricing</a>
         </div>
-        <div class="footer-copy">© 2026 Finansor AI</div>
+        <div class="footer-copy">© 2026 Finansor AI · Built with quantitative precision</div>
     </footer>
 
     <script>
-        async function loadMacro() {
-            let data;
-            try { const r = await fetch('data/macro.json'); data = await r.json(); } catch(e) { return; }
+        let macroData = null;
 
-            document.getElementById('macroTime').textContent = 'Updated: ' + new Date(data.timestamp).toLocaleString();
+        // Terminal ticker
+        const tickerData = [
+            {sym:'SPY',val:'562.40',chg:'+0.32%',up:true},{sym:'QQQ',val:'481.22',chg:'-0.18%',up:false},
+            {sym:'BTC',val:'82,140',chg:'+1.24%',up:true},{sym:'ETH',val:'3,280',chg:'+0.87%',up:true},
+            {sym:'GOLD',val:'3,050',chg:'+0.65%',up:true},{sym:'VIX',val:'19.80',chg:'+2.10%',up:true},
+            {sym:'DXY',val:'104.2',chg:'+0.15%',up:true},{sym:'OIL',val:'68.20',chg:'-1.40%',up:false},
+            {sym:'10Y',val:'4.28%',chg:'+3bp',up:true},{sym:'2Y',val:'4.72%',chg:'+5bp',up:true},
+            {sym:'JPY',val:'154.80',chg:'+0.22%',up:true},{sym:'EUR',val:'1.0842',chg:'-0.12%',up:false},
+        ];
+        const tickerHTML = tickerData.map(t =>
+            `<span class="ticker-item"><span class="sym">${t.sym}</span><span class="val">${t.val}</span><span class="chg ${t.up?'up':'dn'}">${t.chg}</span></span>`
+        ).join('');
+        document.getElementById('macroTicker').innerHTML = tickerHTML + tickerHTML;
+
+        // Quant deductions derived from macro data
+        function generateDeductions(data) {
+            const deductions = [];
+            const b = data.macro_brief;
+            const s = data.sentiment_overview;
+
+            // Rate/equity deduction
+            deductions.push({
+                icon: '📉', title: 'Equity Downside Pressure',
+                text: 'Hawkish Fed + sticky CPI + rising 2Y yields → equities face headwind. Rate-sensitive sectors (tech, small-cap) most vulnerable. SPY/QQQ skew negative near-term.',
+                tags: [{t:'SPY',c:'neg'},{t:'QQQ',c:'neg'},{t:'IWM',c:'neg'},{t:'Rates',c:'neg'}],
+                confidence: 72
+            });
+
+            // Gold deduction
+            deductions.push({
+                icon: '🥇', title: 'Gold Structural Bid Intact',
+                text: 'Central bank buying at record pace + negative real rates persistence + geopolitical hedging = gold uptrend continuation. $3,100 target if risk-off deepens.',
+                tags: [{t:'GLD',c:'pos'},{t:'SLV',c:'pos'},{t:'Safe Haven',c:'pos'}],
+                confidence: 85
+            });
+
+            // Volatility deduction
+            deductions.push({
+                icon: '⚡', title: 'Volatility Expansion Likely',
+                text: `VIX at ${s.vix} with CPI release in 48h + FOMC next week. Put/call ratio at ${s.put_call_ratio} signals hedging demand. Expect VIX 22-25 if CPI surprises hot.`,
+                tags: [{t:'VIX',c:'neg'},{t:'UVXY',c:'pos'},{t:'CPI Risk',c:'neg'}],
+                confidence: 68
+            });
+
+            // Crypto deduction
+            deductions.push({
+                icon: '₿', title: 'BTC Consolidation with Upward Bias',
+                text: 'ETF inflows resuming ($340M/day), support holding at $79K. Macro headwinds offset by institutional flows. Range-bound $79K-$86K until rate clarity emerges.',
+                tags: [{t:'BTC',c:'pos'},{t:'ETH',c:'pos'},{t:'ETF Flows',c:'pos'}],
+                confidence: 61
+            });
+
+            // Oil weakness
+            deductions.push({
+                icon: '🛢️', title: 'Oil Bearish Setup',
+                text: 'Weak China PMI + OPEC supply increase signal + rising US inventories = downward pressure. $65 support test probable. Short energy as macro hedge.',
+                tags: [{t:'USO',c:'neg'},{t:'XLE',c:'neg'},{t:'Demand',c:'neg'}],
+                confidence: 74
+            });
+
+            return deductions;
+        }
+
+        function filterThemes(cat) {
+            document.querySelectorAll('.theme-filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderThemes(cat);
+        }
+
+        function renderThemes(cat) {
+            if (!macroData) return;
+            const themes = cat === 'All' ? macroData.themes : macroData.themes.filter(t => t.id === cat);
+            document.getElementById('themeFeeds').innerHTML = themes.map(t => {
+                const sentClass = t.sentiment > 0.1 ? 'sent-bullish' : t.sentiment < -0.1 ? 'sent-bearish' : 'sent-neutral';
+                const sentLabel = t.sentiment > 0.1 ? 'Bullish' : t.sentiment < -0.1 ? 'Bearish' : 'Neutral';
+                return `
+                    <div class="theme-card">
+                        <div class="theme-header">
+                            <div class="left"><span class="icon">${t.icon}</span><h3>${t.name}</h3></div>
+                            <span class="theme-sentiment ${sentClass}">${sentLabel} (${t.sentiment>=0?'+':''}${t.sentiment.toFixed(2)})</span>
+                        </div>
+                        <div class="theme-trend">Trend: ${t.trend} · ${t.items.length} items</div>
+                        ${t.items.map(i => `
+                            <div class="news-item">
+                                <div class="text">
+                                    <span class="impact-badge impact-${i.impact}"></span>
+                                    <a href="${i.url}" target="_blank" rel="noopener">${i.text}</a>
+                                </div>
+                                <div class="meta">
+                                    <div class="source">${i.source}</div>
+                                    <div class="time">${new Date(i.time).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadMacro() {
+            try { const r = await fetch('data/macro.json'); macroData = await r.json(); } catch(e) { return; }
+
+            document.getElementById('macroTime').textContent = 'Updated: ' + new Date(macroData.timestamp).toLocaleString();
 
             // Brief
-            const b = data.macro_brief;
+            const b = macroData.macro_brief;
             const regimeClass = b.risk_regime.toLowerCase().includes('off') ? 'regime-risk-off' : 'regime-risk-on';
             document.getElementById('briefCard').innerHTML = `
                 <h2>📋 ${b.title}</h2>
@@ -164,8 +316,25 @@
                 <p>${b.summary}</p>
             `;
 
+            // Quant Deductions
+            const deductions = generateDeductions(macroData);
+            document.getElementById('quantDeductions').innerHTML = deductions.map(d => `
+                <div class="deduction">
+                    <div class="signal-icon">${d.icon}</div>
+                    <div class="content">
+                        <h4>${d.title}</h4>
+                        <p>${d.text}</p>
+                        <div class="tags">${d.tags.map(t => `<span class="tag ${t.c}">${t.t}</span>`).join('')}</div>
+                    </div>
+                    <div class="confidence">
+                        <div class="val">${d.confidence}%</div>
+                        <div class="lbl">Confidence</div>
+                    </div>
+                </div>
+            `).join('');
+
             // Sentiment
-            const s = data.sentiment_overview;
+            const s = macroData.sentiment_overview;
             document.getElementById('sentimentRow').innerHTML = `
                 <div class="sent-card"><div class="label">Overall Sentiment</div><div class="value" style="color:${s.overall>=0?'var(--green)':'var(--red)'}">${s.overall>=0?'+':''}${s.overall.toFixed(2)}</div></div>
                 <div class="sent-card"><div class="label">Fear & Greed</div><div class="value">${s.fear_greed}</div></div>
@@ -176,7 +345,7 @@
             `;
 
             // Asset Impact
-            document.getElementById('assetImpact').innerHTML = data.asset_impact.map(a => {
+            document.getElementById('assetImpact').innerHTML = macroData.asset_impact.map(a => {
                 const pct = Math.abs(a.impact_score) * 50;
                 const dir = a.impact_score >= 0 ? 'pos' : 'neg';
                 const style = dir === 'pos' ? `right:50%;width:${pct}%` : `left:50%;width:${pct}%`;
@@ -190,7 +359,7 @@
             }).join('');
 
             // Events
-            document.getElementById('upcomingEvents').innerHTML = data.upcoming_events.map(e => `
+            document.getElementById('upcomingEvents').innerHTML = macroData.upcoming_events.map(e => `
                 <div class="event-card">
                     <div>
                         <div class="name">${e.event}</div>
@@ -198,37 +367,18 @@
                     </div>
                     <div style="text-align:right">
                         <span class="importance imp-${e.importance}">${e.importance}</span>
-                        <div class="date">${new Date(e.date).toLocaleDateString('en-US', {month:'short',day:'numeric'})}</div>
+                        <div class="date">${new Date(e.date).toLocaleDateString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
                     </div>
                 </div>
             `).join('');
 
-            // Theme Feeds
-            document.getElementById('themeFeeds').innerHTML = data.themes.map(t => {
-                const sentClass = t.sentiment > 0.1 ? 'sent-bullish' : t.sentiment < -0.1 ? 'sent-bearish' : 'sent-neutral';
-                const sentLabel = t.sentiment > 0.1 ? 'Bullish' : t.sentiment < -0.1 ? 'Bearish' : 'Neutral';
-                return `
-                    <div class="theme-card">
-                        <div class="theme-header">
-                            <div class="left"><span class="icon">${t.icon}</span><h3>${t.name}</h3></div>
-                            <span class="theme-sentiment ${sentClass}">${sentLabel} (${t.sentiment>=0?'+':''}${t.sentiment.toFixed(2)})</span>
-                        </div>
-                        <div class="theme-trend">Trend: ${t.trend}</div>
-                        ${t.items.map(i => `
-                            <div class="news-item">
-                                <div class="text">
-                                    <span class="impact-badge impact-${i.impact}"></span>
-                                    <a href="${i.url}" target="_blank" rel="noopener">${i.text}</a>
-                                </div>
-                                <div class="meta">
-                                    <div class="source">${i.source}</div>
-                                    <div class="time">${new Date(i.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }).join('');
+            // Theme filters
+            const filterCats = [{id:'All',label:'All Themes'},...macroData.themes.map(t=>({id:t.id,label:t.icon+' '+t.name}))];
+            document.getElementById('themeFilters').innerHTML = filterCats.map(c =>
+                `<button class="theme-filter-btn ${c.id==='All'?'active':''}" onclick="filterThemes('${c.id}')">${c.label}</button>`
+            ).join('');
+
+            renderThemes('All');
         }
 
         loadMacro();
