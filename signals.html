@@ -1,182 +1,296 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Signals — Finansor AI</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
-    <style>
-        :root{--bg:#0a0e17;--bg2:#111827;--card:#151d2e;--border:#1e2a3a;--text:#e2e8f0;--text2:#94a3b8;--accent:#3b82f6;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--cyan:#06b6d4;--gradient:linear-gradient(135deg,#3b82f6,#8b5cf6)}
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}a{color:var(--accent);text-decoration:none}
-        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}.nav-logo{font-size:20px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}.nav-logo span{font-size:24px;-webkit-text-fill-color:initial}.nav-links{display:flex;gap:32px;align-items:center}.nav-links a{color:var(--text2);font-size:14px;font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--text)}.nav-cta{background:var(--gradient);color:white!important;padding:8px 20px;border-radius:8px;font-weight:600;font-size:13px}.nav-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green)}.nav-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
-        .page-header{padding:100px 24px 24px;text-align:center}.page-header h1{font-size:40px;font-weight:800;margin-bottom:8px}.page-header p{color:var(--text2);font-size:16px}
-        .container{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Signals — Finansor AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #06080d; --surface: #0c1017; --surface-hover: #111827; --border: #1a2035; --border-accent: #243049;
+  --text: #e8ecf2; --text-muted: #7a8599; --text-dim: #4a5568;
+  --accent: #3b82f6; --accent-light: #60a5fa; --accent-glow: rgba(59, 130, 246, 0.15);
+  --cyan: #06b6d4; --green: #10b981; --red: #ef4444; --gold: #f59e0b;
+}
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+a { color: var(--accent-light); text-decoration: none; }
+a:hover { color: var(--cyan); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(6,8,13,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a { color: var(--text-muted); font-size: 0.875rem; font-weight: 500; }
+.nav-links a:hover, .nav-links a.active { color: var(--text); }
+.nav-cta { background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; }
+.nav-cta:hover { opacity: 0.9; color: #fff; }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+.hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+.mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; flex-direction: column; gap: 12px; z-index: 999; }
+.mobile-menu a { color: var(--text-muted); font-size: 0.95rem; padding: 8px 0; }
+.mobile-menu.open { display: flex; }
+@media (max-width: 768px) { .nav-links { display: none; } .hamburger { display: flex; } }
 
-        /* Summary cards */
-        .summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px}
-        .sum-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
-        .sum-val{font-size:28px;font-weight:800}.sum-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-top:4px}
+.page { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.page-header { padding: 100px 0 32px; display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 16px; }
+.page-header h1 { font-size: 2.2rem; }
+.header-meta { display: flex; align-items: center; gap: 16px; }
+.regime-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: var(--green); padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; }
+.last-update { font-size: 0.8rem; color: var(--text-dim); }
 
-        /* Controls */
-        .controls{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;align-items:center}
-        .search{flex:1;min-width:200px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 16px;border-radius:10px;font-size:14px}
-        .search:focus{outline:none;border-color:var(--accent)}
-        select{background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 16px;border-radius:10px;font-size:14px}
-        .update-time{color:var(--text2);font-size:12px;margin-left:auto}
+/* FILTERS */
+.filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.search-input { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text); font-size: 0.85rem; width: 220px; outline: none; font-family: 'Inter', sans-serif; }
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--text-dim); }
+.filter-group { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2px; }
+.fg-btn { padding: 6px 14px; border: none; background: transparent; color: var(--text-muted); font-size: 0.78rem; font-weight: 500; cursor: pointer; border-radius: 4px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+.fg-btn:hover { color: var(--text); }
+.fg-btn.active { background: var(--accent-glow); color: var(--accent-light); }
 
-        /* Table */
-        .table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--border);border-radius:14px}
-        table{width:100%;border-collapse:collapse;font-size:14px}
-        th{background:var(--bg2);color:var(--text2);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:0.5px;padding:14px 16px;text-align:left;cursor:pointer;user-select:none;white-space:nowrap}
-        th:hover{color:var(--text)}
-        td{padding:14px 16px;border-top:1px solid var(--border);white-space:nowrap}
-        tr:hover td{background:rgba(59,130,246,0.05)}
-        .ticker-cell{font-weight:700;font-size:15px}
-        .signal-badge{padding:4px 12px;border-radius:6px;font-weight:600;font-size:12px;display:inline-block}
-        .signal-strong-buy{background:rgba(16,185,129,0.2);color:#34d399}
-        .signal-buy{background:rgba(245,158,11,0.2);color:var(--yellow)}
-        .signal-hold{background:rgba(148,163,184,0.2);color:var(--text2)}
-        .signal-sell{background:rgba(249,115,22,0.2);color:var(--orange)}
-        .signal-strong-sell{background:rgba(239,68,68,0.2);color:var(--red)}
-        .green{color:var(--green)}.red{color:var(--red)}.yellow{color:var(--yellow)}
-        .score-bar{width:60px;height:6px;background:var(--bg2);border-radius:3px;display:inline-block;vertical-align:middle;margin-right:6px;overflow:hidden}
-        .score-fill{height:100%;border-radius:3px}
+/* TABLE */
+.table-wrap { overflow-x: auto; margin-bottom: 40px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+thead th { text-align: left; padding: 12px 16px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; white-space: nowrap; }
+thead th:hover { color: var(--text-muted); }
+thead th .sort-icon { margin-left: 4px; opacity: 0.4; }
+tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
+tbody tr:hover { background: var(--surface-hover); }
+tbody td { padding: 14px 16px; white-space: nowrap; }
+.ticker-cell { font-weight: 700; color: var(--text); }
+.change-up { color: var(--green); }
+.change-down { color: var(--red); }
+.signal-buy { color: var(--green); font-weight: 600; }
+.signal-sell { color: var(--red); font-weight: 600; }
+.signal-hold { color: var(--text-dim); font-weight: 600; }
+.score-bar { width: 60px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
+.score-fill { height: 100%; border-radius: 3px; }
+.confidence { font-weight: 600; }
+.strategy-cell { font-size: 0.78rem; color: var(--text-muted); }
+.regime-cell { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        footer{border-top:1px solid var(--border);padding:48px 24px}.footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}.footer-links{display:flex;gap:24px}.footer-links a{color:var(--text2);font-size:13px}.footer-copy{color:var(--text2);font-size:13px}
-        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}.summary{grid-template-columns:repeat(2,1fr)}th,td{padding:10px 8px;font-size:12px}}
-    </style>
+/* DETAIL ROW */
+.detail-row { display: none; }
+.detail-row.open { display: table-row; }
+.detail-row td { padding: 0; }
+.detail-content { background: var(--surface); padding: 20px 16px; border-bottom: 1px solid var(--border-accent); }
+.indicators { display: flex; gap: 24px; flex-wrap: wrap; }
+.indicator { text-align: center; }
+.indicator .ind-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.indicator .ind-value { font-size: 1rem; font-weight: 700; }
+
+/* SUMMARY */
+.summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align: center; }
+.summary-card .val { font-size: 1.5rem; font-weight: 700; font-family: 'Fraunces', serif; }
+.summary-card .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+footer { border-top: 1px solid var(--border); padding: 48px 24px; margin-top: 40px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; }
+.footer-brand p { font-size: 0.8rem; color: var(--text-dim); max-width: 260px; margin-top: 8px; }
+.footer-links { display: flex; gap: 48px; }
+.footer-col h4 { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; }
+.footer-col a { display: block; color: var(--text-dim); font-size: 0.85rem; margin-bottom: 8px; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { max-width: 1200px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-dim); text-align: center; }
+</style>
 </head>
 <body>
-    <nav><div class="nav-inner"><a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a><div class="nav-links"><a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html" class="active">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a><div class="nav-status">Systems Online</div><a href="dashboard.html" class="nav-cta">Launch App →</a></div><button class="hamburger" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button></div></nav>
-
-    <div class="page-header">
-        <h1>📡 Live Signals</h1>
-        <p>Real-time consensus signals from 20+ quantitative strategies</p>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html" class="active">Signals</a>
+      <a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a>
+      <a href="dashboard.html" class="nav-cta">Launch App →</a>
     </div>
+    <button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a>
+  <a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a>
+</div>
 
-    <div class="container">
-        <div class="summary" id="summary"></div>
-
-        <div class="controls">
-            <input class="search" type="text" placeholder="🔍 Search ticker..." id="search" oninput="filterTable()">
-            <select id="signalFilter" onchange="filterTable()">
-                <option value="all">All Signals</option>
-                <option value="buy">Buy / Strong Buy</option>
-                <option value="sell">Sell / Strong Sell</option>
-                <option value="hold">Hold</option>
-            </select>
-            <select id="sortBy" onchange="sortTable()">
-                <option value="score-desc">Score ↓</option>
-                <option value="score-asc">Score ↑</option>
-                <option value="change-desc">Change % ↓</option>
-                <option value="change-asc">Change % ↑</option>
-                <option value="ticker-asc">Ticker A-Z</option>
-            </select>
-            <div class="update-time" id="updateTime"></div>
-        </div>
-
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Ticker</th>
-                        <th>Price</th>
-                        <th>Change</th>
-                        <th>Signal</th>
-                        <th>Score</th>
-                        <th>RSI</th>
-                        <th>Strategy</th>
-                        <th>Stop Loss</th>
-                        <th>Take Profit</th>
-                    </tr>
-                </thead>
-                <tbody id="signalBody"></tbody>
-            </table>
-        </div>
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:12px;">Live Signals</div>
+      <h1>Signal Dashboard</h1>
     </div>
+    <div class="header-meta">
+      <div class="regime-badge">● BULLISH</div>
+      <div class="last-update">Last update: <span id="lastUpdate"></span></div>
+    </div>
+  </div>
 
-    <footer><div class="footer-inner"><div class="footer-copy">© 2026 Finansor AI</div><div class="footer-links"><a href="https://github.com/prochainz/finansor-quant">GitHub</a><a href="agents.html">Agents</a><a href="pricing.html">Pricing</a></div></div></footer>
+  <!-- SUMMARY -->
+  <div class="summary" id="summary"></div>
 
-    <script>
-    let signals=[];
+  <!-- FILTERS -->
+  <div class="filters">
+    <input type="text" class="search-input" placeholder="Search ticker..." id="searchInput" oninput="renderTable()">
+    <div class="filter-group">
+      <button class="fg-btn active" data-tf="all" onclick="setTF(this)">All</button>
+      <button class="fg-btn" data-tf="short" onclick="setTF(this)">Short</button>
+      <button class="fg-btn" data-tf="mid" onclick="setTF(this)">Mid</button>
+      <button class="fg-btn" data-tf="long" onclick="setTF(this)">Long</button>
+    </div>
+    <div class="filter-group">
+      <button class="fg-btn active" data-sig="all" onclick="setSig(this)">All</button>
+      <button class="fg-btn" data-sig="buy" onclick="setSig(this)">🟢 Buy</button>
+      <button class="fg-btn" data-sig="sell" onclick="setSig(this)">🔴 Sell</button>
+      <button class="fg-btn" data-sig="hold" onclick="setSig(this)">⚪ Hold</button>
+    </div>
+  </div>
 
-    fetch('data/signals.json').then(r=>r.json()).then(data=>{
-        signals=data.signals||[];
-        document.getElementById('updateTime').textContent='Updated: '+new Date(data.timestamp).toLocaleString();
-        renderSummary();
-        renderTable();
-    });
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('ticker')">Ticker <span class="sort-icon">↕</span></th>
+          <th onclick="sortBy('price')">Price <span class="sort-icon">↕</span></th>
+          <th onclick="sortBy('change')">Change% <span class="sort-icon">↕</span></th>
+          <th onclick="sortBy('signal')">Signal <span class="sort-icon">↕</span></th>
+          <th onclick="sortBy('score')">Score <span class="sort-icon">↕</span></th>
+          <th onclick="sortBy('confidence')">Confidence <span class="sort-icon">↕</span></th>
+          <th onclick="sortBy('strategy')">Best Strategy <span class="sort-icon">↕</span></th>
+          <th onclick="sortBy('regime')">Regime <span class="sort-icon">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="signalBody"></tbody>
+    </table>
+  </div>
+</div>
 
-    function renderSummary(){
-        const buys=signals.filter(s=>s.signal.includes('BUY')).length;
-        const sells=signals.filter(s=>s.signal.includes('SELL')).length;
-        const holds=signals.filter(s=>s.signal.includes('HOLD')).length;
-        const avgScore=(signals.reduce((a,s)=>a+s.score,0)/signals.length).toFixed(3);
-        document.getElementById('summary').innerHTML=`
-            <div class="sum-card"><div class="sum-val">${signals.length}</div><div class="sum-label">Total Assets</div></div>
-            <div class="sum-card"><div class="sum-val green">${buys}</div><div class="sum-label">Buy Signals</div></div>
-            <div class="sum-card"><div class="sum-val red">${sells}</div><div class="sum-label">Sell Signals</div></div>
-            <div class="sum-card"><div class="sum-val yellow">${holds}</div><div class="sum-label">Hold</div></div>
-            <div class="sum-card"><div class="sum-val" style="color:var(--cyan)">${avgScore}</div><div class="sum-label">Avg Score</div></div>
-        `;
-    }
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo"><span>📊</span> Finansor AI</div>
+      <p>AI-powered quantitative analysis for modern traders.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col"><h4>Platform</h4><a href="agents.html">Agents</a><a href="signals.html">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a></div>
+      <div class="footer-col"><h4>Company</h4><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a><a href="#">Docs</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Finansor AI. All rights reserved.</div>
+</footer>
 
-    function getSignalClass(sig){
-        if(sig.includes('STRONG BUY'))return'signal-strong-buy';
-        if(sig.includes('BUY'))return'signal-buy';
-        if(sig.includes('STRONG SELL'))return'signal-strong-sell';
-        if(sig.includes('SELL'))return'signal-sell';
-        return'signal-hold';
-    }
+<script>
+const signals = [
+  {ticker:'AAPL',price:189.42,change:2.31,signal:'buy',score:0.72,confidence:81,strategy:'Trend EMA Cross',regime:'Bullish',tf:'mid',rsi:42.3,macd:0.45,ema20:186.1,ema50:183.4,bb_upper:195.2,bb_lower:182.1},
+  {ticker:'BTC',price:67284,change:-1.18,signal:'hold',score:0.12,confidence:54,strategy:'Mean Reversion',regime:'Sideways',tf:'short',rsi:51.2,macd:-120,ema20:67800,ema50:66200,bb_upper:71000,bb_lower:63500},
+  {ticker:'ETH',price:3412,change:3.42,signal:'buy',score:0.85,confidence:89,strategy:'MACD Momentum',regime:'Bullish',tf:'mid',rsi:38.1,macd:45.2,ema20:3350,ema50:3280,bb_upper:3600,bb_lower:3100},
+  {ticker:'MSFT',price:421.56,change:0.87,signal:'buy',score:0.61,confidence:73,strategy:'RSI Reversal',regime:'Bullish',tf:'long',rsi:44.8,macd:2.1,ema20:418.3,ema50:412.7,bb_upper:430.5,bb_lower:410.2},
+  {ticker:'NVDA',price:892.30,change:4.12,signal:'buy',score:0.91,confidence:92,strategy:'Trend EMA Cross',regime:'Bullish',tf:'mid',rsi:35.2,macd:18.4,ema20:860.1,ema50:820.5,bb_upper:920.3,bb_lower:830.1},
+  {ticker:'TSLA',price:178.92,change:-2.44,signal:'sell',score:-0.68,confidence:77,strategy:'Bollinger Squeeze',regime:'Bearish',tf:'short',rsi:72.1,macd:-3.2,ema20:185.4,ema50:192.3,bb_upper:195.1,bb_lower:170.2},
+  {ticker:'SOL',price:142.18,change:5.67,signal:'buy',score:0.78,confidence:84,strategy:'MACD Momentum',regime:'Bullish',tf:'short',rsi:36.4,macd:5.8,ema20:135.2,ema50:128.9,bb_upper:155.3,bb_lower:125.1},
+  {ticker:'AMZN',price:182.45,change:1.23,signal:'buy',score:0.55,confidence:68,strategy:'Mean Reversion',regime:'Bullish',tf:'long',rsi:47.2,macd:1.8,ema20:180.1,ema50:176.8,bb_upper:190.2,bb_lower:172.5},
+  {ticker:'GOOGL',price:156.78,change:-0.32,signal:'hold',score:0.08,confidence:51,strategy:'RSI Reversal',regime:'Sideways',tf:'mid',rsi:52.4,macd:0.3,ema20:157.1,ema50:155.8,bb_upper:162.3,bb_lower:151.2},
+  {ticker:'META',price:502.14,change:1.89,signal:'buy',score:0.64,confidence:76,strategy:'Trend EMA Cross',regime:'Bullish',tf:'long',rsi:41.3,macd:4.5,ema20:495.2,ema50:485.1,bb_upper:515.3,bb_lower:482.1},
+  {ticker:'SPY',price:512.30,change:0.45,signal:'hold',score:0.22,confidence:58,strategy:'Bollinger Squeeze',regime:'Bullish',tf:'mid',rsi:49.1,macd:0.8,ema20:510.5,ema50:506.2,bb_upper:520.1,bb_lower:502.3},
+  {ticker:'XRP',price:0.634,change:2.11,signal:'buy',score:0.48,confidence:65,strategy:'MACD Momentum',regime:'Bullish',tf:'short',rsi:43.5,macd:0.02,ema20:0.62,ema50:0.59,bb_upper:0.68,bb_lower:0.57},
+  {ticker:'JPM',price:198.34,change:-0.78,signal:'sell',score:-0.42,confidence:62,strategy:'Mean Reversion',regime:'Sideways',tf:'mid',rsi:64.2,macd:-1.2,ema20:200.5,ema50:197.8,bb_upper:205.1,bb_lower:193.2},
+  {ticker:'AMD',price:178.92,change:3.21,signal:'buy',score:0.73,confidence:82,strategy:'Trend EMA Cross',regime:'Bullish',tf:'mid',rsi:39.8,macd:4.1,ema20:173.2,ema50:168.5,bb_upper:185.3,bb_lower:165.2},
+  {ticker:'DOGE',price:0.0842,change:-3.12,signal:'sell',score:-0.55,confidence:71,strategy:'RSI Reversal',regime:'Bearish',tf:'short',rsi:71.4,macd:-0.003,ema20:0.088,ema50:0.092,bb_upper:0.095,bb_lower:0.075},
+  {ticker:'V',price:281.45,change:0.92,signal:'buy',score:0.51,confidence:67,strategy:'Bollinger Squeeze',regime:'Bullish',tf:'long',rsi:45.8,macd:1.5,ema20:279.2,ema50:275.8,bb_upper:288.3,bb_lower:273.1},
+  {ticker:'AVAX',price:38.42,change:4.56,signal:'buy',score:0.82,confidence:86,strategy:'MACD Momentum',regime:'Bullish',tf:'short',rsi:34.2,macd:1.8,ema20:36.1,ema50:34.5,bb_upper:42.1,bb_lower:32.5},
+  {ticker:'DIS',price:112.34,change:-1.45,signal:'sell',score:-0.38,confidence:60,strategy:'Mean Reversion',regime:'Bearish',tf:'mid',rsi:62.8,macd:-0.9,ema20:114.5,ema50:116.2,bb_upper:118.3,bb_lower:108.1},
+  {ticker:'LINK',price:18.92,change:2.78,signal:'buy',score:0.62,confidence:74,strategy:'Trend EMA Cross',regime:'Bullish',tf:'mid',rsi:40.1,macd:0.6,ema20:18.2,ema50:17.5,bb_upper:20.1,bb_lower:16.8},
+  {ticker:'BA',price:178.56,change:-0.12,signal:'hold',score:-0.05,confidence:48,strategy:'RSI Reversal',regime:'Sideways',tf:'long',rsi:53.2,macd:-0.2,ema20:179.1,ema50:180.5,bb_upper:185.2,bb_lower:173.1},
+  {ticker:'UNI',price:12.45,change:1.92,signal:'buy',score:0.45,confidence:63,strategy:'Bollinger Squeeze',regime:'Bullish',tf:'short',rsi:44.5,macd:0.3,ema20:12.1,ema50:11.8,bb_upper:13.2,bb_lower:11.1},
+  {ticker:'GS',price:412.78,change:1.34,signal:'buy',score:0.58,confidence:72,strategy:'Trend EMA Cross',regime:'Bullish',tf:'long',rsi:43.1,macd:3.2,ema20:408.5,ema50:402.1,bb_upper:420.3,bb_lower:398.5},
+];
 
-    function renderTable(){
-        const body=document.getElementById('signalBody');
-        const search=document.getElementById('search').value.toUpperCase();
-        const filter=document.getElementById('signalFilter').value;
-        let filtered=signals.filter(s=>{
-            if(search&&!s.ticker.includes(search))return false;
-            if(filter==='buy'&&!s.signal.includes('BUY'))return false;
-            if(filter==='sell'&&!s.signal.includes('SELL'))return false;
-            if(filter==='hold'&&!s.signal.includes('HOLD'))return false;
-            return true;
-        });
+let activeTF = 'all', activeSig = 'all', sortCol = 'score', sortDir = -1;
+let expandedRow = null;
 
-        const sort=document.getElementById('sortBy').value;
-        const [key,dir]=sort.split('-');
-        filtered.sort((a,b)=>{
-            let va,vb;
-            if(key==='score'){va=a.score;vb=b.score;}
-            else if(key==='change'){va=a.changePct;vb=b.changePct;}
-            else{va=a.ticker;vb=b.ticker;}
-            if(typeof va==='string')return dir==='asc'?va.localeCompare(vb):vb.localeCompare(va);
-            return dir==='asc'?va-vb:vb-va;
-        });
+function setTF(btn) { document.querySelectorAll('[data-tf]').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); activeTF=btn.dataset.tf; renderTable(); }
+function setSig(btn) { document.querySelectorAll('[data-sig]').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); activeSig=btn.dataset.sig; renderTable(); }
+function sortBy(col) { if(sortCol===col) sortDir*=-1; else { sortCol=col; sortDir=-1; } renderTable(); }
 
-        body.innerHTML=filtered.map((s,i)=>{
-            const chgClass=s.changePct>=0?'green':'red';
-            const arrow=s.changePct>=0?'▲':'▼';
-            const scoreNorm=((s.score+1)/2*100).toFixed(0);
-            const scoreColor=s.score>0.2?'var(--green)':s.score<-0.2?'var(--red)':'var(--text2)';
-            const rsiColor=s.rsi<30?'var(--green)':s.rsi>70?'var(--red)':'var(--text2)';
-            return`<tr>
-                <td style="color:var(--text2)">${i+1}</td>
-                <td class="ticker-cell">${s.ticker}</td>
-                <td>$${s.price.toFixed(2)}</td>
-                <td class="${chgClass}">${arrow} ${Math.abs(s.changePct).toFixed(2)}%</td>
-                <td><span class="signal-badge ${getSignalClass(s.signal)}">${s.signal.replace(/[^\w\s]/g,'').trim()}</span></td>
-                <td><span class="score-bar"><span class="score-fill" style="width:${Math.max(5,scoreNorm)}%;background:${scoreColor}"></span></span>${s.score.toFixed(3)}</td>
-                <td style="color:${rsiColor}">${s.rsi.toFixed(1)}</td>
-                <td style="color:var(--text2);font-size:12px">${s.best_strategy}</td>
-                <td style="color:var(--red);font-size:13px">$${s.stop_loss.toFixed(2)}</td>
-                <td style="color:var(--green);font-size:13px">$${s.take_profit.toFixed(2)}</td>
-            </tr>`;
-        }).join('');
-    }
+function renderTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  let data = signals.filter(s => {
+    if(q && !s.ticker.toLowerCase().includes(q)) return false;
+    if(activeTF!=='all' && s.tf!==activeTF) return false;
+    if(activeSig!=='all' && s.signal!==activeSig) return false;
+    return true;
+  });
+  data.sort((a,b) => {
+    let va=a[sortCol], vb=b[sortCol];
+    if(typeof va==='string') return va.localeCompare(vb)*sortDir;
+    return (va-vb)*sortDir;
+  });
 
-    function filterTable(){renderTable()}
-    function sortTable(){renderTable()}
-    </script>
+  const tbody = document.getElementById('signalBody');
+  tbody.innerHTML = '';
+  data.forEach((s,i) => {
+    const changeClass = s.change >= 0 ? 'change-up' : 'change-down';
+    const sigClass = s.signal==='buy'?'signal-buy':s.signal==='sell'?'signal-sell':'signal-hold';
+    const sigIcon = s.signal==='buy'?'🟢 BUY':s.signal==='sell'?'🔴 SELL':'⚪ HOLD';
+    const scorePct = ((s.score+1)/2)*100;
+    const scoreColor = s.score>0.3?'var(--green)':s.score<-0.3?'var(--red)':'var(--text-dim)';
+    const regimeColor = s.regime==='Bullish'?'var(--green)':s.regime==='Bearish'?'var(--red)':'var(--text-muted)';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="ticker-cell">${s.ticker}</td>
+      <td>$${typeof s.price==='number'&&s.price>1000?s.price.toLocaleString():s.price}</td>
+      <td class="${changeClass}">${s.change>0?'+':''}${s.change}%</td>
+      <td class="${sigClass}">${sigIcon}</td>
+      <td><span class="score-bar"><span class="score-fill" style="width:${scorePct}%;background:${scoreColor}"></span></span>${s.score>0?'+':''}${s.score.toFixed(2)}</td>
+      <td class="confidence">${s.confidence}%</td>
+      <td class="strategy-cell">${s.strategy}</td>
+      <td class="regime-cell" style="color:${regimeColor}">${s.regime}</td>
+    `;
+    tr.onclick = () => toggleDetail(s, tr);
+    tbody.appendChild(tr);
+
+    const detailTr = document.createElement('tr');
+    detailTr.className = 'detail-row';
+    detailTr.id = 'detail-'+s.ticker;
+    detailTr.innerHTML = `<td colspan="8"><div class="detail-content">
+      <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;">Indicator Breakdown — ${s.ticker}</div>
+      <div class="indicators">
+        <div class="indicator"><div class="ind-label">RSI (14)</div><div class="ind-value" style="color:${s.rsi>70?'var(--red)':s.rsi<30?'var(--green)':'var(--text)'}">${s.rsi}</div></div>
+        <div class="indicator"><div class="ind-label">MACD</div><div class="ind-value" style="color:${s.macd>0?'var(--green)':'var(--red)'}">${s.macd>0?'+':''}${s.macd}</div></div>
+        <div class="indicator"><div class="ind-label">EMA 20</div><div class="ind-value">${s.ema20}</div></div>
+        <div class="indicator"><div class="ind-label">EMA 50</div><div class="ind-value">${s.ema50}</div></div>
+        <div class="indicator"><div class="ind-label">BB Upper</div><div class="ind-value">${s.bb_upper}</div></div>
+        <div class="indicator"><div class="ind-label">BB Lower</div><div class="ind-value">${s.bb_lower}</div></div>
+        <div class="indicator"><div class="ind-label">Timeframe</div><div class="ind-value" style="text-transform:capitalize;">${s.tf}</div></div>
+        <div class="indicator"><div class="ind-label">Score</div><div class="ind-value" style="color:${scoreColor}">${s.score>0?'+':''}${s.score.toFixed(2)}</div></div>
+      </div>
+    </div></td>`;
+    tbody.appendChild(detailTr);
+  });
+
+  // Summary
+  const buys = data.filter(s=>s.signal==='buy').length;
+  const sells = data.filter(s=>s.signal==='sell').length;
+  const holds = data.filter(s=>s.signal==='hold').length;
+  const avgConf = data.length ? (data.reduce((a,s)=>a+s.confidence,0)/data.length).toFixed(1) : 0;
+  document.getElementById('summary').innerHTML = `
+    <div class="summary-card"><div class="val" style="color:var(--green)">${buys}</div><div class="label">Buy Signals</div></div>
+    <div class="summary-card"><div class="val" style="color:var(--red)">${sells}</div><div class="label">Sell Signals</div></div>
+    <div class="summary-card"><div class="val">${holds}</div><div class="label">Hold Signals</div></div>
+    <div class="summary-card"><div class="val">${data.length}</div><div class="label">Total Assets</div></div>
+    <div class="summary-card"><div class="val">${avgConf}%</div><div class="label">Avg Confidence</div></div>
+  `;
+}
+
+function toggleDetail(s, tr) {
+  const det = document.getElementById('detail-'+s.ticker);
+  if(det.classList.contains('open')) { det.classList.remove('open'); }
+  else { document.querySelectorAll('.detail-row.open').forEach(d=>d.classList.remove('open')); det.classList.add('open'); }
+}
+
+document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+renderTable();
+</script>
 </body>
 </html>

@@ -1,310 +1,503 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finansor AI — Intelligent Trading Platform</title>
-    <meta name="description" content="AI-powered quantitative trading platform with autonomous agents, real-time signals, and portfolio optimization.">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
-    <style>
-        :root {
-            --bg: #0a0e17;
-            --bg2: #111827;
-            --bg3: #1a2332;
-            --card: #151d2e;
-            --border: #1e2a3a;
-            --text: #e2e8f0;
-            --text2: #94a3b8;
-            --accent: #3b82f6;
-            --accent2: #8b5cf6;
-            --green: #10b981;
-            --red: #ef4444;
-            --yellow: #f59e0b;
-            --orange: #f97316;
-            --cyan: #06b6d4;
-            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            --glow: 0 0 30px rgba(59,130,246,0.15);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
-        a { color: var(--accent); text-decoration: none; transition: 0.2s; }
-        a:hover { color: var(--accent2); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finansor AI — AI-Powered Quantitative Finance</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #06080d;
+  --surface: #0c1017;
+  --surface-hover: #111827;
+  --border: #1a2035;
+  --border-accent: #243049;
+  --text: #e8ecf2;
+  --text-muted: #7a8599;
+  --text-dim: #4a5568;
+  --accent: #3b82f6;
+  --accent-light: #60a5fa;
+  --accent-glow: rgba(59, 130, 246, 0.15);
+  --cyan: #06b6d4;
+  --green: #10b981;
+  --red: #ef4444;
+  --gold: #f59e0b;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+a { color: var(--accent-light); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--cyan); }
 
-        /* Nav */
-        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,14,23,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
-        .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
-        .nav-logo { font-size: 20px; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px; }
-        .nav-logo span { font-size: 24px; -webkit-text-fill-color: initial; }
-        .nav-links { display: flex; gap: 32px; align-items: center; }
-        .nav-links a { color: var(--text2); font-size: 14px; font-weight: 500; }
-        .nav-links a:hover, .nav-links a.active { color: var(--text); }
-        .nav-cta { background: var(--gradient); color: white; padding: 8px 20px; border-radius: 8px; font-weight: 600; font-size: 13px; }
-        .nav-cta:hover { opacity: 0.9; color: white; }
-        .nav-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--green); }
-        .nav-status::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
-        .hamburger { display: none; background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(6,8,13,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.nav-logo span { font-size: 1.4rem; }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a { color: var(--text-muted); font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--text); }
+.nav-cta { background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; transition: opacity 0.2s; }
+.nav-cta:hover { opacity: 0.9; color: #fff; }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+.hamburger span { width: 22px; height: 2px; background: var(--text); transition: 0.3s; border-radius: 2px; }
+.mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; flex-direction: column; gap: 12px; z-index: 999; }
+.mobile-menu a { color: var(--text-muted); font-size: 0.95rem; padding: 8px 0; }
+.mobile-menu.open { display: flex; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+}
 
-        /* Hero */
-        .hero { padding: 140px 24px 80px; text-align: center; position: relative; overflow: hidden; }
-        .hero::before { content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); pointer-events: none; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); color: var(--accent); font-size: 13px; font-weight: 500; padding: 6px 16px; border-radius: 20px; margin-bottom: 24px; }
-        .hero h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
-        .hero h1 .gradient { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 18px; color: var(--text2); max-width: 640px; margin: 0 auto 40px; line-height: 1.6; }
-        .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-        .btn-primary { background: var(--gradient); color: white; padding: 14px 32px; border-radius: 10px; font-weight: 600; font-size: 15px; border: none; cursor: pointer; transition: 0.2s; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); color: white; }
-        .btn-secondary { background: var(--card); color: var(--text); padding: 14px 32px; border-radius: 10px; font-weight: 600; font-size: 15px; border: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
-        .btn-secondary:hover { border-color: var(--accent); color: var(--text); }
+/* TICKER BAR */
+.ticker-bar { margin-top: 64px; background: var(--surface); border-bottom: 1px solid var(--border); overflow: hidden; height: 40px; position: relative; }
+.ticker-track { display: flex; animation: tickerScroll 30s linear infinite; white-space: nowrap; height: 100%; align-items: center; }
+.ticker-item { display: inline-flex; align-items: center; gap: 6px; padding: 0 24px; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); border-right: 1px solid var(--border); height: 100%; }
+.ticker-item .symbol { color: var(--text); font-weight: 600; }
+.ticker-item .up { color: var(--green); }
+.ticker-item .down { color: var(--red); }
+@keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* Stats bar */
-        .stats-bar { display: flex; justify-content: center; gap: 48px; padding: 40px 24px; flex-wrap: wrap; }
-        .stat { text-align: center; }
-        .stat-value { font-size: 32px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .stat-label { font-size: 13px; color: var(--text2); margin-top: 4px; }
+/* SECTIONS */
+.section { max-width: 1200px; margin: 0 auto; padding: 80px 24px; }
+.section-divider { height: 1px; background: var(--border); max-width: 1200px; margin: 0 auto; }
+.section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 12px; }
+.section-title { font-size: 2rem; margin-bottom: 16px; }
+.section-subtitle { color: var(--text-muted); font-size: 1.05rem; max-width: 600px; }
 
-        /* Section */
-        .section { max-width: 1280px; margin: 0 auto; padding: 80px 24px; }
-        .section-title { font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 12px; }
-        .section-sub { font-size: 16px; color: var(--text2); text-align: center; max-width: 600px; margin: 0 auto 48px; }
+/* HERO */
+.hero { text-align: center; padding-top: 100px; padding-bottom: 80px; }
+.hero-label { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--green); margin-bottom: 24px; }
+.hero-label .dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.4); } 50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(16,185,129,0); } }
+.hero h1 { font-size: 3.5rem; line-height: 1.15; margin-bottom: 20px; font-weight: 700; }
+.hero h1 em { font-style: italic; background: linear-gradient(135deg, var(--accent), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-sub { font-size: 1.15rem; color: var(--text-muted); max-width: 560px; margin: 0 auto 32px; line-height: 1.7; }
+.hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+.btn-primary { background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #fff; padding: 14px 32px; border-radius: 10px; font-weight: 600; font-size: 0.95rem; border: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(59,130,246,0.3); color: #fff; }
+.btn-secondary { background: transparent; color: var(--text); padding: 14px 32px; border-radius: 10px; font-weight: 600; font-size: 0.95rem; border: 1px solid var(--border-accent); cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+.btn-secondary:hover { border-color: var(--accent); background: var(--accent-glow); }
+.hero-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.hero-stat { text-align: center; }
+.hero-stat .val { font-size: 1.3rem; font-weight: 700; font-family: 'Fraunces', serif; color: var(--text); }
+.hero-stat .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2.2rem; }
+  .hero-stats { gap: 20px; }
+}
 
-        /* Agent Cards */
-        .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px; }
-        .agent-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; transition: 0.3s; position: relative; overflow: hidden; }
-        .agent-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--glow); }
-        .agent-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .agent-icon { font-size: 36px; }
-        .agent-status { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .agent-status.active { background: rgba(16,185,129,0.15); color: var(--green); }
-        .agent-status.standby { background: rgba(245,158,11,0.15); color: var(--yellow); }
-        .agent-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
-        .agent-cat { font-size: 12px; color: var(--accent); font-weight: 500; margin-bottom: 12px; }
-        .agent-desc { font-size: 14px; color: var(--text2); line-height: 1.5; margin-bottom: 20px; }
-        .agent-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .agent-stat { text-align: center; padding: 10px; background: var(--bg2); border-radius: 8px; }
-        .agent-stat-val { font-size: 16px; font-weight: 700; }
-        .agent-stat-val.green { color: var(--green); }
-        .agent-stat-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
-        .agent-actions { display: flex; gap: 8px; margin-top: 16px; }
-        .agent-btn { flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; cursor: pointer; border: none; transition: 0.2s; }
-        .agent-btn-primary { background: var(--gradient); color: white; }
-        .agent-btn-secondary { background: var(--bg2); color: var(--text2); border: 1px solid var(--border); }
-        .agent-btn:hover { opacity: 0.85; }
+/* PLATFORM PREVIEW */
+.preview-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; max-width: 900px; margin: 0 auto; overflow: hidden; }
+.preview-header { display: flex; gap: 6px; margin-bottom: 16px; }
+.preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+.preview-dot:nth-child(1) { background: #ef4444; }
+.preview-dot:nth-child(2) { background: #f59e0b; }
+.preview-dot:nth-child(3) { background: #10b981; }
+.preview-body { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.preview-panel { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; min-height: 140px; }
+.preview-panel h4 { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+@media (max-width: 600px) { .preview-body { grid-template-columns: 1fr; } }
 
-        /* Live Signal Ticker */
-        .ticker-bar { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 12px 0; overflow: hidden; }
-        .ticker-inner { display: flex; gap: 40px; animation: scroll 30s linear infinite; white-space: nowrap; }
-        .ticker-item { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
-        .ticker-item .up { color: var(--green); }
-        .ticker-item .down { color: var(--red); }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+/* CARDS GRID */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; transition: border-color 0.3s, transform 0.2s; }
+.card:hover { border-color: var(--border-accent); transform: translateY(-4px); }
+.card-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 16px; background: var(--accent-glow); }
+.card h3 { font-size: 1.1rem; margin-bottom: 8px; font-family: 'Inter', sans-serif; font-weight: 600; }
+.card p { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; }
+.card .step-num { font-size: 0.7rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; letter-spacing: 1px; }
 
-        /* Features */
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 32px; text-align: center; transition: 0.3s; }
-        .feature-card:hover { border-color: var(--accent); }
-        .feature-icon { font-size: 40px; margin-bottom: 16px; }
-        .feature-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-        .feature-desc { font-size: 14px; color: var(--text2); line-height: 1.5; }
+/* AGENT CARDS */
+.agent-card { position: relative; }
+.agent-status { display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; }
+.status-active .status-dot { background: var(--green); }
+.status-active { color: var(--green); }
+.agent-card .btn-sm { margin-top: 16px; padding: 8px 20px; font-size: 0.8rem; border-radius: 6px; }
 
-        /* Performance */
-        .perf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-        .perf-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
-        .perf-value { font-size: 28px; font-weight: 800; }
-        .perf-label { font-size: 12px; color: var(--text2); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+/* PERFORMANCE */
+.perf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 40px; }
+.perf-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+.perf-card h4 { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 16px; }
+.perf-metric { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; }
+.perf-metric .label { color: var(--text-muted); }
+.perf-metric .value { font-weight: 600; }
+.perf-metric .value.positive { color: var(--green); }
+.perf-metric .value.negative { color: var(--red); }
 
-        /* CTA */
-        .cta-section { text-align: center; padding: 100px 24px; position: relative; }
-        .cta-section::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%); pointer-events: none; }
-        .cta-section h2 { font-size: 40px; font-weight: 800; margin-bottom: 16px; }
-        .cta-section p { color: var(--text2); font-size: 16px; margin-bottom: 32px; }
+/* TESTIMONIALS */
+.testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 40px; }
+.testimonial { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+.testimonial p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+.testimonial .author { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+.testimonial .role { font-size: 0.75rem; color: var(--text-dim); }
 
-        /* Footer */
-        footer { border-top: 1px solid var(--border); padding: 48px 24px; }
-        .footer-inner { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-        .footer-links { display: flex; gap: 24px; }
-        .footer-links a { color: var(--text2); font-size: 13px; }
-        .footer-copy { color: var(--text2); font-size: 13px; }
+/* CTA */
+.cta-section { text-align: center; padding: 80px 24px; }
+.cta-section h2 { font-size: 2rem; margin-bottom: 16px; }
+.cta-section p { color: var(--text-muted); margin-bottom: 32px; }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hamburger { display: block; }
-            .stats-bar { gap: 24px; }
-            .agents-grid, .features-grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 32px; }
-        }
-    </style>
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 32px; }
+.footer-brand .nav-logo { margin-bottom: 8px; }
+.footer-brand p { font-size: 0.8rem; color: var(--text-dim); max-width: 260px; }
+.footer-links { display: flex; gap: 48px; }
+.footer-col h4 { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; }
+.footer-col a { display: block; color: var(--text-dim); font-size: 0.85rem; margin-bottom: 8px; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { max-width: 1200px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-dim); text-align: center; }
+
+/* SCROLL REVEAL */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
 </head>
 <body>
-    <!-- Nav -->
-    <nav>
-        <div class="nav-inner">
-            <a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a>
-            <div class="nav-links">
-                <a href="index.html" class="active">Home</a>
-                <a href="agents.html">Agents</a>
-                <a href="signals.html">Signals</a>
-                <a href="dashboard.html">Dashboard</a>
-                <a href="backtest.html">Backtest</a>
-                <a href="macro.html">Macro</a>
-                <a href="pricing.html">Pricing</a>
-                <div class="nav-status">Systems Online</div>
-                <a href="dashboard.html" class="nav-cta">Launch App →</a>
-            </div>
-            <button class="hamburger" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button>
-        </div>
-    </nav>
-
-    <!-- Signal Ticker -->
-    <div class="ticker-bar" style="margin-top:64px">
-        <div class="ticker-inner" id="tickerBar"></div>
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="agents.html">Agents</a>
+      <a href="signals.html">Signals</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="backtest.html">Backtest</a>
+      <a href="macro.html">Macro</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="dashboard.html" class="nav-cta">Launch App →</a>
     </div>
+    <button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="agents.html">Agents</a>
+  <a href="signals.html">Signals</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="backtest.html">Backtest</a>
+  <a href="macro.html">Macro</a>
+  <a href="pricing.html">Pricing</a>
+</div>
 
-    <!-- Hero -->
-    <section class="hero">
-        <div class="hero-badge">⚡ Powered by 20+ Quantitative Strategies</div>
-        <h1>Autonomous AI Agents<br>for <span class="gradient">Smarter Trading</span></h1>
-        <p>Deploy intelligent agents that analyze markets 24/7, generate consensus signals from multi-strategy models, and optimize your portfolio in real-time.</p>
-        <div class="hero-btns">
-            <a href="dashboard.html" class="btn-primary">Open Dashboard</a>
-            <a href="agents.html" class="btn-secondary">Browse Agents →</a>
+<!-- TICKER BAR -->
+<div class="ticker-bar">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="symbol">AAPL</span> $189.42 <span class="up">+2.31%</span></div>
+    <div class="ticker-item"><span class="symbol">BTC</span> $67,284 <span class="down">-1.18%</span></div>
+    <div class="ticker-item"><span class="symbol">ETH</span> $3,412 <span class="up">+3.42%</span></div>
+    <div class="ticker-item"><span class="symbol">MSFT</span> $421.56 <span class="up">+0.87%</span></div>
+    <div class="ticker-item"><span class="symbol">NVDA</span> $892.30 <span class="up">+4.12%</span></div>
+    <div class="ticker-item"><span class="symbol">TSLA</span> $178.92 <span class="down">-2.44%</span></div>
+    <div class="ticker-item"><span class="symbol">SOL</span> $142.18 <span class="up">+5.67%</span></div>
+    <div class="ticker-item"><span class="symbol">AMZN</span> $182.45 <span class="up">+1.23%</span></div>
+    <div class="ticker-item"><span class="symbol">SPY</span> $512.30 <span class="up">+0.45%</span></div>
+    <div class="ticker-item"><span class="symbol">GOOGL</span> $156.78 <span class="down">-0.32%</span></div>
+    <div class="ticker-item"><span class="symbol">META</span> $502.14 <span class="up">+1.89%</span></div>
+    <div class="ticker-item"><span class="symbol">XRP</span> $0.634 <span class="up">+2.11%</span></div>
+    <!-- duplicate for seamless loop -->
+    <div class="ticker-item"><span class="symbol">AAPL</span> $189.42 <span class="up">+2.31%</span></div>
+    <div class="ticker-item"><span class="symbol">BTC</span> $67,284 <span class="down">-1.18%</span></div>
+    <div class="ticker-item"><span class="symbol">ETH</span> $3,412 <span class="up">+3.42%</span></div>
+    <div class="ticker-item"><span class="symbol">MSFT</span> $421.56 <span class="up">+0.87%</span></div>
+    <div class="ticker-item"><span class="symbol">NVDA</span> $892.30 <span class="up">+4.12%</span></div>
+    <div class="ticker-item"><span class="symbol">TSLA</span> $178.92 <span class="down">-2.44%</span></div>
+    <div class="ticker-item"><span class="symbol">SOL</span> $142.18 <span class="up">+5.67%</span></div>
+    <div class="ticker-item"><span class="symbol">AMZN</span> $182.45 <span class="up">+1.23%</span></div>
+    <div class="ticker-item"><span class="symbol">SPY</span> $512.30 <span class="up">+0.45%</span></div>
+    <div class="ticker-item"><span class="symbol">GOOGL</span> $156.78 <span class="down">-0.32%</span></div>
+    <div class="ticker-item"><span class="symbol">META</span> $502.14 <span class="up">+1.89%</span></div>
+    <div class="ticker-item"><span class="symbol">XRP</span> $0.634 <span class="up">+2.11%</span></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="section hero">
+  <div class="hero-label"><span class="dot"></span> LIVE — AI-POWERED QUANTITATIVE ANALYSIS</div>
+  <h1>The AI That <em>Trades Smarter</em></h1>
+  <p class="hero-sub">20 quantitative strategies. Real-time sentiment analysis. Regime-adaptive signals. One platform.</p>
+  <div class="hero-buttons">
+    <a href="dashboard.html" class="btn-primary">Open Dashboard</a>
+    <a href="signals.html" class="btn-secondary">View Signals →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">46+</div><div class="label">Assets Tracked</div></div>
+    <div class="hero-stat"><div class="val">20</div><div class="label">Strategies</div></div>
+    <div class="hero-stat"><div class="val">1.78</div><div class="label">Peak Sharpe</div></div>
+    <div class="hero-stat"><div class="val">24/7</div><div class="label">Live Signals</div></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PLATFORM PREVIEW -->
+<section class="section reveal">
+  <div style="text-align:center; margin-bottom: 40px;">
+    <div class="section-label">Platform</div>
+    <h2 class="section-title">Your AI Command Center</h2>
+  </div>
+  <div class="preview-card">
+    <div class="preview-header"><div class="preview-dot"></div><div class="preview-dot"></div><div class="preview-dot"></div></div>
+    <div class="preview-body">
+      <div class="preview-panel">
+        <h4>Portfolio Performance</h4>
+        <canvas id="previewChart1" width="360" height="100"></canvas>
+      </div>
+      <div class="preview-panel">
+        <h4>Signal Distribution</h4>
+        <div style="display:flex; gap:12px; align-items:end; height:80px; padding-top:8px;">
+          <div style="flex:1; background:var(--green); border-radius:4px 4px 0 0; height:70%;"></div>
+          <div style="flex:1; background:var(--red); border-radius:4px 4px 0 0; height:30%;"></div>
+          <div style="flex:1; background:var(--green); border-radius:4px 4px 0 0; height:55%;"></div>
+          <div style="flex:1; background:var(--accent); border-radius:4px 4px 0 0; height:85%;"></div>
+          <div style="flex:1; background:var(--green); border-radius:4px 4px 0 0; height:60%;"></div>
+          <div style="flex:1; background:var(--red); border-radius:4px 4px 0 0; height:25%;"></div>
+          <div style="flex:1; background:var(--green); border-radius:4px 4px 0 0; height:75%;"></div>
+          <div style="flex:1; background:var(--accent); border-radius:4px 4px 0 0; height:45%;"></div>
         </div>
-    </section>
-
-    <!-- Stats -->
-    <div class="stats-bar">
-        <div class="stat"><div class="stat-value">6</div><div class="stat-label">Active Agents</div></div>
-        <div class="stat"><div class="stat-value">46+</div><div class="stat-label">Tracked Assets</div></div>
-        <div class="stat"><div class="stat-value">20</div><div class="stat-label">Strategies</div></div>
-        <div class="stat"><div class="stat-value">4h</div><div class="stat-label">Signal Refresh</div></div>
-        <div class="stat"><div class="stat-value" id="statWinRate">—</div><div class="stat-label">Avg Win Rate</div></div>
+      </div>
+      <div class="preview-panel">
+        <h4>Active Agents</h4>
+        <div style="font-size:0.8rem;">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>Signal Engine</span><span style="color:var(--green);">● Active</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>Sentiment AI</span><span style="color:var(--green);">● Active</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Risk Manager</span><span style="color:var(--gold);">● Beta</span></div>
+        </div>
+      </div>
+      <div class="preview-panel">
+        <h4>Market Regime</h4>
+        <div style="text-align:center; padding-top:16px;">
+          <div style="font-size:2rem; font-weight:700; color:var(--green); font-family:'Fraunces',serif;">BULLISH</div>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">Trend-following strategies favored</div>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <!-- Featured Agents -->
-    <section class="section">
-        <h2 class="section-title">AI Agent Marketplace</h2>
-        <p class="section-sub">Each agent runs autonomously — analyzing data, generating signals, and adapting to market conditions.</p>
-        <div class="agents-grid" id="agentGrid"></div>
-    </section>
+<div class="section-divider"></div>
 
-    <!-- Features -->
-    <section class="section" style="padding-top:0">
-        <h2 class="section-title">Platform Capabilities</h2>
-        <p class="section-sub">Built on production-grade quantitative research infrastructure.</p>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🧠</div>
-                <div class="feature-title">20-Strategy Consensus</div>
-                <div class="feature-desc">Signals generated from 20+ quantitative strategies — momentum, mean reversion, volatility regimes, and more.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📡</div>
-                <div class="feature-title">Real-Time Sentiment</div>
-                <div class="feature-desc">NLP-powered analysis of Twitter/X, news, and social signals. Detect narrative shifts before price moves.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔄</div>
-                <div class="feature-title">Regime Detection</div>
-                <div class="feature-desc">Automatically classifies market conditions — bull, bear, sideways, high-vol — and adapts strategy weights.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <div class="feature-title">Walk-Forward Validation</div>
-                <div class="feature-desc">Every strategy backtested with rolling out-of-sample windows. No overfitting, only edge.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🛡️</div>
-                <div class="feature-title">Risk Management</div>
-                <div class="feature-desc">Dynamic position sizing, ATR-based stops, drawdown limits, and portfolio-level VaR monitoring.</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <div class="feature-title">Portfolio Optimization</div>
-                <div class="feature-desc">Mean-Variance, CVaR, and Risk Parity models optimize allocation across assets and strategies.</div>
-            </div>
-        </div>
-    </section>
+<!-- HOW IT WORKS -->
+<section class="section reveal">
+  <div style="text-align:center; margin-bottom: 20px;">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">From Data to Alpha in 4 Steps</h2>
+  </div>
+  <div class="cards-grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="card">
+      <div class="step-num">STEP 01</div>
+      <div class="card-icon">📡</div>
+      <h3>Data Ingestion</h3>
+      <p>Yahoo Finance, Twitter, news feeds — all streamed and normalized in real time.</p>
+    </div>
+    <div class="card">
+      <div class="step-num">STEP 02</div>
+      <div class="card-icon">🧠</div>
+      <h3>AI Analysis</h3>
+      <p>20 quantitative strategies with regime detection analyze every asset simultaneously.</p>
+    </div>
+    <div class="card">
+      <div class="step-num">STEP 03</div>
+      <div class="card-icon">⚡</div>
+      <h3>Signal Generation</h3>
+      <p>Consensus scoring, ML prediction, and confidence weighting produce actionable signals.</p>
+    </div>
+    <div class="card">
+      <div class="step-num">STEP 04</div>
+      <div class="card-icon">🔔</div>
+      <h3>Alerts & Action</h3>
+      <p>Telegram alerts, dashboard updates, and API webhooks keep you ahead of the market.</p>
+    </div>
+  </div>
+</section>
 
-    <!-- Performance -->
-    <section class="section" style="padding-top:0">
-        <h2 class="section-title">Backtest Performance</h2>
-        <p class="section-sub">Aggregate metrics across all strategies — walk-forward validated.</p>
-        <div class="perf-grid">
-            <div class="perf-card"><div class="perf-value" style="color:var(--green)">1.78</div><div class="perf-label">Best Sharpe Ratio</div></div>
-            <div class="perf-card"><div class="perf-value" style="color:var(--green)">40.1%</div><div class="perf-label">Top CAGR</div></div>
-            <div class="perf-card"><div class="perf-value" style="color:var(--red)">-16.4%</div><div class="perf-label">Max Drawdown</div></div>
-            <div class="perf-card"><div class="perf-value" style="color:var(--cyan)">67.3%</div><div class="perf-label">Avg Win Rate</div></div>
-            <div class="perf-card"><div class="perf-value" style="color:var(--accent)">2.4</div><div class="perf-label">Profit Factor</div></div>
-            <div class="perf-card"><div class="perf-value" style="color:var(--yellow)">12.8%</div><div class="perf-label">Alpha (annualized)</div></div>
-        </div>
-    </section>
+<div class="section-divider"></div>
 
-    <!-- CTA -->
-    <section class="cta-section">
-        <h2>Start Trading Smarter</h2>
-        <p>Access real-time signals, AI agents, and portfolio optimization — all in one platform.</p>
-        <a href="dashboard.html" class="btn-primary">Launch Dashboard →</a>
-    </section>
+<!-- TOP AGENTS -->
+<section class="section reveal">
+  <div style="text-align:center; margin-bottom: 20px;">
+    <div class="section-label">AI Agents</div>
+    <h2 class="section-title">Meet Your Trading Team</h2>
+    <p class="section-subtitle" style="margin:0 auto;">Autonomous agents that analyze, score, and optimize — 24/7.</p>
+  </div>
+  <div class="cards-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="card agent-card">
+      <div class="agent-status status-active"><span class="status-dot"></span> ACTIVE</div>
+      <div class="card-icon">📈</div>
+      <h3>Signal Engine Agent</h3>
+      <p>Real-time technical analysis across 46+ assets using 20 quantitative strategies with consensus scoring.</p>
+      <a href="agents.html" class="btn-primary btn-sm" style="display:inline-block;">Activate</a>
+    </div>
+    <div class="card agent-card">
+      <div class="agent-status status-active"><span class="status-dot"></span> ACTIVE</div>
+      <div class="card-icon">💬</div>
+      <h3>Sentiment Analyzer</h3>
+      <p>NLP-powered sentiment scoring from Twitter, Reddit, and financial news. Real-time mood tracking.</p>
+      <a href="agents.html" class="btn-primary btn-sm" style="display:inline-block;">Activate</a>
+    </div>
+    <div class="card agent-card">
+      <div class="agent-status status-active"><span class="status-dot"></span> ACTIVE</div>
+      <div class="card-icon">💼</div>
+      <h3>Portfolio Optimizer</h3>
+      <p>CVaR-based optimization with dynamic rebalancing. Maximizes risk-adjusted returns across your portfolio.</p>
+      <a href="agents.html" class="btn-primary btn-sm" style="display:inline-block;">Activate</a>
+    </div>
+  </div>
+</section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-inner">
-            <div class="footer-copy">© 2026 Finansor AI. Built with quantitative precision.</div>
-            <div class="footer-links">
-                <a href="https://github.com/prochainz/finansor-quant">GitHub</a>
-                <a href="agents.html">Agents</a>
-                <a href="signals.html">Signals</a>
-                <a href="pricing.html">Pricing</a>
-            </div>
-        </div>
-    </footer>
+<div class="section-divider"></div>
 
-    <script>
-    // Load agents
-    fetch('data/agents.json').then(r=>r.json()).then(data=>{
-        const grid=document.getElementById('agentGrid');
-        const agents=data.agents.slice(0,6);
-        let totalWR=0;
-        agents.forEach(a=>{
-            totalWR+=a.win_rate;
-            grid.innerHTML+=`
-            <div class="agent-card">
-                <div class="agent-header">
-                    <div class="agent-icon">${a.icon}</div>
-                    <span class="agent-status ${a.status}">${a.status}</span>
-                </div>
-                <div class="agent-name">${a.name}</div>
-                <div class="agent-cat">${a.category}</div>
-                <div class="agent-desc">${a.description.substring(0,120)}...</div>
-                <div class="agent-stats">
-                    <div class="agent-stat"><div class="agent-stat-val green">${a.win_rate}%</div><div class="agent-stat-label">Win Rate</div></div>
-                    <div class="agent-stat"><div class="agent-stat-val">${a.signals_per_day}/d</div><div class="agent-stat-label">Signals</div></div>
-                    <div class="agent-stat"><div class="agent-stat-val">${a.uptime}%</div><div class="agent-stat-label">Uptime</div></div>
-                </div>
-                <div class="agent-actions">
-                    <a href="agents.html#${a.id}" class="agent-btn agent-btn-primary">View Details</a>
-                    <button class="agent-btn agent-btn-secondary" onclick="alert('Agent ${a.name} activated! Check Dashboard for status.')">Activate</button>
-                </div>
-            </div>`;
-        });
-        document.getElementById('statWinRate').textContent=(totalWR/agents.length).toFixed(1)+'%';
-    });
+<!-- PERFORMANCE -->
+<section class="section reveal">
+  <div style="text-align:center; margin-bottom: 20px;">
+    <div class="section-label">Performance</div>
+    <h2 class="section-title">Backtested. Validated. Deployed.</h2>
+  </div>
+  <div class="perf-grid">
+    <div class="perf-card">
+      <h4>🏆 Trend EMA Cross</h4>
+      <div class="perf-metric"><span class="label">Sharpe</span><span class="value positive">1.78</span></div>
+      <div class="perf-metric"><span class="label">CAGR</span><span class="value positive">+34.2%</span></div>
+      <div class="perf-metric"><span class="label">Max DD</span><span class="value negative">-12.4%</span></div>
+      <div class="perf-metric"><span class="label">Win Rate</span><span class="value">62.1%</span></div>
+    </div>
+    <div class="perf-card">
+      <h4>📊 RSI Reversal</h4>
+      <div class="perf-metric"><span class="label">Sharpe</span><span class="value positive">1.52</span></div>
+      <div class="perf-metric"><span class="label">CAGR</span><span class="value positive">+28.7%</span></div>
+      <div class="perf-metric"><span class="label">Max DD</span><span class="value negative">-15.8%</span></div>
+      <div class="perf-metric"><span class="label">Win Rate</span><span class="value">58.4%</span></div>
+    </div>
+    <div class="perf-card">
+      <h4>⚡ MACD Momentum</h4>
+      <div class="perf-metric"><span class="label">Sharpe</span><span class="value positive">1.41</span></div>
+      <div class="perf-metric"><span class="label">CAGR</span><span class="value positive">+25.3%</span></div>
+      <div class="perf-metric"><span class="label">Max DD</span><span class="value negative">-18.2%</span></div>
+      <div class="perf-metric"><span class="label">Win Rate</span><span class="value">55.9%</span></div>
+    </div>
+    <div class="perf-card">
+      <h4>🎯 Bollinger Squeeze</h4>
+      <div class="perf-metric"><span class="label">Sharpe</span><span class="value positive">1.35</span></div>
+      <div class="perf-metric"><span class="label">CAGR</span><span class="value positive">+22.1%</span></div>
+      <div class="perf-metric"><span class="label">Max DD</span><span class="value negative">-14.6%</span></div>
+      <div class="perf-metric"><span class="label">Win Rate</span><span class="value">57.2%</span></div>
+    </div>
+    <div class="perf-card">
+      <h4>🔄 Mean Reversion</h4>
+      <div class="perf-metric"><span class="label">Sharpe</span><span class="value positive">1.28</span></div>
+      <div class="perf-metric"><span class="label">CAGR</span><span class="value positive">+19.8%</span></div>
+      <div class="perf-metric"><span class="label">Max DD</span><span class="value negative">-11.3%</span></div>
+      <div class="perf-metric"><span class="label">Win Rate</span><span class="value">61.5%</span></div>
+    </div>
+  </div>
+</section>
 
-    // Ticker
-    fetch('data/signals.json').then(r=>r.json()).then(data=>{
-        const bar=document.getElementById('tickerBar');
-        let html='';
-        const signals=data.signals||[];
-        const items=[...signals,...signals]; // duplicate for infinite scroll
-        items.forEach(s=>{
-            const cls=s.changePct>=0?'up':'down';
-            const arrow=s.changePct>=0?'▲':'▼';
-            html+=`<div class="ticker-item"><strong>${s.ticker}</strong> $${s.price.toFixed(2)} <span class="${cls}">${arrow} ${Math.abs(s.changePct).toFixed(2)}%</span></div>`;
-        });
-        bar.innerHTML=html;
-    });
-    </script>
+<div class="section-divider"></div>
+
+<!-- TESTIMONIALS -->
+<section class="section reveal">
+  <div style="text-align:center; margin-bottom: 20px;">
+    <div class="section-label">What Traders Say</div>
+    <h2 class="section-title">Trusted by Quantitative Traders</h2>
+  </div>
+  <div class="testimonials">
+    <div class="testimonial">
+      <p>"Finansor's consensus signals cut my research time by 80%. The regime detection alone is worth the subscription — I stopped fighting the trend."</p>
+      <div class="author">Alex Chen</div>
+      <div class="role">Quantitative Analyst, Meridian Capital</div>
+    </div>
+    <div class="testimonial">
+      <p>"I've backtested dozens of strategies manually. Finansor does it in seconds with better risk metrics. The Sharpe ratios speak for themselves."</p>
+      <div class="author">Sarah Williams</div>
+      <div class="role">Independent Trader & Fund Manager</div>
+    </div>
+    <div class="testimonial">
+      <p>"The sentiment analyzer caught the SVB collapse narrative shift 6 hours before the crash. That signal saved our portfolio from a 15% drawdown."</p>
+      <div class="author">Marcus Petrov</div>
+      <div class="role">CTO, Voltaire Trading Systems</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CTA -->
+<section class="section cta-section reveal">
+  <h2>Start Analyzing Markets with AI Today</h2>
+  <p>No credit card required. Free tier includes 5 assets and daily signals.</p>
+  <a href="pricing.html" class="btn-primary">Get Started Free →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo"><span>📊</span> Finansor AI</div>
+      <p>AI-powered quantitative analysis for modern traders. 20 strategies, real-time signals, one platform.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="agents.html">Agents</a>
+        <a href="signals.html">Signals</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="backtest.html">Backtest</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="macro.html">Macro</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="#">Documentation</a>
+        <a href="#">API</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <a href="#">GitHub</a>
+        <a href="#">Twitter</a>
+        <a href="#">Telegram</a>
+        <a href="#">Discord</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Finansor AI. All rights reserved. Built for traders who think in Sharpe ratios.</div>
+</footer>
+
+<script>
+// Preview chart
+const ctx = document.getElementById('previewChart1');
+if (ctx) {
+  const c = ctx.getContext('2d');
+  const w = ctx.width, h = ctx.height;
+  const pts = [30,25,35,28,42,38,50,45,55,48,60,58,65,62,70,68,75,72,80];
+  c.strokeStyle = '#3b82f6';
+  c.lineWidth = 2;
+  c.beginPath();
+  pts.forEach((p, i) => {
+    const x = (i / (pts.length - 1)) * w;
+    const y = h - (p / 100) * h;
+    i === 0 ? c.moveTo(x, y) : c.lineTo(x, y);
+  });
+  c.stroke();
+  // gradient fill
+  const grad = c.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, 'rgba(59,130,246,0.15)');
+  grad.addColorStop(1, 'rgba(59,130,246,0)');
+  c.lineTo(w, h);
+  c.lineTo(0, h);
+  c.fillStyle = grad;
+  c.fill();
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>

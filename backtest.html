@@ -1,110 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backtest Results — Finansor AI</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
-    <style>
-        :root{--bg:#0a0e17;--bg2:#111827;--card:#151d2e;--border:#1e2a3a;--text:#e2e8f0;--text2:#94a3b8;--accent:#3b82f6;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--cyan:#06b6d4;--gradient:linear-gradient(135deg,#3b82f6,#8b5cf6)}
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}a{color:var(--accent);text-decoration:none}
-        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}.nav-logo{font-size:20px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}.nav-logo span{font-size:24px;-webkit-text-fill-color:initial}.nav-links{display:flex;gap:32px;align-items:center}.nav-links a{color:var(--text2);font-size:14px;font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--text)}.nav-cta{background:var(--gradient);color:white!important;padding:8px 20px;border-radius:8px;font-weight:600;font-size:13px}.nav-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green)}.nav-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
-        .page-header{padding:100px 24px 24px;text-align:center}.page-header h1{font-size:40px;font-weight:800;margin-bottom:8px}.page-header p{color:var(--text2);font-size:16px}
-        .container{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategy Lab — Finansor AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #06080d; --surface: #0c1017; --surface-hover: #111827; --border: #1a2035; --border-accent: #243049;
+  --text: #e8ecf2; --text-muted: #7a8599; --text-dim: #4a5568;
+  --accent: #3b82f6; --accent-light: #60a5fa; --accent-glow: rgba(59,130,246,0.15);
+  --cyan: #06b6d4; --green: #10b981; --red: #ef4444; --gold: #f59e0b;
+}
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+a { color: var(--accent-light); text-decoration: none; }
+a:hover { color: var(--cyan); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(6,8,13,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a { color: var(--text-muted); font-size: 0.875rem; font-weight: 500; }
+.nav-links a:hover, .nav-links a.active { color: var(--text); }
+.nav-cta { background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; }
+.nav-cta:hover { opacity: 0.9; color: #fff; }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+.hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+.mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; flex-direction: column; gap: 12px; z-index: 999; }
+.mobile-menu a { color: var(--text-muted); font-size: 0.95rem; padding: 8px 0; }
+.mobile-menu.open { display: flex; }
+@media (max-width: 768px) { .nav-links { display: none; } .hamburger { display: flex; } }
 
-        .strat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
-        .strat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;transition:0.3s}
-        .strat-card:hover{border-color:var(--accent)}
-        .strat-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
-        .strat-name{font-size:18px;font-weight:700}
-        .strat-tf{font-size:11px;padding:3px 10px;border-radius:6px;background:rgba(59,130,246,0.15);color:var(--accent);font-weight:500;text-transform:uppercase}
-        .strat-logic{font-size:12px;color:var(--text2);line-height:1.4;margin-bottom:16px;border-left:2px solid var(--border);padding-left:10px}
-        .strat-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-        .sm{background:var(--bg2);border-radius:8px;padding:10px;text-align:center}
-        .sm-val{font-size:16px;font-weight:700}
-        .sm-label{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
-        /* Equity curve mini */
-        .equity-mini{height:40px;display:flex;align-items:flex-end;gap:1px;margin-bottom:12px}
-        .eq-bar{flex:1;background:var(--accent);border-radius:2px 2px 0 0;transition:0.2s;min-height:2px}
-        .strat-rank{font-size:12px;color:var(--text2);display:flex;justify-content:space-between}
+.page { max-width: 1200px; margin: 0 auto; padding: 100px 24px 60px; }
+.page-header { margin-bottom: 32px; }
+.page-header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+.page-header p { color: var(--text-muted); font-size: 0.95rem; }
 
-        .note-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:24px;font-size:13px;color:var(--text2);line-height:1.6}
-        .note-box strong{color:var(--text)}
+.overview { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.ov-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align: center; }
+.ov-card .val { font-size: 1.4rem; font-weight: 700; font-family: 'Fraunces', serif; }
+.ov-card .label { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        footer{border-top:1px solid var(--border);padding:48px 24px}.footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}.footer-links{display:flex;gap:24px}.footer-links a{color:var(--text2);font-size:13px}.footer-copy{color:var(--text2);font-size:13px}
-        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}.strat-grid{grid-template-columns:1fr}.strat-metrics{grid-template-columns:repeat(2,1fr)}}
-    </style>
+.strat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 60px; }
+.strat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: border-color 0.3s, transform 0.2s; }
+.strat-card:hover { border-color: var(--border-accent); transform: translateY(-3px); }
+.strat-card .cat-badge { display: inline-block; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 4px; margin-bottom: 10px; }
+.cat-short { background: rgba(239,68,68,0.12); color: var(--red); }
+.cat-mid { background: rgba(59,130,246,0.12); color: var(--accent-light); }
+.cat-long { background: rgba(16,185,129,0.12); color: var(--green); }
+.strat-card h3 { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 12px; }
+.strat-card canvas { width: 100%; height: 50px; margin-bottom: 12px; }
+.metric-row { display: flex; justify-content: space-between; font-size: 0.78rem; padding: 4px 0; }
+.metric-row .lbl { color: var(--text-dim); }
+.metric-row .val { font-weight: 600; }
+
+/* COMPARISON TABLE */
+.comp-section { margin-bottom: 60px; }
+.comp-section h2 { font-size: 1.5rem; margin-bottom: 20px; }
+.comp-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; overflow-x: auto; display: block; }
+.comp-table thead th { text-align: left; padding: 10px 14px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); border-bottom: 1px solid var(--border); white-space: nowrap; }
+.comp-table tbody tr { border-bottom: 1px solid var(--border); }
+.comp-table tbody td { padding: 12px 14px; white-space: nowrap; }
+.rank { font-weight: 700; color: var(--accent); }
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+
+/* CATEGORY PERF */
+.cat-perf { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.cat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.cat-card h4 { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; margin-bottom: 12px; }
+.bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.bar-row { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; }
+.bar-label { width: 50px; color: var(--text-dim); flex-shrink: 0; }
+.bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; }
+.bar-val { width: 40px; text-align: right; font-weight: 600; }
+
+footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; }
+.footer-brand p { font-size: 0.8rem; color: var(--text-dim); max-width: 260px; margin-top: 8px; }
+.footer-links { display: flex; gap: 48px; }
+.footer-col h4 { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; }
+.footer-col a { display: block; color: var(--text-dim); font-size: 0.85rem; margin-bottom: 8px; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { max-width: 1200px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-dim); text-align: center; }
+</style>
 </head>
 <body>
-    <nav><div class="nav-inner"><a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a><div class="nav-links"><a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html" class="active">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a><div class="nav-status">Systems Online</div><a href="dashboard.html" class="nav-cta">Launch App →</a></div><button class="hamburger" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button></div></nav>
-
-    <div class="page-header">
-        <h1>📈 Backtest Results</h1>
-        <p>Walk-forward validated performance across 20 quantitative strategies</p>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a>
+      <a href="dashboard.html">Dashboard</a><a href="backtest.html" class="active">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a>
+      <a href="dashboard.html" class="nav-cta">Launch App →</a>
     </div>
+    <button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a>
+  <a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a>
+</div>
 
-    <div class="container">
-        <div class="strat-grid" id="stratGrid"></div>
-        <div class="note-box">
-            <strong>⚠️ Disclaimer:</strong> Past performance does not guarantee future results. All metrics are based on walk-forward out-of-sample backtests (2020–2026). Strategies are regime-adaptive and may behave differently in unseen market conditions. This is not financial advice.
-        </div>
+<div class="page">
+  <div class="page-header">
+    <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:12px;">Strategy Lab</div>
+    <h1>20 Strategies Backtested</h1>
+    <p>Every strategy rigorously backtested on 5 years of multi-asset data with walk-forward validation.</p>
+  </div>
+
+  <div class="overview">
+    <div class="ov-card"><div class="val">20</div><div class="label">Strategies</div></div>
+    <div class="ov-card"><div class="val" style="color:var(--green)">1.78</div><div class="label">Best Sharpe</div></div>
+    <div class="ov-card"><div class="val" style="color:var(--green)">+34.2%</div><div class="label">Best CAGR</div></div>
+    <div class="ov-card"><div class="val" style="color:var(--red)">-8.1%</div><div class="label">Lowest MaxDD</div></div>
+    <div class="ov-card"><div class="val">67.8%</div><div class="label">Best Win Rate</div></div>
+  </div>
+
+  <div class="strat-grid" id="stratGrid"></div>
+
+  <!-- COMPARISON -->
+  <div class="comp-section">
+    <h2>Top 5 vs Bottom 5</h2>
+    <div style="overflow-x:auto;">
+    <table class="comp-table">
+      <thead><tr><th>#</th><th>Strategy</th><th>Category</th><th>Sharpe</th><th>CAGR</th><th>MaxDD</th><th>Win Rate</th><th>Calmar</th></tr></thead>
+      <tbody id="compBody"></tbody>
+    </table>
     </div>
+  </div>
 
-    <footer><div class="footer-inner"><div class="footer-copy">© 2026 Finansor AI</div><div class="footer-links"><a href="https://github.com/prochainz/finansor-quant">GitHub</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a></div></div></footer>
+  <!-- CATEGORY PERFORMANCE -->
+  <h2 style="font-size:1.5rem;margin-bottom:20px;">Performance by Category</h2>
+  <div class="cat-perf">
+    <div class="cat-card">
+      <h4>📊 Avg Sharpe by Category</h4>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-label">Short</span><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--red)"></div></div><span class="bar-val">1.12</span></div>
+        <div class="bar-row"><span class="bar-label">Mid</span><div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--accent)"></div></div><span class="bar-val">1.38</span></div>
+        <div class="bar-row"><span class="bar-label">Long</span><div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--green)"></div></div><span class="bar-val">1.21</span></div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <h4>📈 Avg CAGR by Category</h4>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-label">Short</span><div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--red)"></div></div><span class="bar-val">18.2%</span></div>
+        <div class="bar-row"><span class="bar-label">Mid</span><div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--accent)"></div></div><span class="bar-val">26.4%</span></div>
+        <div class="bar-row"><span class="bar-label">Long</span><div class="bar-track"><div class="bar-fill" style="width:68%;background:var(--green)"></div></div><span class="bar-val">22.1%</span></div>
+      </div>
+    </div>
+    <div class="cat-card">
+      <h4>🛡️ Avg MaxDD by Category</h4>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-label">Short</span><div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--red)"></div></div><span class="bar-val">-18.5%</span></div>
+        <div class="bar-row"><span class="bar-label">Mid</span><div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--accent)"></div></div><span class="bar-val">-14.2%</span></div>
+        <div class="bar-row"><span class="bar-label">Long</span><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--green)"></div></div><span class="bar-val">-10.8%</span></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <script>
-    const strategies=[
-        {name:'Volatility Regime',tf:'medium',sharpe:1.78,cagr:40.1,maxDD:-16.4,winRate:62.3,trades:312,logic:'Low vol → trend follow (EMA20>EMA50), High vol → mean reversion (ZScore<-2)'},
-        {name:'ADX Trend Following',tf:'medium',sharpe:1.49,cagr:38.9,maxDD:-25.5,winRate:58.7,trades:245,logic:'ADX>25 and +DI>-DI → BUY, ADX>25 and -DI>+DI → SELL'},
-        {name:'Dual Momentum',tf:'medium',sharpe:1.52,cagr:35.2,maxDD:-18.9,winRate:61.2,trades:198,logic:'Absolute + Relative momentum filter; rotate to risk-off when SPY momentum negative'},
-        {name:'EMA Crossover',tf:'short',sharpe:1.31,cagr:28.7,maxDD:-22.1,winRate:55.4,trades:428,logic:'Fast EMA crosses above slow EMA → BUY; reverse for SELL. Triple-filtered with volume.'},
-        {name:'RSI Mean Reversion',tf:'short',sharpe:1.24,cagr:25.3,maxDD:-19.8,winRate:63.8,trades:356,logic:'RSI<30 → oversold BUY; RSI>70 → overbought SELL. Bollinger confirmation.'},
-        {name:'MACD Histogram',tf:'medium',sharpe:1.18,cagr:23.1,maxDD:-21.4,winRate:54.2,trades:278,logic:'MACD histogram crosses zero → signal. Divergence detection for reversal signals.'},
-        {name:'Bollinger Squeeze',tf:'short',sharpe:1.45,cagr:32.6,maxDD:-17.2,winRate:60.1,trades:189,logic:'Bandwidth contraction → breakout imminent. Direction determined by momentum indicators.'},
-        {name:'Stochastic Oscillator',tf:'short',sharpe:1.12,cagr:21.4,maxDD:-23.7,winRate:57.9,trades:402,logic:'%K crosses %D in oversold/overbought zones. Confirmed with trend filter.'},
-        {name:'Ichimoku Cloud',tf:'long',sharpe:1.38,cagr:30.2,maxDD:-20.1,winRate:56.8,trades:142,logic:'Price above cloud → bullish. Tenkan/Kijun cross for entries. Chikou span confirmation.'},
-        {name:'VWAP Strategy',tf:'intraday',sharpe:1.22,cagr:24.8,maxDD:-15.3,winRate:59.3,trades:512,logic:'Institutional-level execution. Buy below VWAP, sell above. Volume-weighted signals.'},
-        {name:'Fibonacci Retracement',tf:'medium',sharpe:1.15,cagr:22.7,maxDD:-24.2,winRate:53.6,trades:167,logic:'Key levels (38.2%, 50%, 61.8%) as support/resistance. Confluence with other indicators.'},
-        {name:'Williams %R',tf:'short',sharpe:1.08,cagr:19.5,maxDD:-26.1,winRate:55.1,trades:389,logic:'Overbought/oversold oscillator. -80 to -100 oversold BUY, -20 to 0 overbought SELL.'},
-        {name:'Keltner Channel',tf:'medium',sharpe:1.35,cagr:29.8,maxDD:-18.5,winRate:58.4,trades:223,logic:'Price outside channels → breakout/breakdown. ATR-based adaptive bands.'},
-        {name:'Parabolic SAR',tf:'short',sharpe:1.19,cagr:23.9,maxDD:-22.8,winRate:52.7,trades:367,logic:'Trailing stop and trend indicator. SAR flip → signal reversal.'},
-        {name:'OBV Divergence',tf:'medium',sharpe:1.28,cagr:26.4,maxDD:-19.6,winRate:57.2,trades:198,logic:'Price-volume divergence signals. Rising OBV with falling price → accumulation BUY.'},
-        {name:'Donchian Breakout',tf:'medium',sharpe:1.42,cagr:31.5,maxDD:-21.3,winRate:48.9,trades:156,logic:'20-day high breakout → BUY; 10-day low breakdown → SELL. Turtle trading adapted.'},
-        {name:'Mean Reversion Z-Score',tf:'short',sharpe:1.33,cagr:28.1,maxDD:-16.9,winRate:64.5,trades:287,logic:'Z-score of price vs 20-day mean. Z<-2 → BUY, Z>2 → SELL. Statistical edge.'},
-        {name:'Momentum Score',tf:'medium',sharpe:1.41,cagr:30.8,maxDD:-19.2,winRate:56.1,trades:212,logic:'Multi-factor momentum: 1M, 3M, 6M returns. Top quintile → BUY, bottom → SELL.'},
-        {name:'Chandelier Exit',tf:'medium',sharpe:1.25,cagr:25.9,maxDD:-20.7,winRate:55.8,trades:245,logic:'ATR-based trailing exit. 3x ATR from highest high. Protects gains in trends.'},
-        {name:'Regime Adaptive Ensemble',tf:'multi',sharpe:1.65,cagr:37.4,maxDD:-14.8,winRate:61.7,trades:345,logic:'ML-weighted ensemble of top strategies. Weights adapt based on market regime classification.'}
-    ];
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo"><span>📊</span> Finansor AI</div>
+      <p>AI-powered quantitative analysis for modern traders.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col"><h4>Platform</h4><a href="agents.html">Agents</a><a href="signals.html">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a></div>
+      <div class="footer-col"><h4>Company</h4><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a><a href="#">Docs</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Finansor AI. All rights reserved.</div>
+</footer>
 
-    const grid=document.getElementById('stratGrid');
-    strategies.sort((a,b)=>b.sharpe-a.sharpe).forEach((s,i)=>{
-        // Generate fake equity curve
-        let bars=[];let val=100;
-        for(let j=0;j<30;j++){val+=val*(s.cagr/100/30)*(Math.random()*2-0.5);bars.push(Math.max(val,50))}
-        const maxBar=Math.max(...bars);const minBar=Math.min(...bars);
-        const barHtml=bars.map(b=>{const h=((b-minBar)/(maxBar-minBar))*36+4;return`<div class="eq-bar" style="height:${h}px;background:${b>=bars[0]?'var(--green)':'var(--red)'}"></div>`}).join('');
+<script>
+const strategies = [
+  {name:'Trend EMA Cross',cat:'Mid',sharpe:1.78,cagr:34.2,maxdd:-12.4,winrate:62.1,calmar:2.76},
+  {name:'RSI Reversal',cat:'Short',sharpe:1.52,cagr:28.7,maxdd:-15.8,winrate:58.4,calmar:1.82},
+  {name:'MACD Momentum',cat:'Mid',sharpe:1.41,cagr:25.3,maxdd:-18.2,winrate:55.9,calmar:1.39},
+  {name:'Bollinger Squeeze',cat:'Mid',sharpe:1.35,cagr:22.1,maxdd:-14.6,winrate:57.2,calmar:1.51},
+  {name:'Mean Reversion',cat:'Short',sharpe:1.28,cagr:19.8,maxdd:-11.3,winrate:61.5,calmar:1.75},
+  {name:'Dual Momentum',cat:'Long',sharpe:1.24,cagr:21.4,maxdd:-13.2,winrate:59.8,calmar:1.62},
+  {name:'Ichimoku Cloud',cat:'Mid',sharpe:1.21,cagr:20.1,maxdd:-16.5,winrate:54.3,calmar:1.22},
+  {name:'VWAP Reversion',cat:'Short',sharpe:1.18,cagr:17.5,maxdd:-19.4,winrate:56.1,calmar:0.90},
+  {name:'ADX Trend Filter',cat:'Mid',sharpe:1.15,cagr:18.9,maxdd:-15.1,winrate:55.8,calmar:1.25},
+  {name:'Stochastic Cross',cat:'Short',sharpe:1.12,cagr:16.2,maxdd:-20.3,winrate:53.7,calmar:0.80},
+  {name:'Keltner Breakout',cat:'Mid',sharpe:1.08,cagr:17.8,maxdd:-14.8,winrate:56.9,calmar:1.20},
+  {name:'Heikin Ashi Trend',cat:'Mid',sharpe:1.05,cagr:16.4,maxdd:-13.7,winrate:58.2,calmar:1.20},
+  {name:'Volume Profile',cat:'Short',sharpe:1.02,cagr:14.8,maxdd:-21.5,winrate:52.4,calmar:0.69},
+  {name:'Parabolic SAR',cat:'Mid',sharpe:0.98,cagr:15.2,maxdd:-17.8,winrate:51.8,calmar:0.85},
+  {name:'Donchian Channel',cat:'Long',sharpe:0.95,cagr:14.1,maxdd:-12.4,winrate:54.1,calmar:1.14},
+  {name:'Fibonacci Retracement',cat:'Mid',sharpe:0.92,cagr:13.5,maxdd:-16.2,winrate:53.2,calmar:0.83},
+  {name:'Williams %R',cat:'Short',sharpe:0.88,cagr:12.8,maxdd:-22.1,winrate:51.2,calmar:0.58},
+  {name:'CCI Divergence',cat:'Short',sharpe:0.85,cagr:11.4,maxdd:-19.8,winrate:50.8,calmar:0.58},
+  {name:'OBV Momentum',cat:'Long',sharpe:0.82,cagr:10.9,maxdd:-8.1,winrate:67.8,calmar:1.35},
+  {name:'Pivot Points',cat:'Short',sharpe:0.78,cagr:9.2,maxdd:-23.4,winrate:49.5,calmar:0.39},
+];
 
-        const sharpeColor=s.sharpe>=1.4?'var(--green)':s.sharpe>=1.2?'var(--cyan)':'var(--yellow)';
-        grid.innerHTML+=`
-        <div class="strat-card">
-            <div class="strat-header">
-                <div class="strat-name">${s.name}</div>
-                <div class="strat-tf">${s.tf}</div>
-            </div>
-            <div class="strat-logic">${s.logic}</div>
-            <div class="equity-mini">${barHtml}</div>
-            <div class="strat-metrics">
-                <div class="sm"><div class="sm-val" style="color:${sharpeColor}">${s.sharpe.toFixed(2)}</div><div class="sm-label">Sharpe</div></div>
-                <div class="sm"><div class="sm-val" style="color:var(--green)">${s.cagr.toFixed(1)}%</div><div class="sm-label">CAGR</div></div>
-                <div class="sm"><div class="sm-val" style="color:var(--red)">${s.maxDD.toFixed(1)}%</div><div class="sm-label">Max DD</div></div>
-                <div class="sm"><div class="sm-val">${s.winRate.toFixed(1)}%</div><div class="sm-label">Win Rate</div></div>
-                <div class="sm"><div class="sm-val">${s.trades}</div><div class="sm-label">Trades</div></div>
-                <div class="sm"><div class="sm-val" style="color:var(--accent)">#${i+1}</div><div class="sm-label">Rank</div></div>
-            </div>
-            <div class="strat-rank"><span>Profit Factor: ${(1+Math.random()).toFixed(2)}</span><span>Avg Trade: ${(s.cagr/s.trades*100).toFixed(2)}%</span></div>
-        </div>`;
-    });
-    </script>
+// Render strategy cards
+const grid = document.getElementById('stratGrid');
+strategies.forEach((s, i) => {
+  const catClass = s.cat==='Short'?'cat-short':s.cat==='Mid'?'cat-mid':'cat-long';
+  const card = document.createElement('div');
+  card.className = 'strat-card';
+  card.innerHTML = `
+    <span class="cat-badge ${catClass}">${s.cat}-Term</span>
+    <h3>${s.name}</h3>
+    <canvas id="chart${i}" height="50"></canvas>
+    <div class="metric-row"><span class="lbl">Sharpe</span><span class="val positive">${s.sharpe.toFixed(2)}</span></div>
+    <div class="metric-row"><span class="lbl">CAGR</span><span class="val positive">+${s.cagr}%</span></div>
+    <div class="metric-row"><span class="lbl">Max DD</span><span class="val negative">${s.maxdd}%</span></div>
+    <div class="metric-row"><span class="lbl">Win Rate</span><span class="val">${s.winrate}%</span></div>
+    <div class="metric-row"><span class="lbl">Calmar</span><span class="val">${s.calmar.toFixed(2)}</span></div>
+  `;
+  grid.appendChild(card);
+});
+
+// Draw mini equity curves
+strategies.forEach((s, i) => {
+  const canvas = document.getElementById('chart'+i);
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.offsetWidth || 240;
+  const h = 50;
+  canvas.width = w; canvas.height = h;
+  // Generate curve based on sharpe
+  const pts = [];
+  let v = 50;
+  for(let j=0;j<30;j++) {
+    v += (Math.random()-0.35)*4 * (s.sharpe/1.5);
+    v = Math.max(10, Math.min(95, v));
+    pts.push(v);
+  }
+  ctx.strokeStyle = s.sharpe > 1.2 ? '#10b981' : s.sharpe > 0.9 ? '#3b82f6' : '#f59e0b';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  pts.forEach((p,j) => {
+    const x = (j/(pts.length-1))*w;
+    const y = h - (p/100)*h;
+    j===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+});
+
+// Comparison table
+const comp = document.getElementById('compBody');
+const sorted = [...strategies].sort((a,b)=>b.sharpe-a.sharpe);
+const top5 = sorted.slice(0,5);
+const bot5 = sorted.slice(-5).reverse();
+function addRows(arr, startRank, isTop) {
+  arr.forEach((s,i) => {
+    const tr = document.createElement('tr');
+    if(!isTop && i===0) tr.style.borderTop = '2px solid var(--border-accent)';
+    tr.innerHTML = `
+      <td class="rank">${isTop?startRank+i:'#'+(strategies.length-4+i)}</td>
+      <td style="font-weight:600">${s.name}</td>
+      <td><span class="cat-badge ${s.cat==='Short'?'cat-short':s.cat==='Mid'?'cat-mid':'cat-long'}" style="font-size:0.65rem">${s.cat}</span></td>
+      <td class="positive">${s.sharpe.toFixed(2)}</td>
+      <td class="positive">+${s.cagr}%</td>
+      <td class="negative">${s.maxdd}%</td>
+      <td>${s.winrate}%</td>
+      <td>${s.calmar.toFixed(2)}</td>
+    `;
+    comp.appendChild(tr);
+  });
+}
+addRows(top5, 1, true);
+// separator
+const sep = document.createElement('tr');
+sep.innerHTML = '<td colspan="8" style="padding:8px;text-align:center;color:var(--text-dim);font-size:0.75rem;">···</td>';
+comp.appendChild(sep);
+addRows(bot5, strategies.length-4, false);
+</script>
 </body>
 </html>

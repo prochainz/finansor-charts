@@ -1,204 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent Marketplace — Finansor AI</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
-    <style>
-        :root{--bg:#0a0e17;--bg2:#111827;--bg3:#1a2332;--card:#151d2e;--border:#1e2a3a;--text:#e2e8f0;--text2:#94a3b8;--accent:#3b82f6;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--cyan:#06b6d4;--gradient:linear-gradient(135deg,#3b82f6,#8b5cf6)}
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}a{color:var(--accent);text-decoration:none}
-        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}.nav-logo{font-size:20px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}.nav-logo span{font-size:24px;-webkit-text-fill-color:initial}.nav-links{display:flex;gap:32px;align-items:center}.nav-links a{color:var(--text2);font-size:14px;font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--text)}.nav-cta{background:var(--gradient);color:white!important;padding:8px 20px;border-radius:8px;font-weight:600;font-size:13px}.nav-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green)}.nav-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Marketplace — Finansor AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #06080d; --surface: #0c1017; --surface-hover: #111827; --border: #1a2035; --border-accent: #243049;
+  --text: #e8ecf2; --text-muted: #7a8599; --text-dim: #4a5568;
+  --accent: #3b82f6; --accent-light: #60a5fa; --accent-glow: rgba(59, 130, 246, 0.15);
+  --cyan: #06b6d4; --green: #10b981; --red: #ef4444; --gold: #f59e0b;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+a { color: var(--accent-light); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--cyan); }
 
-        .page-header{padding:100px 24px 40px;text-align:center}.page-header h1{font-size:40px;font-weight:800;margin-bottom:8px}.page-header p{color:var(--text2);font-size:16px}
-        .container{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(6,8,13,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.nav-logo span { font-size: 1.4rem; }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a { color: var(--text-muted); font-size: 0.875rem; font-weight: 500; }
+.nav-links a:hover, .nav-links a.active { color: var(--text); }
+.nav-cta { background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; }
+.nav-cta:hover { opacity: 0.9; color: #fff; }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+.hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+.mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; flex-direction: column; gap: 12px; z-index: 999; }
+.mobile-menu a { color: var(--text-muted); font-size: 0.95rem; padding: 8px 0; }
+.mobile-menu.open { display: flex; }
+@media (max-width: 768px) { .nav-links { display: none; } .hamburger { display: flex; } }
 
-        /* Filters */
-        .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;justify-content:center}
-        .filter-btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:500;background:var(--card);border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:0.2s}
-        .filter-btn.active,.filter-btn:hover{background:var(--accent);color:white;border-color:var(--accent)}
+/* PAGE */
+.page-header { margin-top: 64px; padding: 60px 24px 40px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+.page-header h1 { font-size: 2.5rem; margin-bottom: 12px; }
+.page-header p { color: var(--text-muted); font-size: 1.05rem; }
+.section { max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; }
 
-        /* Agent detail card */
-        .agent-detail{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:20px;transition:0.3s}
-        .agent-detail:hover{border-color:var(--accent)}
-        .agent-top{display:flex;gap:24px;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap}
-        .agent-icon-lg{font-size:56px;width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border-radius:16px}
-        .agent-info{flex:1;min-width:200px}
-        .agent-info h2{font-size:24px;font-weight:700;margin-bottom:4px}
-        .agent-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
-        .agent-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px;text-transform:uppercase;letter-spacing:0.5px}
-        .badge-active{background:rgba(16,185,129,0.15);color:var(--green)}
-        .badge-standby{background:rgba(245,158,11,0.15);color:var(--yellow)}
-        .badge-cat{background:rgba(59,130,246,0.15);color:var(--accent)}
-        .agent-desc-full{color:var(--text2);font-size:14px;line-height:1.6;margin-bottom:16px}
-        .agent-strategy{background:var(--bg2);border-radius:10px;padding:16px;margin-bottom:20px;font-size:13px;color:var(--text2);line-height:1.5;border-left:3px solid var(--accent)}
-        .agent-strategy strong{color:var(--text);display:block;margin-bottom:4px}
-        .agent-metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px}
-        .metric{background:var(--bg2);border-radius:10px;padding:14px;text-align:center}
-        .metric-val{font-size:20px;font-weight:700}
-        .metric-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
-        .agent-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-        .tag{font-size:11px;padding:4px 10px;background:var(--bg2);border-radius:6px;color:var(--text2)}
-        .agent-actions2{display:flex;gap:10px;flex-wrap:wrap}
-        .btn{padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:0.2s}
-        .btn-grad{background:var(--gradient);color:white}
-        .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
-        .btn:hover{opacity:0.85;transform:translateY(-1px)}
+/* FILTERS */
+.filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px; align-items: center; }
+.search-input { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text); font-size: 0.875rem; width: 260px; outline: none; font-family: 'Inter', sans-serif; }
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--text-dim); }
+.filter-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 8px 16px; color: var(--text-muted); font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+.filter-btn:hover, .filter-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--text); }
 
-        /* Agent Console Modal */
-        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center}
-        .modal-overlay.show{display:flex}
-        .modal{background:var(--card);border:1px solid var(--border);border-radius:16px;width:90%;max-width:700px;max-height:80vh;overflow-y:auto;padding:32px}
-        .modal h3{font-size:22px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-        .modal-close{background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer;position:absolute;top:16px;right:20px}
-        .console{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:'Courier New',monospace;font-size:13px;color:var(--green);min-height:200px;margin-bottom:16px;white-space:pre-wrap;line-height:1.6}
-        .console-input{display:flex;gap:8px}.console-input input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-family:monospace;font-size:13px}
-        .console-input button{background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer}
+/* AGENT CARDS */
+.agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; margin-bottom: 60px; }
+.agent-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; transition: border-color 0.3s, transform 0.2s; position: relative; }
+.agent-card:hover { border-color: var(--border-accent); transform: translateY(-4px); }
+.agent-card .badge { position: absolute; top: 16px; right: 16px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 4px; }
+.badge-popular { background: rgba(59,130,246,0.15); color: var(--accent-light); }
+.badge-active { background: rgba(16,185,129,0.15); color: var(--green); }
+.badge-beta { background: rgba(245,158,11,0.15); color: var(--gold); }
+.badge-soon { background: rgba(122,133,153,0.15); color: var(--text-muted); }
+.agent-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px; background: var(--accent-glow); }
+.agent-card h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+.agent-card .desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+.agent-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; font-size: 0.75rem; color: var(--text-dim); }
+.stars { color: var(--gold); letter-spacing: 2px; }
+.agent-actions { display: flex; gap: 8px; }
+.btn-sm { padding: 8px 18px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+.btn-primary-sm { background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #fff; }
+.btn-primary-sm:hover { opacity: 0.9; }
+.btn-outline-sm { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+.btn-outline-sm:hover { border-color: var(--accent); color: var(--text); }
 
-        footer{border-top:1px solid var(--border);padding:48px 24px}.footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}.footer-links{display:flex;gap:24px}.footer-links a{color:var(--text2);font-size:13px}.footer-copy{color:var(--text2);font-size:13px}
-        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}.agent-top{flex-direction:column}.agent-metrics{grid-template-columns:repeat(2,1fr)}}
-    </style>
+/* CONSOLE */
+.console-section h2 { font-size: 1.5rem; margin-bottom: 16px; }
+.console { background: #0a0c10; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.console-header { background: var(--surface); padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.console-header .dot { width: 8px; height: 8px; border-radius: 50%; }
+.console-header .dot:nth-child(1) { background: #ef4444; }
+.console-header .dot:nth-child(2) { background: #f59e0b; }
+.console-header .dot:nth-child(3) { background: #10b981; }
+.console-header span { margin-left: 8px; font-size: 0.75rem; color: var(--text-dim); }
+.console-body { padding: 16px; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.8rem; min-height: 200px; max-height: 320px; overflow-y: auto; }
+.console-body .line { margin-bottom: 4px; color: var(--text-muted); }
+.console-body .line.cmd { color: var(--green); }
+.console-body .line.output { color: var(--text-dim); }
+.console-body .line.accent { color: var(--accent-light); }
+.console-input-row { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border); background: var(--surface); }
+.console-input-row span { color: var(--green); font-family: monospace; font-size: 0.8rem; }
+.console-input { flex: 1; background: transparent; border: none; color: var(--text); font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.8rem; outline: none; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 36px; max-width: 560px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
+.modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+.modal h2 { font-size: 1.4rem; margin-bottom: 8px; }
+.modal .desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.7; }
+.modal-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.modal-stat { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+.modal-stat .label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+.modal-stat .value { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; }
+.footer-brand p { font-size: 0.8rem; color: var(--text-dim); max-width: 260px; margin-top: 8px; }
+.footer-links { display: flex; gap: 48px; }
+.footer-col h4 { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; }
+.footer-col a { display: block; color: var(--text-dim); font-size: 0.85rem; margin-bottom: 8px; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { max-width: 1200px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-dim); text-align: center; }
+
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
 </head>
 <body>
-    <nav><div class="nav-inner"><a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a><div class="nav-links"><a href="index.html">Home</a><a href="agents.html" class="active">Agents</a><a href="signals.html">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a><div class="nav-status">Systems Online</div><a href="dashboard.html" class="nav-cta">Launch App →</a></div><button class="hamburger" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button></div></nav>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="agents.html" class="active">Agents</a>
+      <a href="signals.html">Signals</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="backtest.html">Backtest</a>
+      <a href="macro.html">Macro</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="dashboard.html" class="nav-cta">Launch App →</a>
+    </div>
+    <button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a>
+  <a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a>
+</div>
 
-    <div class="page-header">
-        <h1>🤖 Agent Marketplace</h1>
-        <p>Deploy, configure, and monitor autonomous trading agents</p>
+<div class="page-header" style="margin-top:64px;">
+  <div class="section-label" style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:12px;">AI Agents</div>
+  <h1>Agent Marketplace</h1>
+  <p>Deploy autonomous AI agents that analyze markets, generate signals, and optimize your portfolio around the clock.</p>
+</div>
+
+<div class="section">
+  <div class="filters">
+    <input type="text" class="search-input" placeholder="Search agents..." id="agentSearch" oninput="filterAgents()">
+    <button class="filter-btn active" data-cat="all" onclick="setFilter(this)">All</button>
+    <button class="filter-btn" data-cat="signals" onclick="setFilter(this)">Signals</button>
+    <button class="filter-btn" data-cat="sentiment" onclick="setFilter(this)">Sentiment</button>
+    <button class="filter-btn" data-cat="portfolio" onclick="setFilter(this)">Portfolio</button>
+    <button class="filter-btn" data-cat="macro" onclick="setFilter(this)">Macro</button>
+    <button class="filter-btn" data-cat="risk" onclick="setFilter(this)">Risk</button>
+  </div>
+
+  <div class="agents-grid" id="agentsGrid">
+    <div class="agent-card" data-category="signals" data-name="Signal Engine Agent">
+      <div class="badge badge-popular">Most Popular</div>
+      <div class="agent-icon">📈</div>
+      <h3>Signal Engine Agent</h3>
+      <p class="desc">Real-time technical analysis signals for 46+ assets. Runs 20 strategies with consensus scoring and regime-adaptive weighting.</p>
+      <div class="agent-meta">
+        <span class="stars">★★★★★</span>
+        <span>4.9 · 12.4k uses</span>
+        <span style="color:var(--green);">● Active</span>
+      </div>
+      <div class="agent-actions">
+        <button class="btn-sm btn-primary-sm">Configure</button>
+        <button class="btn-sm btn-outline-sm" onclick="openModal('signal')">View Details</button>
+      </div>
     </div>
 
-    <div class="container">
-        <div class="filters">
-            <button class="filter-btn active" onclick="filterAgents('all',this)">All Agents</button>
-            <button class="filter-btn" onclick="filterAgents('Sentiment',this)">Sentiment</button>
-            <button class="filter-btn" onclick="filterAgents('Technical',this)">Technical</button>
-            <button class="filter-btn" onclick="filterAgents('Macro',this)">Macro</button>
-            <button class="filter-btn" onclick="filterAgents('Momentum',this)">Momentum</button>
-            <button class="filter-btn" onclick="filterAgents('DeFi',this)">DeFi</button>
-            <button class="filter-btn" onclick="filterAgents('Risk',this)">Risk</button>
-        </div>
-        <div id="agentList"></div>
+    <div class="agent-card" data-category="sentiment" data-name="Sentiment Analyzer">
+      <div class="badge badge-active">Active</div>
+      <div class="agent-icon">💬</div>
+      <h3>Sentiment Analyzer</h3>
+      <p class="desc">Twitter + news NLP sentiment scoring with real-time mood tracking. Detects narrative shifts before price moves.</p>
+      <div class="agent-meta">
+        <span class="stars">★★★★☆</span>
+        <span>4.7 · 8.2k uses</span>
+        <span style="color:var(--green);">● Active</span>
+      </div>
+      <div class="agent-actions">
+        <button class="btn-sm btn-primary-sm">Configure</button>
+        <button class="btn-sm btn-outline-sm" onclick="openModal('sentiment')">View Details</button>
+      </div>
     </div>
 
-    <!-- Console Modal -->
-    <div class="modal-overlay" id="consoleModal">
-        <div class="modal" style="position:relative">
-            <button class="modal-close" onclick="closeConsole()">✕</button>
-            <h3 id="consoleName"></h3>
-            <div class="console" id="consoleOutput"></div>
-            <div class="console-input">
-                <input type="text" id="consoleInput" placeholder="Enter command... (try: run, status, config, signals)" onkeydown="if(event.key==='Enter')sendCommand()">
-                <button onclick="sendCommand()">Send</button>
-            </div>
-        </div>
+    <div class="agent-card" data-category="portfolio" data-name="Portfolio Optimizer">
+      <div class="badge badge-active">Active</div>
+      <div class="agent-icon">💼</div>
+      <h3>Portfolio Optimizer</h3>
+      <p class="desc">CVaR-based portfolio allocation with dynamic rebalancing. Maximizes risk-adjusted returns using modern portfolio theory.</p>
+      <div class="agent-meta">
+        <span class="stars">★★★★★</span>
+        <span>4.8 · 6.1k uses</span>
+        <span style="color:var(--green);">● Active</span>
+      </div>
+      <div class="agent-actions">
+        <button class="btn-sm btn-primary-sm">Configure</button>
+        <button class="btn-sm btn-outline-sm" onclick="openModal('portfolio')">View Details</button>
+      </div>
     </div>
 
-    <footer><div class="footer-inner"><div class="footer-copy">© 2026 Finansor AI</div><div class="footer-links"><a href="https://github.com/prochainz/finansor-quant">GitHub</a><a href="signals.html">Signals</a><a href="pricing.html">Pricing</a></div></div></footer>
+    <div class="agent-card" data-category="macro" data-name="Macro Monitor">
+      <div class="badge badge-active">Active</div>
+      <div class="agent-icon">🌐</div>
+      <h3>Macro Monitor</h3>
+      <p class="desc">Tracks Fed policy, inflation, economic indicators, and global macro trends. Provides regime context for strategy selection.</p>
+      <div class="agent-meta">
+        <span class="stars">★★★★☆</span>
+        <span>4.6 · 4.8k uses</span>
+        <span style="color:var(--green);">● Active</span>
+      </div>
+      <div class="agent-actions">
+        <button class="btn-sm btn-primary-sm">Configure</button>
+        <button class="btn-sm btn-outline-sm" onclick="openModal('macro')">View Details</button>
+      </div>
+    </div>
 
-    <script>
-    let allAgents=[];
-    let currentAgent=null;
+    <div class="agent-card" data-category="risk" data-name="Risk Manager">
+      <div class="badge badge-beta">Beta</div>
+      <div class="agent-icon">🛡️</div>
+      <h3>Risk Manager</h3>
+      <p class="desc">Automated stop-loss management, position sizing, and drawdown protection. Prevents catastrophic losses with dynamic risk limits.</p>
+      <div class="agent-meta">
+        <span class="stars">★★★★☆</span>
+        <span>4.5 · 2.3k uses</span>
+        <span style="color:var(--gold);">● Beta</span>
+      </div>
+      <div class="agent-actions">
+        <button class="btn-sm btn-primary-sm">Activate</button>
+        <button class="btn-sm btn-outline-sm" onclick="openModal('risk')">View Details</button>
+      </div>
+    </div>
 
-    fetch('data/agents.json').then(r=>r.json()).then(data=>{
-        allAgents=data.agents;
-        renderAgents(allAgents);
-        // Check hash for scroll
-        if(location.hash){
-            setTimeout(()=>{const el=document.getElementById(location.hash.slice(1));if(el)el.scrollIntoView({behavior:'smooth'})},300);
-        }
-    });
+    <div class="agent-card" data-category="signals" data-name="ML Predictor">
+      <div class="badge badge-soon">Coming Soon</div>
+      <div class="agent-icon">🤖</div>
+      <h3>ML Predictor</h3>
+      <p class="desc">XGBoost + LSTM ensemble for price direction prediction. Trained on 5 years of multi-asset data with walk-forward validation.</p>
+      <div class="agent-meta">
+        <span class="stars">☆☆☆☆☆</span>
+        <span>— · Unreleased</span>
+        <span style="color:var(--text-dim);">● Coming Soon</span>
+      </div>
+      <div class="agent-actions">
+        <button class="btn-sm btn-outline-sm" style="opacity:0.5;cursor:not-allowed;">Notify Me</button>
+        <button class="btn-sm btn-outline-sm" onclick="openModal('ml')">View Details</button>
+      </div>
+    </div>
+  </div>
 
-    function filterAgents(cat,btn){
-        document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        const filtered=cat==='all'?allAgents:allAgents.filter(a=>a.category===cat);
-        renderAgents(filtered);
-    }
+  <!-- CONSOLE -->
+  <div class="console-section reveal">
+    <h2>Interactive Console</h2>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Try commands: <code style="background:var(--surface);padding:2px 6px;border-radius:4px;">status</code>, <code style="background:var(--surface);padding:2px 6px;border-radius:4px;">signals AAPL</code>, <code style="background:var(--surface);padding:2px 6px;border-radius:4px;">run signal-engine</code>, <code style="background:var(--surface);padding:2px 6px;border-radius:4px;">help</code></p>
+    <div class="console">
+      <div class="console-header">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <span>finansor-cli v2.1.0</span>
+      </div>
+      <div class="console-body" id="consoleOutput">
+        <div class="line accent">Welcome to Finansor AI Console v2.1.0</div>
+        <div class="line output">Type 'help' for available commands.</div>
+        <div class="line output">---</div>
+      </div>
+      <div class="console-input-row">
+        <span>❯</span>
+        <input type="text" class="console-input" id="consoleInput" placeholder="Enter command..." autofocus>
+      </div>
+    </div>
+  </div>
+</div>
 
-    function renderAgents(agents){
-        const list=document.getElementById('agentList');
-        list.innerHTML='';
-        agents.forEach(a=>{
-            const statusClass=a.status==='active'?'badge-active':'badge-standby';
-            const div=document.createElement('div');
-            div.className='agent-detail';
-            div.id=a.id;
-            div.setAttribute('data-category',a.category);
-            div.innerHTML=`
-                <div class="agent-top">
-                    <div class="agent-icon-lg">${a.icon}</div>
-                    <div class="agent-info">
-                        <h2>${a.name}</h2>
-                        <div class="agent-meta">
-                            <span class="agent-badge ${statusClass}">${a.status}</span>
-                            <span class="agent-badge badge-cat">${a.category}</span>
-                            <span style="color:var(--text2);font-size:12px">${a.timeframe}</span>
-                        </div>
-                        <div class="agent-desc-full">${a.description}</div>
-                        <div class="agent-strategy"><strong>Strategy Logic</strong>${a.strategy}</div>
-                    </div>
-                </div>
-                <div class="agent-metrics">
-                    <div class="metric"><div class="metric-val" style="color:var(--green)">${a.win_rate}%</div><div class="metric-label">Win Rate</div></div>
-                    <div class="metric"><div class="metric-val">${a.signals_per_day}/d</div><div class="metric-label">Signals/Day</div></div>
-                    <div class="metric"><div class="metric-val" style="color:var(--cyan)">${a.uptime}%</div><div class="metric-label">Uptime</div></div>
-                    <div class="metric"><div class="metric-val">${a.risk_profile}</div><div class="metric-label">Risk</div></div>
-                    <div class="metric"><div class="metric-val" style="color:var(--accent)">${(a.total_signals||0).toLocaleString()}</div><div class="metric-label">Total Signals</div></div>
-                </div>
-                <div class="agent-tags">
-                    ${(a.assets||[]).map(t=>`<span class="tag">${t}</span>`).join('')}
-                    ${(a.inputs||[]).slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}
-                </div>
-                <div class="agent-actions2">
-                    <button class="btn btn-grad" onclick="openConsole('${a.id}')">▶ Run Agent</button>
-                    <button class="btn btn-outline" onclick="activateAgent('${a.name}')">⚡ Activate</button>
-                    <button class="btn btn-outline" onclick="alert('Outputs: ${(a.outputs||[]).join(', ')}')">📤 View Outputs</button>
-                </div>
-            `;
-            list.appendChild(div);
-        });
-    }
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
 
-    function activateAgent(name){
-        alert(`✅ Agent "${name}" activated!\n\nIt will start generating signals on the next cycle (every 4 hours).\n\nCheck the Dashboard for live status.`);
-    }
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo"><span>📊</span> Finansor AI</div>
+      <p>AI-powered quantitative analysis for modern traders.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col"><h4>Platform</h4><a href="agents.html">Agents</a><a href="signals.html">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a></div>
+      <div class="footer-col"><h4>Company</h4><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a><a href="#">Docs</a></div>
+      <div class="footer-col"><h4>Connect</h4><a href="#">GitHub</a><a href="#">Twitter</a><a href="#">Telegram</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Finansor AI. All rights reserved.</div>
+</footer>
 
-    function openConsole(agentId){
-        currentAgent=allAgents.find(a=>a.id===agentId);
-        if(!currentAgent)return;
-        document.getElementById('consoleName').innerHTML=`${currentAgent.icon} ${currentAgent.name} Console`;
-        document.getElementById('consoleOutput').textContent=
-`[${new Date().toISOString()}] Finansor AI Agent Console v2.1
-[${currentAgent.name}] Status: ${currentAgent.status.toUpperCase()}
-[${currentAgent.name}] Uptime: ${currentAgent.uptime}%
-[${currentAgent.name}] Last run: ${currentAgent.last_run}
-[${currentAgent.name}] Total signals: ${currentAgent.total_signals}
+<script>
+// Filter
+let activeFilter = 'all';
+function setFilter(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.cat;
+  filterAgents();
+}
+function filterAgents() {
+  const q = document.getElementById('agentSearch').value.toLowerCase();
+  document.querySelectorAll('.agent-card').forEach(card => {
+    const cat = card.dataset.category;
+    const name = card.dataset.name.toLowerCase();
+    const matchCat = activeFilter === 'all' || cat === activeFilter;
+    const matchSearch = !q || name.includes(q);
+    card.style.display = matchCat && matchSearch ? '' : 'none';
+  });
+}
 
-Type a command: run, status, config, signals, help`;
-        document.getElementById('consoleModal').classList.add('show');
-    }
+// Modal
+const agentDetails = {
+  signal: { icon: '📈', name: 'Signal Engine Agent', desc: 'The flagship agent running 20 quantitative strategies simultaneously across 46+ assets. Uses consensus scoring to weight strategy agreement, regime detection to adapt to market conditions, and confidence scoring to filter noise.', stats: [['Strategies','20'],['Assets','46+'],['Avg Latency','< 2s'],['Uptime','99.9%'],['Sharpe (best)','1.78'],['Update Freq','Every 4h']] },
+  sentiment: { icon: '💬', name: 'Sentiment Analyzer', desc: 'NLP-powered sentiment engine that scans Twitter, Reddit, and financial news in real-time. Detects narrative shifts, fear/greed extremes, and social momentum before price action confirms.', stats: [['Sources','Twitter, Reddit, News'],['Languages','EN'],['Update Freq','Real-time'],['Accuracy','78%'],['Latency','< 5s'],['Coverage','46+ assets']] },
+  portfolio: { icon: '💼', name: 'Portfolio Optimizer', desc: 'Modern portfolio theory meets cutting-edge risk management. Uses CVaR optimization, Black-Litterman views from signal consensus, and dynamic rebalancing triggers.', stats: [['Method','CVaR + BL'],['Rebalance','Dynamic'],['Risk Models','3'],['Max Assets','50'],['Backtest','5yr'],['Sharpe Target','> 1.2']] },
+  macro: { icon: '🌐', name: 'Macro Monitor', desc: 'Tracks 40+ macro indicators including Fed funds rate, CPI, PMI, yield curves, and dollar index. Provides regime classification that feeds into strategy selection.', stats: [['Indicators','40+'],['Regime Types','4'],['Data Sources','FRED, BLS'],['Update','Daily'],['Forecast','3-6mo'],['Coverage','US, EU, Asia']] },
+  risk: { icon: '🛡️', name: 'Risk Manager', desc: 'Automated risk management layer that monitors portfolio exposure, correlation spikes, and drawdown limits. Triggers stop-losses and position reductions before breaches.', stats: [['Max DD Limit','Custom'],['Position Sizing','Kelly/Fixed'],['Correlation','Monitored'],['Alerts','Telegram'],['Status','Beta'],['VaR Model','Historical']] },
+  ml: { icon: '🤖', name: 'ML Predictor', desc: 'Ensemble ML model combining XGBoost for feature importance and LSTM for sequence prediction. Walk-forward validated on 5 years of data across multiple asset classes.', stats: [['Models','XGBoost + LSTM'],['Training','Walk-forward'],['Features','120+'],['Accuracy','TBD'],['Status','In Development'],['ETA','Q2 2026']] }
+};
+function openModal(key) {
+  const d = agentDetails[key];
+  let statsHtml = d.stats.map(s => `<div class="modal-stat"><div class="label">${s[0]}</div><div class="value">${s[1]}</div></div>`).join('');
+  document.getElementById('modalContent').innerHTML = `
+    <div style="font-size:2rem;margin-bottom:12px;">${d.icon}</div>
+    <h2>${d.name}</h2>
+    <p class="desc">${d.desc}</p>
+    <div class="modal-stats">${statsHtml}</div>
+    <button class="btn-sm btn-primary-sm" style="width:100%;padding:12px;">Activate Agent</button>
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
 
-    function closeConsole(){document.getElementById('consoleModal').classList.remove('show')}
+// Console
+const consoleResponses = {
+  help: ['Available commands:', '  status    — Show agent status', '  signals <TICKER> — Get signals for ticker', '  run <agent>  — Run an agent', '  agents   — List all agents', '  clear    — Clear console'],
+  status: ['Agent Status:', '  📈 Signal Engine    ● ACTIVE   Last: 2m ago', '  💬 Sentiment AI     ● ACTIVE   Last: 5m ago', '  💼 Portfolio Opt    ● ACTIVE   Last: 12m ago', '  🌐 Macro Monitor    ● ACTIVE   Last: 1h ago', '  🛡️ Risk Manager     ● BETA     Last: 8m ago', '  🤖 ML Predictor     ○ OFFLINE  Coming Soon'],
+  agents: ['Installed Agents (6):', '  1. Signal Engine Agent    [ACTIVE]', '  2. Sentiment Analyzer     [ACTIVE]', '  3. Portfolio Optimizer    [ACTIVE]', '  4. Macro Monitor          [ACTIVE]', '  5. Risk Manager           [BETA]', '  6. ML Predictor           [COMING SOON]'],
+};
+document.getElementById('consoleInput').addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  const cmd = this.value.trim().toLowerCase();
+  if (!cmd) return;
+  const out = document.getElementById('consoleOutput');
+  out.innerHTML += `<div class="line cmd">❯ ${this.value}</div>`;
+  this.value = '';
+  if (cmd === 'clear') { out.innerHTML = '<div class="line accent">Console cleared.</div>'; return; }
+  if (cmd.startsWith('signals')) {
+    const t = cmd.split(' ')[1] || 'AAPL';
+    const lines = [`Signals for ${t.toUpperCase()}:`, `  Signal: 🟢 BUY  Score: +0.72  Confidence: 81%`, `  Best Strategy: Trend EMA Cross`, `  RSI: 42.3  MACD: +0.45  Regime: BULLISH`, `  Last Updated: ${new Date().toLocaleTimeString()}`];
+    lines.forEach(l => out.innerHTML += `<div class="line output">${l}</div>`);
+  } else if (cmd.startsWith('run')) {
+    const agent = cmd.split(' ').slice(1).join(' ') || 'signal-engine';
+    out.innerHTML += `<div class="line output">Starting ${agent}...</div>`;
+    setTimeout(() => { out.innerHTML += `<div class="line accent">✓ ${agent} completed successfully. 46 assets analyzed.</div>`; out.scrollTop = out.scrollHeight; }, 800);
+  } else if (consoleResponses[cmd]) {
+    consoleResponses[cmd].forEach(l => out.innerHTML += `<div class="line output">${l}</div>`);
+  } else {
+    out.innerHTML += `<div class="line output" style="color:var(--red);">Unknown command: ${cmd}. Type 'help' for options.</div>`;
+  }
+  out.scrollTop = out.scrollHeight;
+});
 
-    function sendCommand(){
-        const input=document.getElementById('consoleInput');
-        const output=document.getElementById('consoleOutput');
-        const cmd=input.value.trim().toLowerCase();
-        input.value='';
-        if(!cmd)return;
-        output.textContent+=`\n\n> ${cmd}`;
-        const a=currentAgent;
-        const responses={
-            'run':`\n[${a.name}] Initializing scan...\n[${a.name}] Fetching market data for ${(a.assets||[]).join(', ')}...\n[${a.name}] Processing ${a.signals_per_day} signal candidates...\n[${a.name}] ✅ Scan complete. ${Math.floor(Math.random()*5)+2} new signals generated.\n[${a.name}] Results pushed to dashboard.`,
-            'status':`\n[${a.name}] Status: ${a.status.toUpperCase()}\n  Uptime: ${a.uptime}%\n  Win Rate: ${a.win_rate}%\n  Risk Profile: ${a.risk_profile}\n  Memory: ${Math.floor(Math.random()*300+100)}MB\n  CPU: ${Math.floor(Math.random()*20+5)}%\n  API Calls Today: ${Math.floor(Math.random()*1000+200)}`,
-            'config':`\n[${a.name}] Configuration:\n  Timeframe: ${a.timeframe}\n  Assets: ${(a.assets||[]).join(', ')}\n  Inputs: ${(a.inputs||[]).join(', ')}\n  Risk Profile: ${a.risk_profile}\n  Signals/Day Target: ${a.signals_per_day}`,
-            'signals':`\n[${a.name}] Recent Signals:\n  NVDA → BULLISH (score: 0.72, confidence: 84%)\n  AAPL → HOLD (score: 0.12, confidence: 67%)\n  TSLA → BEARISH (score: -0.45, confidence: 71%)\n  AMD  → BULLISH (score: 0.58, confidence: 78%)`,
-            'help':`\nAvailable commands:\n  run      - Execute agent scan\n  status   - Show agent status\n  config   - View configuration\n  signals  - Show recent signals\n  stop     - Stop agent\n  help     - Show this help`
-        };
-        output.textContent+=responses[cmd]||`\n[Error] Unknown command: ${cmd}. Type 'help' for available commands.`;
-        output.scrollTop=output.scrollHeight;
-    }
-    </script>
+// Reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>

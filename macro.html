@@ -1,122 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Macro Dashboard — Finansor AI</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
-    <style>
-        :root{--bg:#0a0e17;--bg2:#111827;--card:#151d2e;--border:#1e2a3a;--text:#e2e8f0;--text2:#94a3b8;--accent:#3b82f6;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--cyan:#06b6d4;--gradient:linear-gradient(135deg,#3b82f6,#8b5cf6)}
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}a{color:var(--accent);text-decoration:none}
-        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}.nav-logo{font-size:20px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}.nav-logo span{font-size:24px;-webkit-text-fill-color:initial}.nav-links{display:flex;gap:32px;align-items:center}.nav-links a{color:var(--text2);font-size:14px;font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--text)}.nav-cta{background:var(--gradient);color:white!important;padding:8px 20px;border-radius:8px;font-weight:600;font-size:13px}.nav-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green)}.nav-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
-        .page-header{padding:100px 24px 24px;text-align:center}.page-header h1{font-size:40px;font-weight:800;margin-bottom:8px}.page-header p{color:var(--text2);font-size:16px}
-        .container{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Macro Intelligence — Finansor AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #06080d; --surface: #0c1017; --surface-hover: #111827; --border: #1a2035; --border-accent: #243049;
+  --text: #e8ecf2; --text-muted: #7a8599; --text-dim: #4a5568;
+  --accent: #3b82f6; --accent-light: #60a5fa; --accent-glow: rgba(59,130,246,0.15);
+  --cyan: #06b6d4; --green: #10b981; --red: #ef4444; --gold: #f59e0b;
+}
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 600; }
+a { color: var(--accent-light); text-decoration: none; }
+a:hover { color: var(--cyan); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(6,8,13,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+.nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a { color: var(--text-muted); font-size: 0.875rem; font-weight: 500; }
+.nav-links a:hover, .nav-links a.active { color: var(--text); }
+.nav-cta { background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; }
+.nav-cta:hover { opacity: 0.9; color: #fff; }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+.hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+.mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; flex-direction: column; gap: 12px; z-index: 999; }
+.mobile-menu a { color: var(--text-muted); font-size: 0.95rem; padding: 8px 0; }
+.mobile-menu.open { display: flex; }
+@media (max-width: 768px) { .nav-links { display: none; } .hamburger { display: flex; } }
 
-        .brief-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;margin-bottom:24px}
-        .brief-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
-        .brief-title{font-size:20px;font-weight:700}
-        .regime-tag{padding:6px 14px;border-radius:8px;font-weight:600;font-size:13px}
-        .brief-text{color:var(--text2);font-size:14px;line-height:1.6}
+.page { max-width: 1200px; margin: 0 auto; padding: 100px 24px 60px; }
+.page-header { margin-bottom: 40px; }
+.page-header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+.page-header p { color: var(--text-muted); font-size: 0.95rem; }
+.section-title { font-size: 1.5rem; margin-bottom: 20px; }
+.divider { height: 1px; background: var(--border); margin: 40px 0; }
 
-        .themes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px;margin-bottom:24px}
-        .theme-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;transition:0.3s}
-        .theme-card:hover{border-color:var(--accent)}
-        .theme-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-        .theme-icon{font-size:28px}
-        .theme-name{font-size:18px;font-weight:700;flex:1}
-        .theme-sentiment{font-size:13px;font-weight:600;padding:4px 10px;border-radius:6px}
-        .theme-items{list-style:none}
-        .theme-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.4}
-        .theme-item:last-child{border-bottom:none}
-        .theme-item-meta{display:flex;gap:8px;margin-top:4px;font-size:11px;color:var(--text2)}
-        .impact-badge{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600}
-        .impact-bullish{background:rgba(16,185,129,0.15);color:var(--green)}
-        .impact-bearish{background:rgba(239,68,68,0.15);color:var(--red)}
-        .impact-neutral{background:rgba(148,163,184,0.15);color:var(--text2)}
+/* REGIME */
+.regime-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px; text-align: center; margin-bottom: 40px; }
+.regime-big { font-size: 3rem; font-weight: 700; font-family: 'Fraunces', serif; margin-bottom: 12px; }
+.regime-desc { color: var(--text-muted); font-size: 0.95rem; max-width: 500px; margin: 0 auto 24px; line-height: 1.7; }
+.regime-indicators { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+.regime-ind { text-align: center; }
+.regime-ind .label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.regime-ind .value { font-size: 1.1rem; font-weight: 700; }
 
-        .calendar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:24px}
-        .calendar h3{font-size:18px;font-weight:700;margin-bottom:16px}
-        .cal-item{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid var(--border);align-items:center}
-        .cal-item:last-child{border-bottom:none}
-        .cal-date{min-width:80px;font-size:12px;color:var(--text2)}
-        .cal-event{flex:1;font-size:14px;font-weight:500}
-        .cal-impact{font-size:11px;padding:3px 8px;border-radius:4px;font-weight:600}
-        .high{background:rgba(239,68,68,0.15);color:var(--red)}
-        .medium{background:rgba(245,158,11,0.15);color:var(--yellow)}
-        .low{background:rgba(148,163,184,0.15);color:var(--text2)}
+/* MACRO THEMES */
+.themes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.theme-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: border-color 0.3s; }
+.theme-card:hover { border-color: var(--border-accent); }
+.theme-icon { font-size: 1.5rem; margin-bottom: 12px; }
+.theme-card h3 { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; }
+.theme-card p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.6; }
+.sentiment-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 4px; }
+.sent-bullish { background: rgba(16,185,129,0.12); color: var(--green); }
+.sent-neutral { background: rgba(122,133,153,0.12); color: var(--text-muted); }
+.sent-bearish { background: rgba(239,68,68,0.12); color: var(--red); }
 
-        footer{border-top:1px solid var(--border);padding:48px 24px}.footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}.footer-links{display:flex;gap:24px}.footer-links a{color:var(--text2);font-size:13px}.footer-copy{color:var(--text2);font-size:13px}
-        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}.themes-grid{grid-template-columns:1fr}}
-    </style>
+/* CALENDAR */
+.cal-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 40px; }
+.cal-table thead th { text-align: left; padding: 10px 14px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); border-bottom: 1px solid var(--border); }
+.cal-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+.cal-table tbody tr:hover { background: var(--surface-hover); }
+.cal-table tbody td { padding: 12px 14px; }
+.impact-high { color: var(--red); font-weight: 700; }
+.impact-med { color: var(--gold); font-weight: 600; }
+.impact-low { color: var(--text-dim); }
+
+/* SECTORS */
+.sector-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 40px; }
+.sector-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; transition: transform 0.2s; }
+.sector-card:hover { transform: translateY(-2px); }
+.sector-card .name { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; }
+.sector-card .perf { font-size: 1.1rem; font-weight: 700; }
+
+/* GLOBAL */
+.global-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.global-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+.global-card .info .name { font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+.global-card .info .val { font-size: 1.2rem; font-weight: 700; font-family: 'Fraunces', serif; }
+.global-card .change { font-size: 0.85rem; font-weight: 600; }
+
+footer { border-top: 1px solid var(--border); padding: 48px 24px; margin-top: 60px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px; }
+.footer-brand p { font-size: 0.8rem; color: var(--text-dim); max-width: 260px; margin-top: 8px; }
+.footer-links { display: flex; gap: 48px; }
+.footer-col h4 { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; }
+.footer-col a { display: block; color: var(--text-dim); font-size: 0.85rem; margin-bottom: 8px; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { max-width: 1200px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-dim); text-align: center; }
+</style>
 </head>
 <body>
-    <nav><div class="nav-inner"><a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a><div class="nav-links"><a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html" class="active">Macro</a><a href="pricing.html">Pricing</a><div class="nav-status">Systems Online</div><a href="dashboard.html" class="nav-cta">Launch App →</a></div><button class="hamburger" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button></div></nav>
-
-    <div class="page-header">
-        <h1>🏛️ Macro Dashboard</h1>
-        <p>Macroeconomic indicators, themes, and their market impact</p>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a>
+      <a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html" class="active">Macro</a><a href="pricing.html">Pricing</a>
+      <a href="dashboard.html" class="nav-cta">Launch App →</a>
     </div>
+    <button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a>
+  <a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a>
+</div>
 
-    <div class="container">
-        <div class="brief-card" id="briefCard"></div>
-        <div class="themes-grid" id="themesGrid"></div>
-        <div class="calendar">
-            <h3>📅 Economic Calendar (Next 7 Days)</h3>
-            <div id="calendarList">
-                <div class="cal-item"><div class="cal-date">Mar 12 🔴</div><div class="cal-event">CPI (Consumer Price Index) — Feb YoY</div><div class="cal-impact high">HIGH</div></div>
-                <div class="cal-item"><div class="cal-date">Mar 13</div><div class="cal-event">PPI (Producer Price Index) — Feb</div><div class="cal-impact medium">MEDIUM</div></div>
-                <div class="cal-item"><div class="cal-date">Mar 14</div><div class="cal-event">U. of Michigan Consumer Sentiment — Mar Prelim</div><div class="cal-impact medium">MEDIUM</div></div>
-                <div class="cal-item"><div class="cal-date">Mar 17</div><div class="cal-event">Retail Sales — Feb</div><div class="cal-impact medium">MEDIUM</div></div>
-                <div class="cal-item"><div class="cal-date">Mar 18</div><div class="cal-event">Housing Starts — Feb</div><div class="cal-impact low">LOW</div></div>
-                <div class="cal-item"><div class="cal-date">Mar 19 🔴</div><div class="cal-event">FOMC Rate Decision + Press Conference</div><div class="cal-impact high">HIGH</div></div>
-                <div class="cal-item"><div class="cal-date">Mar 20</div><div class="cal-event">Initial Jobless Claims — Weekly</div><div class="cal-impact medium">MEDIUM</div></div>
-            </div>
-        </div>
+<div class="page">
+  <div class="page-header">
+    <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:12px;">Macro Intelligence</div>
+    <h1>Macro Dashboard</h1>
+    <p>Track macroeconomic trends, regime shifts, and global market conditions that drive strategy selection.</p>
+  </div>
+
+  <!-- REGIME -->
+  <div class="regime-panel">
+    <div style="font-size:0.72rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Current Market Regime</div>
+    <div class="regime-big" style="color:var(--green)">BULLISH</div>
+    <div class="regime-desc">Broad market uptrend confirmed by multiple indicators. Trend-following and momentum strategies are performing well. Risk appetite is elevated with declining VIX.</div>
+    <div class="regime-indicators">
+      <div class="regime-ind"><div class="label">VIX</div><div class="value" style="color:var(--green)">14.2</div></div>
+      <div class="regime-ind"><div class="label">10Y Yield</div><div class="value">4.28%</div></div>
+      <div class="regime-ind"><div class="label">DXY</div><div class="value">103.4</div></div>
+      <div class="regime-ind"><div class="label">Fear & Greed</div><div class="value" style="color:var(--green)">72 Greed</div></div>
+      <div class="regime-ind"><div class="label">Breadth</div><div class="value" style="color:var(--green)">68%</div></div>
     </div>
+  </div>
 
-    <footer><div class="footer-inner"><div class="footer-copy">© 2026 Finansor AI</div><div class="footer-links"><a href="https://github.com/prochainz/finansor-quant">GitHub</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a></div></div></footer>
+  <!-- MACRO THEMES -->
+  <h2 class="section-title">Macro Themes</h2>
+  <div class="themes-grid">
+    <div class="theme-card">
+      <div class="theme-icon">🏛️</div>
+      <h3>Fed Policy</h3>
+      <p>Markets pricing in 2 rate cuts by year-end. Fed maintaining data-dependent stance. Dot plot suggests gradual easing.</p>
+      <span class="sentiment-badge sent-bullish">● Bullish</span>
+    </div>
+    <div class="theme-card">
+      <div class="theme-icon">📊</div>
+      <h3>Inflation</h3>
+      <p>CPI trending down to 3.1% YoY. Core PCE at 2.8%. Shelter inflation remains sticky but showing signs of easing.</p>
+      <span class="sentiment-badge sent-bullish">● Bullish</span>
+    </div>
+    <div class="theme-card">
+      <div class="theme-icon">📈</div>
+      <h3>Growth</h3>
+      <p>GDP growth at 2.4% QoQ. Employment strong with 275K NFP. Consumer spending resilient despite higher rates.</p>
+      <span class="sentiment-badge sent-neutral">● Neutral</span>
+    </div>
+    <div class="theme-card">
+      <div class="theme-icon">💵</div>
+      <h3>US Dollar</h3>
+      <p>DXY consolidating around 103-104. Rate differential narrowing as ECB also signals cuts. Dollar strength fading.</p>
+      <span class="sentiment-badge sent-bearish">● Bearish</span>
+    </div>
+    <div class="theme-card">
+      <div class="theme-icon">⚡</div>
+      <h3>Volatility</h3>
+      <p>VIX at 14.2 — complacency zone. Low vol environment favors carry trades and risk assets. Watch for vol expansion catalysts.</p>
+      <span class="sentiment-badge sent-bullish">● Bullish</span>
+    </div>
+  </div>
 
-    <script>
-    fetch('data/macro.json').then(r=>r.json()).then(data=>{
-        // Brief
-        const b=data.macro_brief;
-        const regimeColor=b.risk_regime.includes('Off')?'rgba(239,68,68,0.15);color:var(--red)':'rgba(16,185,129,0.15);color:var(--green)';
-        document.getElementById('briefCard').innerHTML=`
-            <div class="brief-header">
-                <div class="brief-title">${b.title}</div>
-                <div class="regime-tag" style="background:${regimeColor}">📉 ${b.risk_regime}</div>
-            </div>
-            <div class="brief-text">${b.summary}</div>
-        `;
+  <div class="divider"></div>
 
-        // Themes
-        const grid=document.getElementById('themesGrid');
-        data.themes.forEach(t=>{
-            const sentColor=t.sentiment>0.1?'rgba(16,185,129,0.15);color:var(--green)':t.sentiment<-0.1?'rgba(239,68,68,0.15);color:var(--red)':'rgba(245,158,11,0.15);color:var(--yellow)';
-            const sentText=t.sentiment>0.1?'BULLISH':t.sentiment<-0.1?'BEARISH':'NEUTRAL';
-            grid.innerHTML+=`
-            <div class="theme-card">
-                <div class="theme-header">
-                    <div class="theme-icon">${t.icon}</div>
-                    <div class="theme-name">${t.name}</div>
-                    <div class="theme-sentiment" style="background:${sentColor}">${sentText}</div>
-                </div>
-                <ul class="theme-items">
-                    ${t.items.map(item=>`
-                        <li class="theme-item">
-                            ${item.text}
-                            <div class="theme-item-meta">
-                                <span>${item.source}</span>
-                                <span>${new Date(item.time).toLocaleDateString()}</span>
-                                <span class="impact-badge impact-${item.impact}">${item.impact.toUpperCase()}</span>
-                            </div>
-                        </li>
-                    `).join('')}
-                </ul>
-            </div>`;
-        });
-    });
-    </script>
+  <!-- ECONOMIC CALENDAR -->
+  <h2 class="section-title">Economic Calendar</h2>
+  <div style="overflow-x:auto;">
+  <table class="cal-table">
+    <thead><tr><th>Date</th><th>Event</th><th>Previous</th><th>Forecast</th><th>Impact</th></tr></thead>
+    <tbody>
+      <tr><td>Mar 12</td><td>CPI YoY (Feb)</td><td>3.1%</td><td>2.9%</td><td class="impact-high">🔴 High</td></tr>
+      <tr><td>Mar 12</td><td>Core CPI MoM</td><td>0.4%</td><td>0.3%</td><td class="impact-high">🔴 High</td></tr>
+      <tr><td>Mar 14</td><td>PPI MoM</td><td>0.3%</td><td>0.2%</td><td class="impact-med">🟡 Medium</td></tr>
+      <tr><td>Mar 15</td><td>U. Michigan Sentiment</td><td>76.9</td><td>77.5</td><td class="impact-med">🟡 Medium</td></tr>
+      <tr><td>Mar 19-20</td><td>FOMC Meeting</td><td>5.25-5.50%</td><td>No change</td><td class="impact-high">🔴 High</td></tr>
+      <tr><td>Mar 21</td><td>Initial Jobless Claims</td><td>217K</td><td>215K</td><td class="impact-low">⚪ Low</td></tr>
+      <tr><td>Mar 28</td><td>PCE Price Index MoM</td><td>0.3%</td><td>0.4%</td><td class="impact-high">🔴 High</td></tr>
+      <tr><td>Apr 4</td><td>NFP (Mar)</td><td>275K</td><td>200K</td><td class="impact-high">🔴 High</td></tr>
+      <tr><td>Apr 10</td><td>CPI YoY (Mar)</td><td>2.9%</td><td>2.8%</td><td class="impact-high">🔴 High</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTOR ROTATION -->
+  <h2 class="section-title">Sector Performance (1M)</h2>
+  <div class="sector-grid">
+    <div class="sector-card"><div class="name">Technology</div><div class="perf" style="color:var(--green)">+5.8%</div></div>
+    <div class="sector-card"><div class="name">Healthcare</div><div class="perf" style="color:var(--green)">+3.2%</div></div>
+    <div class="sector-card"><div class="name">Financials</div><div class="perf" style="color:var(--green)">+2.1%</div></div>
+    <div class="sector-card"><div class="name">Consumer Disc.</div><div class="perf" style="color:var(--green)">+1.8%</div></div>
+    <div class="sector-card"><div class="name">Industrials</div><div class="perf" style="color:var(--green)">+1.4%</div></div>
+    <div class="sector-card"><div class="name">Communication</div><div class="perf" style="color:var(--green)">+0.9%</div></div>
+    <div class="sector-card"><div class="name">Materials</div><div class="perf" style="color:var(--green)">+0.4%</div></div>
+    <div class="sector-card"><div class="name">Utilities</div><div class="perf" style="color:var(--red)">-0.3%</div></div>
+    <div class="sector-card"><div class="name">Real Estate</div><div class="perf" style="color:var(--red)">-1.2%</div></div>
+    <div class="sector-card"><div class="name">Energy</div><div class="perf" style="color:var(--red)">-2.1%</div></div>
+    <div class="sector-card"><div class="name">Consumer Staples</div><div class="perf" style="color:var(--red)">-0.8%</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- GLOBAL MARKETS -->
+  <h2 class="section-title">Global Markets</h2>
+  <div class="global-grid">
+    <div class="global-card"><div class="info"><div class="name">S&P 500</div><div class="val">5,123.41</div></div><div class="change" style="color:var(--green)">+0.82%</div></div>
+    <div class="global-card"><div class="info"><div class="name">Nasdaq 100</div><div class="val">18,042.19</div></div><div class="change" style="color:var(--green)">+1.14%</div></div>
+    <div class="global-card"><div class="info"><div class="name">Dow Jones</div><div class="val">39,087.38</div></div><div class="change" style="color:var(--green)">+0.34%</div></div>
+    <div class="global-card"><div class="info"><div class="name">DAX</div><div class="val">17,842.15</div></div><div class="change" style="color:var(--green)">+0.56%</div></div>
+    <div class="global-card"><div class="info"><div class="name">Nikkei 225</div><div class="val">39,688.94</div></div><div class="change" style="color:var(--red)">-0.42%</div></div>
+    <div class="global-card"><div class="info"><div class="name">FTSE 100</div><div class="val">7,682.50</div></div><div class="change" style="color:var(--green)">+0.28%</div></div>
+    <div class="global-card"><div class="info"><div class="name">Shanghai</div><div class="val">3,046.02</div></div><div class="change" style="color:var(--red)">-0.18%</div></div>
+    <div class="global-card"><div class="info"><div class="name">Gold</div><div class="val">$2,178.40</div></div><div class="change" style="color:var(--green)">+0.92%</div></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo"><span>📊</span> Finansor AI</div>
+      <p>AI-powered quantitative analysis for modern traders.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col"><h4>Platform</h4><a href="agents.html">Agents</a><a href="signals.html">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a></div>
+      <div class="footer-col"><h4>Company</h4><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a><a href="#">Docs</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Finansor AI. All rights reserved.</div>
+</footer>
 </body>
 </html>
