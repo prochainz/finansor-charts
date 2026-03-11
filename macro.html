@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macro Dashboard — Finansor AI</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <style>
+        :root{--bg:#0a0e17;--bg2:#111827;--card:#151d2e;--border:#1e2a3a;--text:#e2e8f0;--text2:#94a3b8;--accent:#3b82f6;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--cyan:#06b6d4;--gradient:linear-gradient(135deg,#3b82f6,#8b5cf6)}
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}a{color:var(--accent);text-decoration:none}
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}.nav-logo{font-size:20px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}.nav-logo span{font-size:24px;-webkit-text-fill-color:initial}.nav-links{display:flex;gap:32px;align-items:center}.nav-links a{color:var(--text2);font-size:14px;font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--text)}.nav-cta{background:var(--gradient);color:white!important;padding:8px 20px;border-radius:8px;font-weight:600;font-size:13px}.nav-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green)}.nav-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
+        .page-header{padding:100px 24px 24px;text-align:center}.page-header h1{font-size:40px;font-weight:800;margin-bottom:8px}.page-header p{color:var(--text2);font-size:16px}
+        .container{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+
+        .brief-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;margin-bottom:24px}
+        .brief-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+        .brief-title{font-size:20px;font-weight:700}
+        .regime-tag{padding:6px 14px;border-radius:8px;font-weight:600;font-size:13px}
+        .brief-text{color:var(--text2);font-size:14px;line-height:1.6}
+
+        .themes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px;margin-bottom:24px}
+        .theme-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;transition:0.3s}
+        .theme-card:hover{border-color:var(--accent)}
+        .theme-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+        .theme-icon{font-size:28px}
+        .theme-name{font-size:18px;font-weight:700;flex:1}
+        .theme-sentiment{font-size:13px;font-weight:600;padding:4px 10px;border-radius:6px}
+        .theme-items{list-style:none}
+        .theme-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.4}
+        .theme-item:last-child{border-bottom:none}
+        .theme-item-meta{display:flex;gap:8px;margin-top:4px;font-size:11px;color:var(--text2)}
+        .impact-badge{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600}
+        .impact-bullish{background:rgba(16,185,129,0.15);color:var(--green)}
+        .impact-bearish{background:rgba(239,68,68,0.15);color:var(--red)}
+        .impact-neutral{background:rgba(148,163,184,0.15);color:var(--text2)}
+
+        .calendar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:24px}
+        .calendar h3{font-size:18px;font-weight:700;margin-bottom:16px}
+        .cal-item{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid var(--border);align-items:center}
+        .cal-item:last-child{border-bottom:none}
+        .cal-date{min-width:80px;font-size:12px;color:var(--text2)}
+        .cal-event{flex:1;font-size:14px;font-weight:500}
+        .cal-impact{font-size:11px;padding:3px 8px;border-radius:4px;font-weight:600}
+        .high{background:rgba(239,68,68,0.15);color:var(--red)}
+        .medium{background:rgba(245,158,11,0.15);color:var(--yellow)}
+        .low{background:rgba(148,163,184,0.15);color:var(--text2)}
+
+        footer{border-top:1px solid var(--border);padding:48px 24px}.footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}.footer-links{display:flex;gap:24px}.footer-links a{color:var(--text2);font-size:13px}.footer-copy{color:var(--text2);font-size:13px}
+        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}.themes-grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+    <nav><div class="nav-inner"><a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a><div class="nav-links"><a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html" class="active">Macro</a><a href="pricing.html">Pricing</a><div class="nav-status">Systems Online</div><a href="dashboard.html" class="nav-cta">Launch App →</a></div><button class="hamburger" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button></div></nav>
+
+    <div class="page-header">
+        <h1>🏛️ Macro Dashboard</h1>
+        <p>Macroeconomic indicators, themes, and their market impact</p>
+    </div>
+
+    <div class="container">
+        <div class="brief-card" id="briefCard"></div>
+        <div class="themes-grid" id="themesGrid"></div>
+        <div class="calendar">
+            <h3>📅 Economic Calendar (Next 7 Days)</h3>
+            <div id="calendarList">
+                <div class="cal-item"><div class="cal-date">Mar 12 🔴</div><div class="cal-event">CPI (Consumer Price Index) — Feb YoY</div><div class="cal-impact high">HIGH</div></div>
+                <div class="cal-item"><div class="cal-date">Mar 13</div><div class="cal-event">PPI (Producer Price Index) — Feb</div><div class="cal-impact medium">MEDIUM</div></div>
+                <div class="cal-item"><div class="cal-date">Mar 14</div><div class="cal-event">U. of Michigan Consumer Sentiment — Mar Prelim</div><div class="cal-impact medium">MEDIUM</div></div>
+                <div class="cal-item"><div class="cal-date">Mar 17</div><div class="cal-event">Retail Sales — Feb</div><div class="cal-impact medium">MEDIUM</div></div>
+                <div class="cal-item"><div class="cal-date">Mar 18</div><div class="cal-event">Housing Starts — Feb</div><div class="cal-impact low">LOW</div></div>
+                <div class="cal-item"><div class="cal-date">Mar 19 🔴</div><div class="cal-event">FOMC Rate Decision + Press Conference</div><div class="cal-impact high">HIGH</div></div>
+                <div class="cal-item"><div class="cal-date">Mar 20</div><div class="cal-event">Initial Jobless Claims — Weekly</div><div class="cal-impact medium">MEDIUM</div></div>
+            </div>
+        </div>
+    </div>
+
+    <footer><div class="footer-inner"><div class="footer-copy">© 2026 Finansor AI</div><div class="footer-links"><a href="https://github.com/prochainz/finansor-quant">GitHub</a><a href="agents.html">Agents</a><a href="signals.html">Signals</a></div></div></footer>
+
+    <script>
+    fetch('data/macro.json').then(r=>r.json()).then(data=>{
+        // Brief
+        const b=data.macro_brief;
+        const regimeColor=b.risk_regime.includes('Off')?'rgba(239,68,68,0.15);color:var(--red)':'rgba(16,185,129,0.15);color:var(--green)';
+        document.getElementById('briefCard').innerHTML=`
+            <div class="brief-header">
+                <div class="brief-title">${b.title}</div>
+                <div class="regime-tag" style="background:${regimeColor}">📉 ${b.risk_regime}</div>
+            </div>
+            <div class="brief-text">${b.summary}</div>
+        `;
+
+        // Themes
+        const grid=document.getElementById('themesGrid');
+        data.themes.forEach(t=>{
+            const sentColor=t.sentiment>0.1?'rgba(16,185,129,0.15);color:var(--green)':t.sentiment<-0.1?'rgba(239,68,68,0.15);color:var(--red)':'rgba(245,158,11,0.15);color:var(--yellow)';
+            const sentText=t.sentiment>0.1?'BULLISH':t.sentiment<-0.1?'BEARISH':'NEUTRAL';
+            grid.innerHTML+=`
+            <div class="theme-card">
+                <div class="theme-header">
+                    <div class="theme-icon">${t.icon}</div>
+                    <div class="theme-name">${t.name}</div>
+                    <div class="theme-sentiment" style="background:${sentColor}">${sentText}</div>
+                </div>
+                <ul class="theme-items">
+                    ${t.items.map(item=>`
+                        <li class="theme-item">
+                            ${item.text}
+                            <div class="theme-item-meta">
+                                <span>${item.source}</span>
+                                <span>${new Date(item.time).toLocaleDateString()}</span>
+                                <span class="impact-badge impact-${item.impact}">${item.impact.toUpperCase()}</span>
+                            </div>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>`;
+        });
+    });
+    </script>
+</body>
+</html>

@@ -3,965 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finansor AI — Intelligent Finance Agent Marketplace</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>Finansor AI — Intelligent Trading Platform</title>
+    <meta name="description" content="AI-powered quantitative trading platform with autonomous agents, real-time signals, and portfolio optimization.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
     <style>
         :root {
-            --bg-0: #06080d;
-            --bg-1: #0c0f16;
-            --bg-2: #12161f;
-            --bg-3: #1a1f2e;
-            --bg-4: #222838;
-            --border: #1e2433;
-            --border-light: #2a3040;
-            --text-0: #f0f2f5;
-            --text-1: #c4c9d4;
-            --text-2: #8891a4;
-            --text-3: #5a6378;
+            --bg: #0a0e17;
+            --bg2: #111827;
+            --bg3: #1a2332;
+            --card: #151d2e;
+            --border: #1e2a3a;
+            --text: #e2e8f0;
+            --text2: #94a3b8;
             --accent: #3b82f6;
-            --accent-light: #60a5fa;
+            --accent2: #8b5cf6;
             --green: #10b981;
-            --green-dim: rgba(16,185,129,0.12);
             --red: #ef4444;
-            --red-dim: rgba(239,68,68,0.12);
             --yellow: #f59e0b;
-            --yellow-dim: rgba(245,158,11,0.12);
-            --purple: #8b5cf6;
-            --purple-dim: rgba(139,92,246,0.12);
+            --orange: #f97316;
             --cyan: #06b6d4;
-            --gradient-1: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            --gradient-2: linear-gradient(135deg, #06b6d4, #3b82f6);
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-            --shadow-lg: 0 8px 30px rgba(0,0,0,0.5);
-            --shadow-glow: 0 0 40px rgba(59,130,246,0.15);
+            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --glow: 0 0 30px rgba(59,130,246,0.15);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-0);
-            color: var(--text-1);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+        a { color: var(--accent); text-decoration: none; transition: 0.2s; }
+        a:hover { color: var(--accent2); }
 
-        /* ── NAV ── */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            background: rgba(6,8,13,0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 0 24px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        /* Nav */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,14,23,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .nav-logo { font-size: 20px; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px; }
+        .nav-logo span { font-size: 24px; -webkit-text-fill-color: initial; }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a { color: var(--text2); font-size: 14px; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+        .nav-cta { background: var(--gradient); color: white; padding: 8px 20px; border-radius: 8px; font-weight: 600; font-size: 13px; }
+        .nav-cta:hover { opacity: 0.9; color: white; }
+        .nav-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--green); }
+        .nav-status::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .hamburger { display: none; background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
 
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--text-0);
-            font-weight: 700;
-            font-size: 18px;
-        }
+        /* Hero */
+        .hero { padding: 140px 24px 80px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); pointer-events: none; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); color: var(--accent); font-size: 13px; font-weight: 500; padding: 6px 16px; border-radius: 20px; margin-bottom: 24px; }
+        .hero h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+        .hero h1 .gradient { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 18px; color: var(--text2); max-width: 640px; margin: 0 auto 40px; line-height: 1.6; }
+        .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn-primary { background: var(--gradient); color: white; padding: 14px 32px; border-radius: 10px; font-weight: 600; font-size: 15px; border: none; cursor: pointer; transition: 0.2s; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,130,246,0.3); color: white; }
+        .btn-secondary { background: var(--card); color: var(--text); padding: 14px 32px; border-radius: 10px; font-weight: 600; font-size: 15px; border: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--text); }
 
-        .nav-brand span {
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        /* Stats bar */
+        .stats-bar { display: flex; justify-content: center; gap: 48px; padding: 40px 24px; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 32px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { font-size: 13px; color: var(--text2); margin-top: 4px; }
 
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            list-style: none;
-        }
+        /* Section */
+        .section { max-width: 1280px; margin: 0 auto; padding: 80px 24px; }
+        .section-title { font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 12px; }
+        .section-sub { font-size: 16px; color: var(--text2); text-align: center; max-width: 600px; margin: 0 auto 48px; }
 
-        .nav-links a {
-            color: var(--text-2);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
+        /* Agent Cards */
+        .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px; }
+        .agent-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; transition: 0.3s; position: relative; overflow: hidden; }
+        .agent-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--glow); }
+        .agent-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .agent-icon { font-size: 36px; }
+        .agent-status { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .agent-status.active { background: rgba(16,185,129,0.15); color: var(--green); }
+        .agent-status.standby { background: rgba(245,158,11,0.15); color: var(--yellow); }
+        .agent-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+        .agent-cat { font-size: 12px; color: var(--accent); font-weight: 500; margin-bottom: 12px; }
+        .agent-desc { font-size: 14px; color: var(--text2); line-height: 1.5; margin-bottom: 20px; }
+        .agent-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .agent-stat { text-align: center; padding: 10px; background: var(--bg2); border-radius: 8px; }
+        .agent-stat-val { font-size: 16px; font-weight: 700; }
+        .agent-stat-val.green { color: var(--green); }
+        .agent-stat-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+        .agent-actions { display: flex; gap: 8px; margin-top: 16px; }
+        .agent-btn { flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; cursor: pointer; border: none; transition: 0.2s; }
+        .agent-btn-primary { background: var(--gradient); color: white; }
+        .agent-btn-secondary { background: var(--bg2); color: var(--text2); border: 1px solid var(--border); }
+        .agent-btn:hover { opacity: 0.85; }
 
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--text-0);
-            background: var(--bg-3);
-        }
-
-        .nav-cta {
-            background: var(--gradient-1) !important;
-            color: white !important;
-            padding: 8px 20px !important;
-        }
-
-        .nav-cta:hover { opacity: 0.9; }
-
-        .mobile-menu {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-1);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* ── HERO ── */
-        .hero {
-            padding: 140px 24px 100px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 800px;
-            height: 600px;
-            background: radial-gradient(ellipse, rgba(59,130,246,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            background: var(--bg-2);
-            border: 1px solid var(--border-light);
-            border-radius: 100px;
-            font-size: 13px;
-            color: var(--accent-light);
-            margin-bottom: 24px;
-        }
-
-        .hero-badge .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--green);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        .hero h1 {
-            font-size: clamp(36px, 5vw, 64px);
-            font-weight: 800;
-            color: var(--text-0);
-            line-height: 1.1;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
-        }
-
-        .hero h1 em {
-            font-style: normal;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-sub {
-            font-size: 18px;
-            color: var(--text-2);
-            max-width: 600px;
-            margin: 0 auto 40px;
-            line-height: 1.7;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 28px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--gradient-1);
-            color: white;
-            box-shadow: 0 4px 15px rgba(59,130,246,0.3);
-        }
-
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59,130,246,0.4); }
-
-        .btn-secondary {
-            background: var(--bg-3);
-            color: var(--text-0);
-            border: 1px solid var(--border-light);
-        }
-
-        .btn-secondary:hover { background: var(--bg-4); }
-
-        /* ── TICKER BAR ── */
-        .ticker-bar {
-            background: var(--bg-1);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 0;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .ticker-track {
-            display: inline-flex;
-            gap: 40px;
-            animation: scroll 40s linear infinite;
-        }
-
-        @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        .ticker-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-        }
-
-        .ticker-item .name { color: var(--text-2); font-weight: 500; }
-        .ticker-item .price { color: var(--text-0); }
-        .ticker-item .change { font-size: 12px; }
+        /* Live Signal Ticker */
+        .ticker-bar { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 12px 0; overflow: hidden; }
+        .ticker-inner { display: flex; gap: 40px; animation: scroll 30s linear infinite; white-space: nowrap; }
+        .ticker-item { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
         .ticker-item .up { color: var(--green); }
         .ticker-item .down { color: var(--red); }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* ── STATS ── */
-        .stats-section {
-            padding: 60px 24px;
-            background: var(--bg-1);
-        }
+        /* Features */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 32px; text-align: center; transition: 0.3s; }
+        .feature-card:hover { border-color: var(--accent); }
+        .feature-icon { font-size: 40px; margin-bottom: 16px; }
+        .feature-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .feature-desc { font-size: 14px; color: var(--text2); line-height: 1.5; }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        /* Performance */
+        .perf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+        .perf-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
+        .perf-value { font-size: 28px; font-weight: 800; }
+        .perf-label { font-size: 12px; color: var(--text2); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .stat-card {
-            text-align: center;
-            padding: 24px;
-        }
+        /* CTA */
+        .cta-section { text-align: center; padding: 100px 24px; position: relative; }
+        .cta-section::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%); pointer-events: none; }
+        .cta-section h2 { font-size: 40px; font-weight: 800; margin-bottom: 16px; }
+        .cta-section p { color: var(--text2); font-size: 16px; margin-bottom: 32px; }
 
-        .stat-value {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--text-0);
-            font-family: 'JetBrains Mono', monospace;
-        }
+        /* Footer */
+        footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+        .footer-inner { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a { color: var(--text2); font-size: 13px; }
+        .footer-copy { color: var(--text2); font-size: 13px; }
 
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-2);
-            margin-top: 4px;
-        }
-
-        /* ── AGENTS SECTION ── */
-        .section {
-            padding: 80px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .section-header h2 {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-0);
-            margin-bottom: 12px;
-        }
-
-        .section-header p {
-            font-size: 16px;
-            color: var(--text-2);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .filter-bar {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-bottom: 32px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 8px 18px;
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-2);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .agents-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 20px;
-        }
-
-        .agent-card {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 28px;
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .agent-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .agent-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-        }
-
-        .agent-icon {
-            font-size: 32px;
-            width: 52px;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-3);
-            border-radius: 12px;
-        }
-
-        .agent-status {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--green);
-            font-weight: 500;
-        }
-
-        .agent-status .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--green);
-            animation: pulse 2s infinite;
-        }
-
-        .agent-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-0);
-            margin-bottom: 4px;
-        }
-
-        .agent-category {
-            font-size: 12px;
-            color: var(--accent-light);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-
-        .agent-desc {
-            font-size: 14px;
-            color: var(--text-2);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .agent-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .agent-metric {
-            text-align: center;
-        }
-
-        .agent-metric .value {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-0);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .agent-metric .label {
-            font-size: 11px;
-            color: var(--text-3);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .agent-tier {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .tier-starter { background: var(--green-dim); color: var(--green); }
-        .tier-pro { background: var(--purple-dim); color: var(--purple); }
-        .tier-enterprise { background: var(--yellow-dim); color: var(--yellow); }
-
-        /* ── FEATURES ── */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .feature-card {
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 32px;
-        }
-
-        .feature-icon {
-            font-size: 28px;
-            margin-bottom: 16px;
-        }
-
-        .feature-card h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-0);
-            margin-bottom: 8px;
-        }
-
-        .feature-card p {
-            font-size: 14px;
-            color: var(--text-2);
-            line-height: 1.6;
-        }
-
-        /* ── CTA ── */
-        .cta-section {
-            padding: 80px 24px;
-            text-align: center;
-            background: var(--bg-1);
-            border-top: 1px solid var(--border);
-        }
-
-        .cta-section h2 {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-0);
-            margin-bottom: 16px;
-        }
-
-        .cta-section p {
-            font-size: 16px;
-            color: var(--text-2);
-            margin-bottom: 32px;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            padding: 40px 24px;
-            border-top: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 24px;
-            justify-content: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: var(--text-2);
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .footer-links a:hover { color: var(--text-0); }
-
-        .footer-copy {
-            font-size: 13px;
-            color: var(--text-3);
-        }
-
-        /* ── MODAL ── */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
-
-        .modal-overlay.active { display: flex; }
-
-        .modal {
-            background: var(--bg-2);
-            border: 1px solid var(--border-light);
-            border-radius: 16px;
-            max-width: 640px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 36px;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .modal-close {
-            float: right;
-            background: none;
-            border: none;
-            color: var(--text-2);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .modal h2 {
-            font-size: 24px;
-            color: var(--text-0);
-            margin-bottom: 8px;
-        }
-
-        .modal .modal-cat {
-            font-size: 13px;
-            color: var(--accent-light);
-            font-weight: 500;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-        }
-
-        .modal .modal-desc {
-            color: var(--text-2);
-            font-size: 15px;
-            line-height: 1.7;
-            margin-bottom: 24px;
-        }
-
-        .modal-section {
-            margin-bottom: 20px;
-        }
-
-        .modal-section h4 {
-            font-size: 13px;
-            color: var(--text-3);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .modal-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .modal-tag {
-            padding: 4px 12px;
-            background: var(--bg-3);
-            border-radius: 6px;
-            font-size: 13px;
-            color: var(--text-1);
-        }
-
-        .modal-metrics {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-        }
-
-        .modal-metric {
-            background: var(--bg-3);
-            padding: 16px;
-            border-radius: 10px;
-        }
-
-        .modal-metric .val {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-0);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .modal-metric .lbl {
-            font-size: 12px;
-            color: var(--text-3);
-            margin-top: 2px;
-        }
-
-        /* ── RESPONSIVE ── */
+        /* Responsive */
         @media (max-width: 768px) {
             .nav-links { display: none; }
-            .mobile-menu { display: block; }
-            .nav-links.open {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                top: 64px;
-                left: 0;
-                right: 0;
-                background: var(--bg-1);
-                border-bottom: 1px solid var(--border);
-                padding: 16px;
-            }
-            .agents-grid { grid-template-columns: 1fr; }
+            .hamburger { display: block; }
+            .stats-bar { gap: 24px; }
+            .agents-grid, .features-grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 32px; }
-            .hero-sub { font-size: 16px; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .modal { padding: 24px; margin: 16px; }
-            .modal-metrics { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- NAV -->
+    <!-- Nav -->
     <nav>
-        <a href="index.html" class="nav-brand">📊 <span>Finansor AI</span></a>
-        <button class="mobile-menu" onclick="toggleMenu()">☰</button>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="index.html" class="active">Marketplace</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="makro-gundem.html">Makro Gündem</a></li>
-            <li><a href="pricing.html">Pricing</a></li>
-            <li><a href="dashboard.html" class="nav-cta">Launch Console →</a></li>
-        </ul>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a>
+            <div class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="agents.html">Agents</a>
+                <a href="signals.html">Signals</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="backtest.html">Backtest</a>
+                <a href="macro.html">Macro</a>
+                <a href="pricing.html">Pricing</a>
+                <div class="nav-status">Systems Online</div>
+                <a href="dashboard.html" class="nav-cta">Launch App →</a>
+            </div>
+            <button class="hamburger" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button>
+        </div>
     </nav>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-badge"><span class="dot"></span> 6 Agents Active · 31K+ Signals Generated</div>
-        <h1>AI-Powered Finance Agents<br>for <em>Smarter Decisions</em></h1>
-        <p class="hero-sub">Deploy intelligent agents that scan markets, analyze sentiment, and generate actionable signals — 24/7, with institutional-grade precision.</p>
-        <div class="hero-actions">
-            <a href="dashboard.html" class="btn btn-primary">Launch Dashboard →</a>
-            <a href="#agents" class="btn btn-secondary">Explore Agents</a>
-        </div>
-    </section>
-
-    <!-- TICKER BAR -->
-    <div class="ticker-bar">
-        <div class="ticker-track" id="tickerTrack"></div>
+    <!-- Signal Ticker -->
+    <div class="ticker-bar" style="margin-top:64px">
+        <div class="ticker-inner" id="tickerBar"></div>
     </div>
 
-    <!-- STATS -->
-    <section class="stats-section">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value">6</div>
-                <div class="stat-label">Active Agents</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">31K+</div>
-                <div class="stat-label">Signals Generated</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">68.1%</div>
-                <div class="stat-label">Avg Win Rate</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">99.0%</div>
-                <div class="stat-label">Uptime</div>
-            </div>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">⚡ Powered by 20+ Quantitative Strategies</div>
+        <h1>Autonomous AI Agents<br>for <span class="gradient">Smarter Trading</span></h1>
+        <p>Deploy intelligent agents that analyze markets 24/7, generate consensus signals from multi-strategy models, and optimize your portfolio in real-time.</p>
+        <div class="hero-btns">
+            <a href="dashboard.html" class="btn-primary">Open Dashboard</a>
+            <a href="agents.html" class="btn-secondary">Browse Agents →</a>
         </div>
     </section>
 
-    <!-- AGENTS -->
-    <section class="section" id="agents">
-        <div class="section-header">
-            <h2>Agent Marketplace</h2>
-            <p>Specialized AI agents for every market condition and strategy style.</p>
-        </div>
-        <div class="filter-bar" id="filterBar"></div>
-        <div class="agents-grid" id="agentsGrid">
-            <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:28px"><div style="background:linear-gradient(90deg,var(--bg-3) 25%,var(--bg-4) 50%,var(--bg-3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;height:200px"></div></div>
-            <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:28px"><div style="background:linear-gradient(90deg,var(--bg-3) 25%,var(--bg-4) 50%,var(--bg-3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;height:200px"></div></div>
-            <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:28px"><div style="background:linear-gradient(90deg,var(--bg-3) 25%,var(--bg-4) 50%,var(--bg-3) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;height:200px"></div></div>
-        </div>
-    </section>
+    <!-- Stats -->
+    <div class="stats-bar">
+        <div class="stat"><div class="stat-value">6</div><div class="stat-label">Active Agents</div></div>
+        <div class="stat"><div class="stat-value">46+</div><div class="stat-label">Tracked Assets</div></div>
+        <div class="stat"><div class="stat-value">20</div><div class="stat-label">Strategies</div></div>
+        <div class="stat"><div class="stat-value">4h</div><div class="stat-label">Signal Refresh</div></div>
+        <div class="stat"><div class="stat-value" id="statWinRate">—</div><div class="stat-label">Avg Win Rate</div></div>
+    </div>
 
-    <!-- FEATURES -->
+    <!-- Featured Agents -->
     <section class="section">
-        <div class="section-header">
-            <h2>Why Finansor AI</h2>
-            <p>Built by quants, for traders who want an edge.</p>
-        </div>
+        <h2 class="section-title">AI Agent Marketplace</h2>
+        <p class="section-sub">Each agent runs autonomously — analyzing data, generating signals, and adapting to market conditions.</p>
+        <div class="agents-grid" id="agentGrid"></div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" style="padding-top:0">
+        <h2 class="section-title">Platform Capabilities</h2>
+        <p class="section-sub">Built on production-grade quantitative research infrastructure.</p>
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Real-Time Analysis</h3>
-                <p>Agents process market data, news, and social signals continuously. Get alerts in seconds, not hours.</p>
-            </div>
-            <div class="feature-card">
                 <div class="feature-icon">🧠</div>
-                <h3>Multi-Strategy Consensus</h3>
-                <p>20+ strategies from momentum to mean-reversion are combined into a single consensus signal per asset.</p>
+                <div class="feature-title">20-Strategy Consensus</div>
+                <div class="feature-desc">Signals generated from 20+ quantitative strategies — momentum, mean reversion, volatility regimes, and more.</div>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">📡</div>
-                <h3>Sentiment Intelligence</h3>
-                <p>NLP-powered scanning of Twitter, Reddit, and news to detect narrative shifts before they become price moves.</p>
+                <div class="feature-title">Real-Time Sentiment</div>
+                <div class="feature-desc">NLP-powered analysis of Twitter/X, news, and social signals. Detect narrative shifts before price moves.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <div class="feature-title">Regime Detection</div>
+                <div class="feature-desc">Automatically classifies market conditions — bull, bear, sideways, high-vol — and adapts strategy weights.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Walk-Forward Validation</div>
+                <div class="feature-desc">Every strategy backtested with rolling out-of-sample windows. No overfitting, only edge.</div>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🛡️</div>
-                <h3>Risk Management</h3>
-                <p>Continuous portfolio monitoring with VaR, correlation tracking, and dynamic position sizing recommendations.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🌐</div>
-                <h3>Macro Intelligence</h3>
-                <p>Track Fed policy, inflation, employment, and geopolitics with automated macro regime scoring.</p>
+                <div class="feature-title">Risk Management</div>
+                <div class="feature-desc">Dynamic position sizing, ATR-based stops, drawdown limits, and portfolio-level VaR monitoring.</div>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">📊</div>
-                <h3>Operations Console</h3>
-                <p>Monitor all agents, API usage, performance metrics, and portfolio exposure from a single dashboard.</p>
+                <div class="feature-title">Portfolio Optimization</div>
+                <div class="feature-desc">Mean-Variance, CVaR, and Risk Parity models optimize allocation across assets and strategies.</div>
             </div>
+        </div>
+    </section>
+
+    <!-- Performance -->
+    <section class="section" style="padding-top:0">
+        <h2 class="section-title">Backtest Performance</h2>
+        <p class="section-sub">Aggregate metrics across all strategies — walk-forward validated.</p>
+        <div class="perf-grid">
+            <div class="perf-card"><div class="perf-value" style="color:var(--green)">1.78</div><div class="perf-label">Best Sharpe Ratio</div></div>
+            <div class="perf-card"><div class="perf-value" style="color:var(--green)">40.1%</div><div class="perf-label">Top CAGR</div></div>
+            <div class="perf-card"><div class="perf-value" style="color:var(--red)">-16.4%</div><div class="perf-label">Max Drawdown</div></div>
+            <div class="perf-card"><div class="perf-value" style="color:var(--cyan)">67.3%</div><div class="perf-label">Avg Win Rate</div></div>
+            <div class="perf-card"><div class="perf-value" style="color:var(--accent)">2.4</div><div class="perf-label">Profit Factor</div></div>
+            <div class="perf-card"><div class="perf-value" style="color:var(--yellow)">12.8%</div><div class="perf-label">Alpha (annualized)</div></div>
         </div>
     </section>
 
     <!-- CTA -->
     <section class="cta-section">
-        <h2>Ready to Deploy Your First Agent?</h2>
-        <p>Start with the free tier and scale as your strategy evolves. No credit card required.</p>
-        <div class="hero-actions">
-            <a href="pricing.html" class="btn btn-primary">View Pricing →</a>
-            <a href="dashboard.html" class="btn btn-secondary">Try Dashboard</a>
-        </div>
+        <h2>Start Trading Smarter</h2>
+        <p>Access real-time signals, AI agents, and portfolio optimization — all in one platform.</p>
+        <a href="dashboard.html" class="btn-primary">Launch Dashboard →</a>
     </section>
 
-    <!-- FOOTER -->
+    <!-- Footer -->
     <footer>
-        <div class="footer-links">
-            <a href="index.html">Marketplace</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="makro-gundem.html">Makro Gündem</a>
-            <a href="pricing.html">Pricing</a>
+        <div class="footer-inner">
+            <div class="footer-copy">© 2026 Finansor AI. Built with quantitative precision.</div>
+            <div class="footer-links">
+                <a href="https://github.com/prochainz/finansor-quant">GitHub</a>
+                <a href="agents.html">Agents</a>
+                <a href="signals.html">Signals</a>
+                <a href="pricing.html">Pricing</a>
+            </div>
         </div>
-        <div class="footer-copy">© 2026 Finansor AI · Built with quantitative precision</div>
     </footer>
 
-    <!-- AGENT DETAIL MODAL -->
-    <div class="modal-overlay" id="agentModal">
-        <div class="modal">
-            <button class="modal-close" onclick="closeModal()">×</button>
-            <div id="modalContent"></div>
-        </div>
-    </div>
-
     <script>
-        let agentsData = [];
-
-        async function loadAgents() {
-            try {
-                const r = await fetch('data/agents.json');
-                const d = await r.json();
-                agentsData = d.agents;
-            } catch(e) {
-                agentsData = [];
-            }
-            renderFilters();
-            renderAgents('All');
-        }
-
-        function renderFilters() {
-            const cats = ['All', 'Quant', 'Sentiment', 'Macro', 'DeFi', 'Risk'];
-            document.getElementById('filterBar').innerHTML = cats.map(c =>
-                `<button class="filter-btn ${c==='All'?'active':''}" onclick="filterAgents('${c}', this)">${c}</button>`
-            ).join('');
-        }
-
-        function filterAgents(cat, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderAgents(cat);
-        }
-
-        function renderAgents(cat) {
-            const filtered = cat === 'All' ? agentsData : agentsData.filter(a => a.category === cat);
-            document.getElementById('agentsGrid').innerHTML = filtered.map(a => `
-                <div class="agent-card" onclick="openModal('${a.id}')">
-                    <span class="agent-tier tier-${a.tier}">${a.tier}</span>
-                    <div class="agent-card-header">
-                        <div class="agent-icon">${a.icon}</div>
-                        <div class="agent-status"><span class="dot"></span> Active</div>
-                    </div>
-                    <h3>${a.name}</h3>
-                    <div class="agent-category">${a.category}</div>
-                    <p class="agent-desc">${a.description}</p>
-                    <div class="agent-metrics">
-                        <div class="agent-metric">
-                            <div class="value">${a.win_rate}%</div>
-                            <div class="label">Win Rate</div>
-                        </div>
-                        <div class="agent-metric">
-                            <div class="value">${a.signals_per_day}</div>
-                            <div class="label">Signals/Day</div>
-                        </div>
-                        <div class="agent-metric">
-                            <div class="value">${a.uptime}%</div>
-                            <div class="label">Uptime</div>
-                        </div>
-                    </div>
+    // Load agents
+    fetch('data/agents.json').then(r=>r.json()).then(data=>{
+        const grid=document.getElementById('agentGrid');
+        const agents=data.agents.slice(0,6);
+        let totalWR=0;
+        agents.forEach(a=>{
+            totalWR+=a.win_rate;
+            grid.innerHTML+=`
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-icon">${a.icon}</div>
+                    <span class="agent-status ${a.status}">${a.status}</span>
                 </div>
-            `).join('');
-        }
-
-        function openModal(id) {
-            const a = agentsData.find(x => x.id === id);
-            if (!a) return;
-            document.getElementById('modalContent').innerHTML = `
-                <h2>${a.icon} ${a.name}</h2>
-                <div class="modal-cat">${a.category} Agent · ${a.tier} tier</div>
-                <p class="modal-desc">${a.description}</p>
-                <div class="modal-section">
-                    <h4>Strategy</h4>
-                    <p style="color:var(--text-1);font-size:14px;line-height:1.6">${a.strategy}</p>
+                <div class="agent-name">${a.name}</div>
+                <div class="agent-cat">${a.category}</div>
+                <div class="agent-desc">${a.description.substring(0,120)}...</div>
+                <div class="agent-stats">
+                    <div class="agent-stat"><div class="agent-stat-val green">${a.win_rate}%</div><div class="agent-stat-label">Win Rate</div></div>
+                    <div class="agent-stat"><div class="agent-stat-val">${a.signals_per_day}/d</div><div class="agent-stat-label">Signals</div></div>
+                    <div class="agent-stat"><div class="agent-stat-val">${a.uptime}%</div><div class="agent-stat-label">Uptime</div></div>
                 </div>
-                <div class="modal-section">
-                    <h4>Inputs</h4>
-                    <div class="modal-tags">${a.inputs.map(i => `<span class="modal-tag">${i}</span>`).join('')}</div>
+                <div class="agent-actions">
+                    <a href="agents.html#${a.id}" class="agent-btn agent-btn-primary">View Details</a>
+                    <button class="agent-btn agent-btn-secondary" onclick="alert('Agent ${a.name} activated! Check Dashboard for status.')">Activate</button>
                 </div>
-                <div class="modal-section">
-                    <h4>Outputs</h4>
-                    <div class="modal-tags">${a.outputs.map(o => `<span class="modal-tag">${o}</span>`).join('')}</div>
-                </div>
-                <div class="modal-section">
-                    <h4>Coverage</h4>
-                    <div class="modal-tags">${a.assets.map(x => `<span class="modal-tag">${x}</span>`).join('')}</div>
-                </div>
-                <div class="modal-metrics">
-                    <div class="modal-metric"><div class="val">${a.win_rate}%</div><div class="lbl">Win Rate</div></div>
-                    <div class="modal-metric"><div class="val">${a.signals_per_day}/day</div><div class="lbl">Signal Frequency</div></div>
-                    <div class="modal-metric"><div class="val">${a.uptime}%</div><div class="lbl">Uptime</div></div>
-                    <div class="modal-metric"><div class="val">${a.risk_profile}</div><div class="lbl">Risk Profile</div></div>
-                    <div class="modal-metric"><div class="val">${a.timeframe}</div><div class="lbl">Timeframe</div></div>
-                    <div class="modal-metric"><div class="val">${a.total_signals.toLocaleString()}</div><div class="lbl">Total Signals</div></div>
-                </div>
-            `;
-            document.getElementById('agentModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('agentModal').classList.remove('active');
-        }
-
-        document.getElementById('agentModal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
+            </div>`;
         });
+        document.getElementById('statWinRate').textContent=(totalWR/agents.length).toFixed(1)+'%';
+    });
 
-        function toggleMenu() {
-            document.getElementById('navLinks').classList.toggle('open');
-        }
-
-        // Ticker bar
-        const tickers = [
-            {name:'SPY', price:'562.40', change:'+0.32%', up:true},
-            {name:'QQQ', price:'481.22', change:'-0.18%', up:false},
-            {name:'BTC', price:'82,140', change:'+1.24%', up:true},
-            {name:'ETH', price:'3,280', change:'+0.87%', up:true},
-            {name:'GOLD', price:'3,050', change:'+0.65%', up:true},
-            {name:'VIX', price:'19.80', change:'+2.10%', up:true},
-            {name:'DXY', price:'104.2', change:'+0.15%', up:true},
-            {name:'OIL', price:'68.20', change:'-1.40%', up:false},
-            {name:'NVDA', price:'892.50', change:'+2.10%', up:true},
-            {name:'TSLA', price:'178.40', change:'-3.20%', up:false},
-        ];
-        const tickerHTML = tickers.map(t =>
-            `<span class="ticker-item"><span class="name">${t.name}</span> <span class="price">$${t.price}</span> <span class="change ${t.up?'up':'down'}">${t.change}</span></span>`
-        ).join('');
-        document.getElementById('tickerTrack').innerHTML = tickerHTML + tickerHTML;
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
+    // Ticker
+    fetch('data/signals.json').then(r=>r.json()).then(data=>{
+        const bar=document.getElementById('tickerBar');
+        let html='';
+        const signals=data.signals||[];
+        const items=[...signals,...signals]; // duplicate for infinite scroll
+        items.forEach(s=>{
+            const cls=s.changePct>=0?'up':'down';
+            const arrow=s.changePct>=0?'▲':'▼';
+            html+=`<div class="ticker-item"><strong>${s.ticker}</strong> $${s.price.toFixed(2)} <span class="${cls}">${arrow} ${Math.abs(s.changePct).toFixed(2)}%</span></div>`;
         });
-
-        // ESC to close modal
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeModal();
-        });
-
-        loadAgents();
+        bar.innerHTML=html;
+    });
     </script>
 </body>
 </html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Signals — Finansor AI</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <style>
+        :root{--bg:#0a0e17;--bg2:#111827;--card:#151d2e;--border:#1e2a3a;--text:#e2e8f0;--text2:#94a3b8;--accent:#3b82f6;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--cyan:#06b6d4;--gradient:linear-gradient(135deg,#3b82f6,#8b5cf6)}
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}a{color:var(--accent);text-decoration:none}
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}.nav-logo{font-size:20px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}.nav-logo span{font-size:24px;-webkit-text-fill-color:initial}.nav-links{display:flex;gap:32px;align-items:center}.nav-links a{color:var(--text2);font-size:14px;font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--text)}.nav-cta{background:var(--gradient);color:white!important;padding:8px 20px;border-radius:8px;font-weight:600;font-size:13px}.nav-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green)}.nav-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
+        .page-header{padding:100px 24px 24px;text-align:center}.page-header h1{font-size:40px;font-weight:800;margin-bottom:8px}.page-header p{color:var(--text2);font-size:16px}
+        .container{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+
+        /* Summary cards */
+        .summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+        .sum-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+        .sum-val{font-size:28px;font-weight:800}.sum-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-top:4px}
+
+        /* Controls */
+        .controls{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;align-items:center}
+        .search{flex:1;min-width:200px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 16px;border-radius:10px;font-size:14px}
+        .search:focus{outline:none;border-color:var(--accent)}
+        select{background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 16px;border-radius:10px;font-size:14px}
+        .update-time{color:var(--text2);font-size:12px;margin-left:auto}
+
+        /* Table */
+        .table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--border);border-radius:14px}
+        table{width:100%;border-collapse:collapse;font-size:14px}
+        th{background:var(--bg2);color:var(--text2);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:0.5px;padding:14px 16px;text-align:left;cursor:pointer;user-select:none;white-space:nowrap}
+        th:hover{color:var(--text)}
+        td{padding:14px 16px;border-top:1px solid var(--border);white-space:nowrap}
+        tr:hover td{background:rgba(59,130,246,0.05)}
+        .ticker-cell{font-weight:700;font-size:15px}
+        .signal-badge{padding:4px 12px;border-radius:6px;font-weight:600;font-size:12px;display:inline-block}
+        .signal-strong-buy{background:rgba(16,185,129,0.2);color:#34d399}
+        .signal-buy{background:rgba(245,158,11,0.2);color:var(--yellow)}
+        .signal-hold{background:rgba(148,163,184,0.2);color:var(--text2)}
+        .signal-sell{background:rgba(249,115,22,0.2);color:var(--orange)}
+        .signal-strong-sell{background:rgba(239,68,68,0.2);color:var(--red)}
+        .green{color:var(--green)}.red{color:var(--red)}.yellow{color:var(--yellow)}
+        .score-bar{width:60px;height:6px;background:var(--bg2);border-radius:3px;display:inline-block;vertical-align:middle;margin-right:6px;overflow:hidden}
+        .score-fill{height:100%;border-radius:3px}
+
+        footer{border-top:1px solid var(--border);padding:48px 24px}.footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}.footer-links{display:flex;gap:24px}.footer-links a{color:var(--text2);font-size:13px}.footer-copy{color:var(--text2);font-size:13px}
+        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}.summary{grid-template-columns:repeat(2,1fr)}th,td{padding:10px 8px;font-size:12px}}
+    </style>
+</head>
+<body>
+    <nav><div class="nav-inner"><a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a><div class="nav-links"><a href="index.html">Home</a><a href="agents.html">Agents</a><a href="signals.html" class="active">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a><div class="nav-status">Systems Online</div><a href="dashboard.html" class="nav-cta">Launch App →</a></div><button class="hamburger" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button></div></nav>
+
+    <div class="page-header">
+        <h1>📡 Live Signals</h1>
+        <p>Real-time consensus signals from 20+ quantitative strategies</p>
+    </div>
+
+    <div class="container">
+        <div class="summary" id="summary"></div>
+
+        <div class="controls">
+            <input class="search" type="text" placeholder="🔍 Search ticker..." id="search" oninput="filterTable()">
+            <select id="signalFilter" onchange="filterTable()">
+                <option value="all">All Signals</option>
+                <option value="buy">Buy / Strong Buy</option>
+                <option value="sell">Sell / Strong Sell</option>
+                <option value="hold">Hold</option>
+            </select>
+            <select id="sortBy" onchange="sortTable()">
+                <option value="score-desc">Score ↓</option>
+                <option value="score-asc">Score ↑</option>
+                <option value="change-desc">Change % ↓</option>
+                <option value="change-asc">Change % ↑</option>
+                <option value="ticker-asc">Ticker A-Z</option>
+            </select>
+            <div class="update-time" id="updateTime"></div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ticker</th>
+                        <th>Price</th>
+                        <th>Change</th>
+                        <th>Signal</th>
+                        <th>Score</th>
+                        <th>RSI</th>
+                        <th>Strategy</th>
+                        <th>Stop Loss</th>
+                        <th>Take Profit</th>
+                    </tr>
+                </thead>
+                <tbody id="signalBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer><div class="footer-inner"><div class="footer-copy">© 2026 Finansor AI</div><div class="footer-links"><a href="https://github.com/prochainz/finansor-quant">GitHub</a><a href="agents.html">Agents</a><a href="pricing.html">Pricing</a></div></div></footer>
+
+    <script>
+    let signals=[];
+
+    fetch('data/signals.json').then(r=>r.json()).then(data=>{
+        signals=data.signals||[];
+        document.getElementById('updateTime').textContent='Updated: '+new Date(data.timestamp).toLocaleString();
+        renderSummary();
+        renderTable();
+    });
+
+    function renderSummary(){
+        const buys=signals.filter(s=>s.signal.includes('BUY')).length;
+        const sells=signals.filter(s=>s.signal.includes('SELL')).length;
+        const holds=signals.filter(s=>s.signal.includes('HOLD')).length;
+        const avgScore=(signals.reduce((a,s)=>a+s.score,0)/signals.length).toFixed(3);
+        document.getElementById('summary').innerHTML=`
+            <div class="sum-card"><div class="sum-val">${signals.length}</div><div class="sum-label">Total Assets</div></div>
+            <div class="sum-card"><div class="sum-val green">${buys}</div><div class="sum-label">Buy Signals</div></div>
+            <div class="sum-card"><div class="sum-val red">${sells}</div><div class="sum-label">Sell Signals</div></div>
+            <div class="sum-card"><div class="sum-val yellow">${holds}</div><div class="sum-label">Hold</div></div>
+            <div class="sum-card"><div class="sum-val" style="color:var(--cyan)">${avgScore}</div><div class="sum-label">Avg Score</div></div>
+        `;
+    }
+
+    function getSignalClass(sig){
+        if(sig.includes('STRONG BUY'))return'signal-strong-buy';
+        if(sig.includes('BUY'))return'signal-buy';
+        if(sig.includes('STRONG SELL'))return'signal-strong-sell';
+        if(sig.includes('SELL'))return'signal-sell';
+        return'signal-hold';
+    }
+
+    function renderTable(){
+        const body=document.getElementById('signalBody');
+        const search=document.getElementById('search').value.toUpperCase();
+        const filter=document.getElementById('signalFilter').value;
+        let filtered=signals.filter(s=>{
+            if(search&&!s.ticker.includes(search))return false;
+            if(filter==='buy'&&!s.signal.includes('BUY'))return false;
+            if(filter==='sell'&&!s.signal.includes('SELL'))return false;
+            if(filter==='hold'&&!s.signal.includes('HOLD'))return false;
+            return true;
+        });
+
+        const sort=document.getElementById('sortBy').value;
+        const [key,dir]=sort.split('-');
+        filtered.sort((a,b)=>{
+            let va,vb;
+            if(key==='score'){va=a.score;vb=b.score;}
+            else if(key==='change'){va=a.changePct;vb=b.changePct;}
+            else{va=a.ticker;vb=b.ticker;}
+            if(typeof va==='string')return dir==='asc'?va.localeCompare(vb):vb.localeCompare(va);
+            return dir==='asc'?va-vb:vb-va;
+        });
+
+        body.innerHTML=filtered.map((s,i)=>{
+            const chgClass=s.changePct>=0?'green':'red';
+            const arrow=s.changePct>=0?'▲':'▼';
+            const scoreNorm=((s.score+1)/2*100).toFixed(0);
+            const scoreColor=s.score>0.2?'var(--green)':s.score<-0.2?'var(--red)':'var(--text2)';
+            const rsiColor=s.rsi<30?'var(--green)':s.rsi>70?'var(--red)':'var(--text2)';
+            return`<tr>
+                <td style="color:var(--text2)">${i+1}</td>
+                <td class="ticker-cell">${s.ticker}</td>
+                <td>$${s.price.toFixed(2)}</td>
+                <td class="${chgClass}">${arrow} ${Math.abs(s.changePct).toFixed(2)}%</td>
+                <td><span class="signal-badge ${getSignalClass(s.signal)}">${s.signal.replace(/[^\w\s]/g,'').trim()}</span></td>
+                <td><span class="score-bar"><span class="score-fill" style="width:${Math.max(5,scoreNorm)}%;background:${scoreColor}"></span></span>${s.score.toFixed(3)}</td>
+                <td style="color:${rsiColor}">${s.rsi.toFixed(1)}</td>
+                <td style="color:var(--text2);font-size:12px">${s.best_strategy}</td>
+                <td style="color:var(--red);font-size:13px">$${s.stop_loss.toFixed(2)}</td>
+                <td style="color:var(--green);font-size:13px">$${s.take_profit.toFixed(2)}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    function filterTable(){renderTable()}
+    function sortTable(){renderTable()}
+    </script>
+</body>
+</html>

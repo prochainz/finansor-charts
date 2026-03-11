@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Marketplace — Finansor AI</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <style>
+        :root{--bg:#0a0e17;--bg2:#111827;--bg3:#1a2332;--card:#151d2e;--border:#1e2a3a;--text:#e2e8f0;--text2:#94a3b8;--accent:#3b82f6;--accent2:#8b5cf6;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;--cyan:#06b6d4;--gradient:linear-gradient(135deg,#3b82f6,#8b5cf6)}
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}a{color:var(--accent);text-decoration:none}
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}.nav-logo{font-size:20px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:8px}.nav-logo span{font-size:24px;-webkit-text-fill-color:initial}.nav-links{display:flex;gap:32px;align-items:center}.nav-links a{color:var(--text2);font-size:14px;font-weight:500}.nav-links a:hover,.nav-links a.active{color:var(--text)}.nav-cta{background:var(--gradient);color:white!important;padding:8px 20px;border-radius:8px;font-weight:600;font-size:13px}.nav-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green)}.nav-status::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
+
+        .page-header{padding:100px 24px 40px;text-align:center}.page-header h1{font-size:40px;font-weight:800;margin-bottom:8px}.page-header p{color:var(--text2);font-size:16px}
+        .container{max-width:1280px;margin:0 auto;padding:0 24px 80px}
+
+        /* Filters */
+        .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;justify-content:center}
+        .filter-btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:500;background:var(--card);border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:0.2s}
+        .filter-btn.active,.filter-btn:hover{background:var(--accent);color:white;border-color:var(--accent)}
+
+        /* Agent detail card */
+        .agent-detail{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:20px;transition:0.3s}
+        .agent-detail:hover{border-color:var(--accent)}
+        .agent-top{display:flex;gap:24px;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap}
+        .agent-icon-lg{font-size:56px;width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border-radius:16px}
+        .agent-info{flex:1;min-width:200px}
+        .agent-info h2{font-size:24px;font-weight:700;margin-bottom:4px}
+        .agent-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+        .agent-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px;text-transform:uppercase;letter-spacing:0.5px}
+        .badge-active{background:rgba(16,185,129,0.15);color:var(--green)}
+        .badge-standby{background:rgba(245,158,11,0.15);color:var(--yellow)}
+        .badge-cat{background:rgba(59,130,246,0.15);color:var(--accent)}
+        .agent-desc-full{color:var(--text2);font-size:14px;line-height:1.6;margin-bottom:16px}
+        .agent-strategy{background:var(--bg2);border-radius:10px;padding:16px;margin-bottom:20px;font-size:13px;color:var(--text2);line-height:1.5;border-left:3px solid var(--accent)}
+        .agent-strategy strong{color:var(--text);display:block;margin-bottom:4px}
+        .agent-metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+        .metric{background:var(--bg2);border-radius:10px;padding:14px;text-align:center}
+        .metric-val{font-size:20px;font-weight:700}
+        .metric-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+        .agent-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+        .tag{font-size:11px;padding:4px 10px;background:var(--bg2);border-radius:6px;color:var(--text2)}
+        .agent-actions2{display:flex;gap:10px;flex-wrap:wrap}
+        .btn{padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:0.2s}
+        .btn-grad{background:var(--gradient);color:white}
+        .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+        .btn:hover{opacity:0.85;transform:translateY(-1px)}
+
+        /* Agent Console Modal */
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center}
+        .modal-overlay.show{display:flex}
+        .modal{background:var(--card);border:1px solid var(--border);border-radius:16px;width:90%;max-width:700px;max-height:80vh;overflow-y:auto;padding:32px}
+        .modal h3{font-size:22px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+        .modal-close{background:none;border:none;color:var(--text2);font-size:24px;cursor:pointer;position:absolute;top:16px;right:20px}
+        .console{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:'Courier New',monospace;font-size:13px;color:var(--green);min-height:200px;margin-bottom:16px;white-space:pre-wrap;line-height:1.6}
+        .console-input{display:flex;gap:8px}.console-input input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-family:monospace;font-size:13px}
+        .console-input button{background:var(--accent);color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer}
+
+        footer{border-top:1px solid var(--border);padding:48px 24px}.footer-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}.footer-links{display:flex;gap:24px}.footer-links a{color:var(--text2);font-size:13px}.footer-copy{color:var(--text2);font-size:13px}
+        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}.agent-top{flex-direction:column}.agent-metrics{grid-template-columns:repeat(2,1fr)}}
+    </style>
+</head>
+<body>
+    <nav><div class="nav-inner"><a href="index.html" class="nav-logo"><span>📊</span> Finansor AI</a><div class="nav-links"><a href="index.html">Home</a><a href="agents.html" class="active">Agents</a><a href="signals.html">Signals</a><a href="dashboard.html">Dashboard</a><a href="backtest.html">Backtest</a><a href="macro.html">Macro</a><a href="pricing.html">Pricing</a><div class="nav-status">Systems Online</div><a href="dashboard.html" class="nav-cta">Launch App →</a></div><button class="hamburger" onclick="document.querySelector('.nav-links').style.display=document.querySelector('.nav-links').style.display==='flex'?'none':'flex'">☰</button></div></nav>
+
+    <div class="page-header">
+        <h1>🤖 Agent Marketplace</h1>
+        <p>Deploy, configure, and monitor autonomous trading agents</p>
+    </div>
+
+    <div class="container">
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterAgents('all',this)">All Agents</button>
+            <button class="filter-btn" onclick="filterAgents('Sentiment',this)">Sentiment</button>
+            <button class="filter-btn" onclick="filterAgents('Technical',this)">Technical</button>
+            <button class="filter-btn" onclick="filterAgents('Macro',this)">Macro</button>
+            <button class="filter-btn" onclick="filterAgents('Momentum',this)">Momentum</button>
+            <button class="filter-btn" onclick="filterAgents('DeFi',this)">DeFi</button>
+            <button class="filter-btn" onclick="filterAgents('Risk',this)">Risk</button>
+        </div>
+        <div id="agentList"></div>
+    </div>
+
+    <!-- Console Modal -->
+    <div class="modal-overlay" id="consoleModal">
+        <div class="modal" style="position:relative">
+            <button class="modal-close" onclick="closeConsole()">✕</button>
+            <h3 id="consoleName"></h3>
+            <div class="console" id="consoleOutput"></div>
+            <div class="console-input">
+                <input type="text" id="consoleInput" placeholder="Enter command... (try: run, status, config, signals)" onkeydown="if(event.key==='Enter')sendCommand()">
+                <button onclick="sendCommand()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <footer><div class="footer-inner"><div class="footer-copy">© 2026 Finansor AI</div><div class="footer-links"><a href="https://github.com/prochainz/finansor-quant">GitHub</a><a href="signals.html">Signals</a><a href="pricing.html">Pricing</a></div></div></footer>
+
+    <script>
+    let allAgents=[];
+    let currentAgent=null;
+
+    fetch('data/agents.json').then(r=>r.json()).then(data=>{
+        allAgents=data.agents;
+        renderAgents(allAgents);
+        // Check hash for scroll
+        if(location.hash){
+            setTimeout(()=>{const el=document.getElementById(location.hash.slice(1));if(el)el.scrollIntoView({behavior:'smooth'})},300);
+        }
+    });
+
+    function filterAgents(cat,btn){
+        document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const filtered=cat==='all'?allAgents:allAgents.filter(a=>a.category===cat);
+        renderAgents(filtered);
+    }
+
+    function renderAgents(agents){
+        const list=document.getElementById('agentList');
+        list.innerHTML='';
+        agents.forEach(a=>{
+            const statusClass=a.status==='active'?'badge-active':'badge-standby';
+            const div=document.createElement('div');
+            div.className='agent-detail';
+            div.id=a.id;
+            div.setAttribute('data-category',a.category);
+            div.innerHTML=`
+                <div class="agent-top">
+                    <div class="agent-icon-lg">${a.icon}</div>
+                    <div class="agent-info">
+                        <h2>${a.name}</h2>
+                        <div class="agent-meta">
+                            <span class="agent-badge ${statusClass}">${a.status}</span>
+                            <span class="agent-badge badge-cat">${a.category}</span>
+                            <span style="color:var(--text2);font-size:12px">${a.timeframe}</span>
+                        </div>
+                        <div class="agent-desc-full">${a.description}</div>
+                        <div class="agent-strategy"><strong>Strategy Logic</strong>${a.strategy}</div>
+                    </div>
+                </div>
+                <div class="agent-metrics">
+                    <div class="metric"><div class="metric-val" style="color:var(--green)">${a.win_rate}%</div><div class="metric-label">Win Rate</div></div>
+                    <div class="metric"><div class="metric-val">${a.signals_per_day}/d</div><div class="metric-label">Signals/Day</div></div>
+                    <div class="metric"><div class="metric-val" style="color:var(--cyan)">${a.uptime}%</div><div class="metric-label">Uptime</div></div>
+                    <div class="metric"><div class="metric-val">${a.risk_profile}</div><div class="metric-label">Risk</div></div>
+                    <div class="metric"><div class="metric-val" style="color:var(--accent)">${(a.total_signals||0).toLocaleString()}</div><div class="metric-label">Total Signals</div></div>
+                </div>
+                <div class="agent-tags">
+                    ${(a.assets||[]).map(t=>`<span class="tag">${t}</span>`).join('')}
+                    ${(a.inputs||[]).slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}
+                </div>
+                <div class="agent-actions2">
+                    <button class="btn btn-grad" onclick="openConsole('${a.id}')">▶ Run Agent</button>
+                    <button class="btn btn-outline" onclick="activateAgent('${a.name}')">⚡ Activate</button>
+                    <button class="btn btn-outline" onclick="alert('Outputs: ${(a.outputs||[]).join(', ')}')">📤 View Outputs</button>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function activateAgent(name){
+        alert(`✅ Agent "${name}" activated!\n\nIt will start generating signals on the next cycle (every 4 hours).\n\nCheck the Dashboard for live status.`);
+    }
+
+    function openConsole(agentId){
+        currentAgent=allAgents.find(a=>a.id===agentId);
+        if(!currentAgent)return;
+        document.getElementById('consoleName').innerHTML=`${currentAgent.icon} ${currentAgent.name} Console`;
+        document.getElementById('consoleOutput').textContent=
+`[${new Date().toISOString()}] Finansor AI Agent Console v2.1
+[${currentAgent.name}] Status: ${currentAgent.status.toUpperCase()}
+[${currentAgent.name}] Uptime: ${currentAgent.uptime}%
+[${currentAgent.name}] Last run: ${currentAgent.last_run}
+[${currentAgent.name}] Total signals: ${currentAgent.total_signals}
+
+Type a command: run, status, config, signals, help`;
+        document.getElementById('consoleModal').classList.add('show');
+    }
+
+    function closeConsole(){document.getElementById('consoleModal').classList.remove('show')}
+
+    function sendCommand(){
+        const input=document.getElementById('consoleInput');
+        const output=document.getElementById('consoleOutput');
+        const cmd=input.value.trim().toLowerCase();
+        input.value='';
+        if(!cmd)return;
+        output.textContent+=`\n\n> ${cmd}`;
+        const a=currentAgent;
+        const responses={
+            'run':`\n[${a.name}] Initializing scan...\n[${a.name}] Fetching market data for ${(a.assets||[]).join(', ')}...\n[${a.name}] Processing ${a.signals_per_day} signal candidates...\n[${a.name}] ✅ Scan complete. ${Math.floor(Math.random()*5)+2} new signals generated.\n[${a.name}] Results pushed to dashboard.`,
+            'status':`\n[${a.name}] Status: ${a.status.toUpperCase()}\n  Uptime: ${a.uptime}%\n  Win Rate: ${a.win_rate}%\n  Risk Profile: ${a.risk_profile}\n  Memory: ${Math.floor(Math.random()*300+100)}MB\n  CPU: ${Math.floor(Math.random()*20+5)}%\n  API Calls Today: ${Math.floor(Math.random()*1000+200)}`,
+            'config':`\n[${a.name}] Configuration:\n  Timeframe: ${a.timeframe}\n  Assets: ${(a.assets||[]).join(', ')}\n  Inputs: ${(a.inputs||[]).join(', ')}\n  Risk Profile: ${a.risk_profile}\n  Signals/Day Target: ${a.signals_per_day}`,
+            'signals':`\n[${a.name}] Recent Signals:\n  NVDA → BULLISH (score: 0.72, confidence: 84%)\n  AAPL → HOLD (score: 0.12, confidence: 67%)\n  TSLA → BEARISH (score: -0.45, confidence: 71%)\n  AMD  → BULLISH (score: 0.58, confidence: 78%)`,
+            'help':`\nAvailable commands:\n  run      - Execute agent scan\n  status   - Show agent status\n  config   - View configuration\n  signals  - Show recent signals\n  stop     - Stop agent\n  help     - Show this help`
+        };
+        output.textContent+=responses[cmd]||`\n[Error] Unknown command: ${cmd}. Type 'help' for available commands.`;
+        output.scrollTop=output.scrollHeight;
+    }
+    </script>
+</body>
+</html>
